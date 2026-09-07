@@ -1,0 +1,1915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXORA — Sentient Aware</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body id="app-body" class="bg-[#03040a] text-slate-100 font-sans min-h-screen flex flex-col relative overflow-x-hidden selection:bg-sky-500 selection:text-white">
+
+    <!-- NEXORA Universal Ambient Canvas - Persists Across All Views -->
+    <canvas id="nexora-ambient-canvas"></canvas>
+
+    <!-- ===================================================================== -->
+    <!-- OMNIPRESENT FLOATING SWITCHER CONTROLLER -->
+    <!-- ===================================================================== -->
+    <div id="ambient-switcher" class="fixed left-6 bottom-8 z-[9999]">
+        <!-- Trigger Button -->
+        <button id="ambient-switcher-btn" onclick="toggleAmbientSwitcher()" class="group relative flex items-center gap-2 px-4 py-3 rounded-full backdrop-blur-xl bg-gradient-to-r from-slate-900/80 to-slate-800/80 border border-white/10 shadow-2xl shadow-black/50 hover:border-cyan-400/50 transition-all duration-300 hover:scale-105">
+            <span class="text-lg filter hue-rotate-180 animate-pulse">🌌</span>
+            <span class="text-xs font-bold font-mono text-cyan-300 tracking-wider hidden sm:inline">AMBIENT</span>
+            <span class="absolute -top-10 left-1/2 -translate-x-1/2 px-3 py-1 bg-slate-900/95 border border-white/20 rounded-lg text-xs text-white opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Ambient Studio</span>
+        </button>
+
+        <!-- Control Drawer -->
+        <div id="ambient-switcher-drawer" class="hidden absolute bottom-full left-0 mb-4 w-80 max-h-[80vh] overflow-y-auto backdrop-blur-2xl bg-gradient-to-br from-slate-900/95 to-slate-800/95 border border-white/10 rounded-2xl shadow-2xl shadow-black/60" style="transform-origin: bottom left;">
+            <div class="p-5 space-y-5">
+                <!-- Header -->
+                <div class="flex items-center justify-between">
+                    <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                        <span class="text-lg">✨</span> Ambient Studio
+                    </h3>
+                    <button onclick="toggleAmbientSwitcher()" class="text-slate-400 hover:text-white transition-colors">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 6L6 18M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Background Engine Selector -->
+                <div class="space-y-2">
+                    <label class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Background Engine</label>
+                    <div class="grid grid-cols-2 gap-2" id="engine-selector">
+                        <button onclick="setAmbientEngine('sentient-aura')" class="engine-btn active" data-engine="sentient-aura">
+                            <span class="text-sm">🌟</span>
+                            <span class="text-xs">Sentient Aura</span>
+                        </button>
+                        <button onclick="setAmbientEngine('neural-synapse')" class="engine-btn" data-engine="neural-synapse">
+                            <span class="text-sm">🔮</span>
+                            <span class="text-xs">Neural Synapse</span>
+                        </button>
+                        <button onclick="setAmbientEngine('fluid-smoke')" class="engine-btn" data-engine="fluid-smoke">
+                            <span class="text-sm">🌊</span>
+                            <span class="text-xs">Fluid Smoke</span>
+                        </button>
+                        <button onclick="setAmbientEngine('aurora-borealis')" class="engine-btn" data-engine="aurora-borealis">
+                            <span class="text-sm">🎆</span>
+                            <span class="text-xs">Aurora Borealis</span>
+                        </button>
+                        <button onclick="setAmbientEngine('dot-matrix')" class="engine-btn" data-engine="dot-matrix">
+                            <span class="text-sm">📐</span>
+                            <span class="text-xs">Dot Matrix</span>
+                        </button>
+                        <button onclick="setAmbientEngine('noise-gradient')" class="engine-btn" data-engine="noise-gradient">
+                            <span class="text-sm">🎨</span>
+                            <span class="text-xs">Noise Gradient</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Theme Color Swatches -->
+                <div class="space-y-2">
+                    <label class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Chromatic Theme</label>
+                    <div class="flex gap-3" id="theme-selector">
+                        <button onclick="setAmbientTheme('cyber-cyan')" class="theme-btn active" data-theme="cyber-cyan" title="Cyber Cyan">
+                            <span class="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-400 to-cyan-600 shadow-lg shadow-cyan-500/30 block"></span>
+                        </button>
+                        <button onclick="setAmbientTheme('neural-violet')" class="theme-btn" data-theme="neural-violet" title="Neural Violet">
+                            <span class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 shadow-lg shadow-purple-500/30 block"></span>
+                        </button>
+                        <button onclick="setAmbientTheme('obsidian-emerald')" class="theme-btn" data-theme="obsidian-emerald" title="Obsidian Emerald">
+                            <span class="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 shadow-lg shadow-emerald-500/30 block"></span>
+                        </button>
+                        <button onclick="setAmbientTheme('solar-amber')" class="theme-btn" data-theme="solar-amber" title="Solar Amber">
+                            <span class="w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 shadow-lg shadow-amber-500/30 block"></span>
+                        </button>
+                        <button onclick="setAmbientTheme('deep-crimson')" class="theme-btn" data-theme="deep-crimson" title="Deep Crimson">
+                            <span class="w-8 h-8 rounded-full bg-gradient-to-br from-rose-400 to-rose-600 shadow-lg shadow-rose-500/30 block"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Opacity Slider -->
+                <div class="space-y-2">
+                    <label class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Ambient Glow</label>
+                    <div class="flex items-center gap-3">
+                        <span class="text-xs text-slate-500">20%</span>
+                        <input type="range" id="ambient-opacity" min="20" max="95" value="75" oninput="setAmbientOpacity(this.value)" class="flex-1 h-2 bg-slate-700 rounded-full appearance-none cursor-pointer accent-cyan-400">
+                        <span class="text-xs text-slate-500">95%</span>
+                    </div>
+                    <div class="text-xs text-center text-slate-400 font-mono" id="opacity-display">75%</div>
+                </div>
+
+                <!-- Quick Presets -->
+                <div class="space-y-2">
+                    <label class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Quick Presets</label>
+                    <div class="flex gap-2 flex-wrap">
+                        <button onclick="applyPreset('calm')" class="px-3 py-1.5 text-xs rounded-lg bg-slate-800 hover:bg-slate-700 border border-white/10 text-slate-300 transition-all">😌 Calm</button>
+                        <button onclick="applyPreset('focus')" class="px-3 py-1.5 text-xs rounded-lg bg-slate-800 hover:bg-slate-700 border border-white/10 text-slate-300 transition-all">🎯 Focus</button>
+                        <button onclick="applyPreset('energy')" class="px-3 py-1.5 text-xs rounded-lg bg-slate-800 hover:bg-slate-700 border border-white/10 text-slate-300 transition-all">⚡ Energy</button>
+                        <button onclick="applyPreset('night')" class="px-3 py-1.5 text-xs rounded-lg bg-slate-800 hover:bg-slate-700 border border-white/10 text-slate-300 transition-all">🌙 Night</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- SENTIENT AWARE GLOBAL ENVIRONMENT -->
+    <!-- ===================================================================== -->
+    <div class="sentient-environment">
+        <!-- Atmospheric Base -->
+        <div class="atmosphere-base"></div>
+
+        <!-- Volumetric Light Layers -->
+        <div class="atmosphere-volumetric atmosphere-volumetric-1"></div>
+        <div class="atmosphere-volumetric atmosphere-volumetric-2"></div>
+
+        <!-- Subtle Grid -->
+        <div class="atmosphere-grid"></div>
+
+        <!-- Neural Canvas -->
+        <canvas id="sentient-canvas" class="w-full h-full"></canvas>
+
+        <!-- Noise Overlay -->
+        <div class="atmosphere-noise"></div>
+
+        <!-- Depth Gradient -->
+        <div class="atmosphere-depth"></div>
+    </div>
+
+    <!-- Cursor Spotlight -->
+    <div id="cursor-spotlight" class="cursor-spotlight"></div>
+
+    <!-- ===================================================================== -->
+    <!-- SENTIENT NAVIGATION -->
+    <!-- ===================================================================== -->
+    <nav id="sentient-nav" class="sentient-nav transition-opacity duration-500">
+        <div class="nav-brand cursor-pointer" onclick="goBackToIntro()">
+            <div class="nav-brand-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 8v8M8 12h8"/>
+                </svg>
+            </div>
+            <span class="nav-brand-text text-white">NEXORA</span>
+        </div>
+
+        <div id="nav-center" class="hidden md:flex items-center gap-1">
+            <!-- Back Button (shown when not on intro) -->
+            <button id="nav-back-btn" onclick="goBackToIntro()" class="btn btn-ghost btn-sm mr-4 hidden">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                <span>Back</span>
+            </button>
+            <!-- Dynamic nav links populated by role -->
+        </div>
+
+        <div class="flex items-center gap-4">
+            <div id="header-helplines" class="hidden sm:flex items-center gap-3 text-xs">
+                <a href="tel:112" class="text-rose-400 hover:text-rose-300 font-semibold flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
+                    Emergency: 112
+                </a>
+                <span class="text-slate-600">|</span>
+                <span class="text-slate-400">Mental Health: <strong class="text-white">14416</strong></span>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <select id="lang-select" onchange="changeLanguage(this.value)" class="bg-transparent text-xs text-slate-400 outline-none cursor-pointer border border-white/10 rounded-lg px-2 py-1">
+                    <option value="en">EN</option>
+                    <option value="hi">हिं</option>
+                    <option value="bn">বা</option>
+                    <option value="ta">தம</option>
+                </select>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Bottom Navigation (Mobile) -->
+    <nav id="sentient-nav-bottom" class="sentient-nav-bottom">
+        <div class="nav-bottom-links">
+            <button class="nav-bottom-link active" onclick="switchView('intro')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                </svg>
+                <span>Home</span>
+            </button>
+            <button class="nav-bottom-link" onclick="openPortal('pulse')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                </svg>
+                <span>Emotions</span>
+            </button>
+            <button class="nav-bottom-link" onclick="openPortal('triage')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+                <span>Triage</span>
+            </button>
+            <button class="nav-bottom-link" onclick="openPortal('analytics')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 20V10M12 20V4M6 20v-6"/>
+                </svg>
+                <span>Analytics</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ===================================================================== -->
+    <!-- SENTIENT CORE COMPONENT -->
+    <!-- ===================================================================== -->
+    <div id="sentient-core-container" class="sentient-core-container fixed inset-0 pointer-events-none z-5">
+        <canvas id="sentient-core-canvas" class="sentient-core-canvas"></canvas>
+        <div class="sentient-core" id="sentient-core" data-state="dormant">
+            <div class="core-aura"></div>
+            <div class="core-orbital"></div>
+            <div class="core-orbital"></div>
+            <div class="core-orbital"></div>
+            <div class="core-inner-glow"></div>
+            <div class="core-orb"></div>
+            <div class="core-filaments">
+                <div class="filament" style="--filament-length: 120px;"></div>
+                <div class="filament" style="--filament-length: 100px;"></div>
+                <div class="filament" style="--filament-length: 140px;"></div>
+                <div class="filament" style="--filament-length: 110px;"></div>
+                <div class="filament" style="--filament-length: 130px;"></div>
+            </div>
+            <div class="core-particles">
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+            </div>
+            <div class="core-sensors">
+                <div class="sensor sensor-1"></div>
+                <div class="sensor sensor-2"></div>
+                <div class="sensor sensor-3"></div>
+                <div class="sensor sensor-4"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- LANDING PAGE — NEXORA AWAKENS -->
+    <!-- ===================================================================== -->
+    <section id="intro-view" class="relative z-10 flex-1 flex flex-col items-center justify-center p-6 md:p-12 min-h-screen">
+        <div class="max-w-4xl w-full mx-auto text-center space-y-12">
+
+            <!-- Awakening Sequence -->
+            <div id="awakening-container" class="space-y-8">
+                <!-- Status Badge -->
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-xs font-mono uppercase tracking-widest">
+                    <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                    <span>Sentient Intelligence Active</span>
+                </div>
+
+                <!-- Main Title -->
+                <h1 id="main-title" class="text-display" style="animation: fade-in-up 1.5s ease-out 0.5s both;">
+                    NEXORA
+                </h1>
+
+                <!-- Subtitle -->
+                <p id="main-subtitle" class="text-display-sm text-cyan-300/80" style="animation: fade-in-up 1.5s ease-out 1s both;">
+                    I'm Here.
+                </p>
+
+                <!-- Description -->
+                <p id="main-description" class="text-body max-w-2xl mx-auto" style="animation: fade-in-up 1.5s ease-out 1.5s both;">
+                    I detect potential changes in psychological distress and alert authorized support personnel for human assessment. Your safety and well-being matter to me.
+                </p>
+
+                <!-- Audio Button -->
+                <div id="main-audio" style="animation: fade-in-up 1.5s ease-out 2s both;">
+                    <button onclick="readAloudIntro()" class="btn btn-secondary flex items-center gap-2 mx-auto">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                        </svg>
+                        Listen in your language
+                    </button>
+                </div>
+
+                <!-- CTA Button -->
+                <div id="main-cta" class="pt-4" style="animation: fade-in-up 1.5s ease-out 2.5s both;">
+                    <button onclick="goToSecondPage()" class="btn btn-primary btn-lg group">
+                        <span>Begin Connection</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="group-hover:translate-x-1 transition-transform">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Minimal Footer Info -->
+            <div id="main-footer" class="pt-16" style="animation: fade-in-up 1.5s ease-out 3s both;">
+                <p class="text-telemetry">
+                    MoSJE SIH-26094 • AI Psychological Safety & Witness Care
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- ROLE SELECTION — SENTIENT MODES -->
+    <!-- ===================================================================== -->
+    <section id="role-select-view" class="relative z-10 hidden min-h-screen flex-col flex-1 py-20 px-4 md:px-8 justify-center">
+        <div class="max-w-6xl w-full mx-auto space-y-12">
+
+            <!-- Header -->
+            <div class="text-center space-y-4">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-300 text-xs font-mono uppercase tracking-widest">
+                    <span>Choose Your Path</span>
+                </div>
+                <h2 class="text-heading text-white">Select Your Sentient Mode</h2>
+                <p class="text-body max-w-xl mx-auto">
+                    Each mode shapes how NEXORA interacts with you. Choose the perspective that fits your purpose.
+                </p>
+            </div>
+
+            <!-- Role Modes Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                <!-- PATIENT Mode -->
+                <div class="sentient-card sentient-card-interactive p-8 group animate-entrance" onclick="loginAsRole('victim')">
+                    <div class="flex flex-col h-full">
+                        <!-- Icon -->
+                        <div class="w-16 h-16 rounded-2xl bg-mint-dim border border-mint-400/20 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">
+                            🌿
+                        </div>
+
+                        <!-- Title -->
+                        <h3 class="text-heading text-white mb-2">Patient</h3>
+                        <p class="text-violet-300 text-sm font-mono mb-4">Survivor Wellness Mode</p>
+
+                        <!-- Description -->
+                        <p class="text-body text-sm flex-1 mb-6">
+                            A calm, supportive space for survivors. Gentle conversations, emotional tracking, and breathing exercises in a safe environment.
+                        </p>
+
+                        <!-- Features -->
+                        <div class="space-y-2 mb-6">
+                            <div class="flex items-center gap-2 text-sm text-slate-400">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-mint-400">
+                                    <path d="M20 6L9 17l-5-5"/>
+                                </svg>
+                                <span>Daily emotional check-ins</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-slate-400">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-mint-400">
+                                    <path d="M20 6L9 17l-5-5"/>
+                                </svg>
+                                <span>Guided breathing exercises</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-slate-400">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-mint-400">
+                                    <path d="M20 6L9 17l-5-5"/>
+                                </svg>
+                                <span>Private journal & insights</span>
+                            </div>
+                        </div>
+
+                        <!-- CTA -->
+                        <button class="btn btn-mint w-full">
+                            <span>Enter Patient Mode</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- COUNSELOR Mode -->
+                <div class="sentient-card sentient-card-interactive p-8 group animate-entrance" onclick="loginAsRole('counselor')">
+                    <div class="flex flex-col h-full">
+                        <!-- Icon -->
+                        <div class="w-16 h-16 rounded-2xl bg-cyan-dim border border-cyan-400/20 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">
+                            🩺
+                        </div>
+
+                        <!-- Title -->
+                        <h3 class="text-heading text-white mb-2">Counselor</h3>
+                        <p class="text-cyan-300 text-sm font-mono mb-4">Clinical Intelligence Mode</p>
+
+                        <!-- Description -->
+                        <p class="text-body text-sm flex-1 mb-6">
+                            Advanced patient monitoring with AI-powered insights. Track distress trends, analyze patterns, and coordinate care interventions.
+                        </p>
+
+                        <!-- Features -->
+                        <div class="space-y-2 mb-6">
+                            <div class="flex items-center gap-2 text-sm text-slate-400">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-cyan-400">
+                                    <path d="M20 6L9 17l-5-5"/>
+                                </svg>
+                                <span>Patient signal network</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-slate-400">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-cyan-400">
+                                    <path d="M20 6L9 17l-5-5"/>
+                                </svg>
+                                <span>6-week distress analytics</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-slate-400">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-cyan-400">
+                                    <path d="M20 6L9 17l-5-5"/>
+                                </svg>
+                                <span>Intervention coordination</span>
+                            </div>
+                        </div>
+
+                        <!-- CTA -->
+                        <button class="btn btn-primary w-full">
+                            <span>Enter Clinical Mode</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ADMIN Mode -->
+                <div class="sentient-card sentient-card-interactive p-8 group animate-entrance" onclick="loginAsRole('admin')">
+                    <div class="flex flex-col h-full">
+                        <!-- Icon -->
+                        <div class="w-16 h-16 rounded-2xl bg-violet-dim border border-violet-400/20 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">
+                            🏛️
+                        </div>
+
+                        <!-- Title -->
+                        <h3 class="text-heading text-white mb-2">Administration</h3>
+                        <p class="text-violet-300 text-sm font-mono mb-4">System Awareness Mode</p>
+
+                        <!-- Description -->
+                        <p class="text-body text-sm flex-1 mb-6">
+                            Governance oversight across districts. Monitor platform health, track compensation flows, and analyze statewide vulnerability patterns.
+                        </p>
+
+                        <!-- Features -->
+                        <div class="space-y-2 mb-6">
+                            <div class="flex items-center gap-2 text-sm text-slate-400">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-violet-400">
+                                    <path d="M20 6L9 17l-5-5"/>
+                                </svg>
+                                <span>District vulnerability heatmap</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-slate-400">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-violet-400">
+                                    <path d="M20 6L9 17l-5-5"/>
+                                </svg>
+                                <span>Compensation tracking</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-slate-400">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-violet-400">
+                                    <path d="M20 6L9 17l-5-5"/>
+                                </svg>
+                                <span>Policy compliance reports</span>
+                            </div>
+                        </div>
+
+                        <!-- CTA -->
+                        <button class="btn btn-violet w-full">
+                            <span>Enter Governance Mode</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Back Link -->
+            <div class="text-center pt-8">
+                <button onclick="goBackToIntro()" class="btn btn-ghost">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                    Return to Home
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- PATIENT PORTAL — EMOTIONAL SANCTUARY -->
+    <!-- ===================================================================== -->
+    <section id="victim-view" class="relative z-10 hidden min-h-screen flex-col flex-1 pt-20 pb-20">
+        <main class="max-w-4xl mx-auto w-full p-4 md:p-8 flex-1">
+
+            <!-- Back Button -->
+            <button onclick="goBackToIntro()" class="btn btn-ghost mb-4 text-sm">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to Home
+            </button>
+
+            <!-- Welcome Header -->
+            <div class="sentient-card p-6 mb-8">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-12 h-12 rounded-full bg-mint-dim border border-mint-400/30 flex items-center justify-center text-2xl">
+                        🌿
+                    </div>
+                    <div>
+                        <h2 class="text-heading text-white">Your Safe Space</h2>
+                        <p class="text-body text-sm text-slate-400">A confidential environment for your well-being</p>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="flex flex-wrap gap-3">
+                    <a href="tel:14416" class="btn btn-sm bg-mint-dim text-mint-300 border border-mint-400/20">
+                        📞 Tele-MANAS: 14416
+                    </a>
+                    <a href="tel:112" class="btn btn-sm bg-coral-dim text-coral-300 border border-coral-400/20">
+                        🚨 Emergency: 112
+                    </a>
+                    <button onclick="toggleBreathingModal()" class="btn btn-sm btn-secondary">
+                        🌿 Breathe
+                    </button>
+                </div>
+            </div>
+
+            <!-- Profile Intake (First Time) -->
+            <div id="victim-profile-intake" class="sentient-card p-6 mb-8">
+                <h3 class="text-heading text-white mb-6 flex items-center gap-2">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-cyan-400">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    Your Profile
+                </h3>
+
+                <form onsubmit="handleVictimProfileSubmit(event)" class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-micro text-slate-400 block mb-2">Full Name</label>
+                            <input type="text" id="victim-intake-name" required placeholder="Your name" class="sentient-input">
+                        </div>
+                        <div>
+                            <label class="text-micro text-slate-400 block mb-2">Mobile Number</label>
+                            <input type="tel" id="victim-intake-phone" required placeholder="Your phone" class="sentient-input">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-micro text-slate-400 block mb-2">Profession / Livelihood</label>
+                            <select id="victim-intake-profession" required class="sentient-input sentient-select" onchange="onProfessionChange(this.value)">
+                                <option value="">Select your profession</option>
+                                <option value="Student">🎓 Student</option>
+                                <option value="Salaried">💼 Salaried Employee</option>
+                                <option value="Business">🏪 Business / Self-Employed</option>
+                                <option value="Unemployed">⚠️ Currently Unemployed / Seeking Work</option>
+                            </select>
+                            <input type="hidden" id="victim-intake-work" value="">
+                        </div>
+                        <div>
+                            <label class="text-micro text-slate-400 block mb-2">Daily Stress Level</label>
+                            <select id="victim-intake-stress" class="sentient-input sentient-select">
+                                <option value="Low / Manageable">Low / Manageable</option>
+                                <option value="Moderate" selected>Moderate</option>
+                                <option value="High / Severe">High / Severe</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-mint btn-lg w-full sm:w-auto">
+                        <span>Begin Daily Check-In</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Emotional Check-In Chat -->
+            <div id="victim-chat-container" class="hidden sentient-card overflow-hidden mb-8">
+                <!-- Chat Header -->
+                <div class="p-4 border-b border-white/5 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-cyan-dim border border-cyan-400/30 flex items-center justify-center">
+                            ✨
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-white">Daily Check-In</h4>
+                            <p class="text-xs text-slate-400">10 gentle questions • Private & secure</p>
+                        </div>
+                    </div>
+                    <span id="checkin-progress-badge" class="text-xs font-mono bg-cyan-dim text-cyan-300 px-3 py-1 rounded-full">
+                        Question 1 of 10
+                    </span>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="w-full h-1 bg-slate-800">
+                    <div id="checkin-progress-bar" class="h-full bg-gradient-to-r from-mint-400 to-cyan-400 transition-all duration-500" style="width: 10%;"></div>
+                </div>
+
+                <!-- Messages -->
+                <div id="checkin-chat-stream" class="h-80 overflow-y-auto p-4 space-y-4">
+                    <!-- Messages populated by JS -->
+                </div>
+
+                <!-- Quick Responses -->
+                <div class="p-4 border-t border-white/5 space-y-3">
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="handleQuickCheckInResponse('😊 Very good')" class="btn btn-sm bg-slate-800 hover:bg-mint-dim text-slate-300">😊 Very good</button>
+                        <button onclick="handleQuickCheckInResponse('🙂 Good')" class="btn btn-sm bg-slate-800 hover:bg-mint-dim text-slate-300">🙂 Good</button>
+                        <button onclick="handleQuickCheckInResponse('😐 Okay')" class="btn btn-sm bg-slate-800 hover:bg-slate-700 text-slate-300">😐 Okay</button>
+                        <button onclick="handleQuickCheckInResponse('😟 Worried')" class="btn btn-sm bg-slate-800 hover:bg-amber-dim text-slate-300">😟 Worried</button>
+                        <button onclick="handleQuickCheckInResponse('😞 Difficult')" class="btn btn-sm bg-slate-800 hover:bg-coral-dim text-slate-300">😞 Difficult</button>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <input type="text" id="checkin-freeform-input" onkeydown="if(event.key === 'Enter'){ event.preventDefault(); handleConversationalCheckInSend(event); }" placeholder="Type your response..." class="sentient-input flex-1">
+                        <button onclick="handleConversationalCheckInSend(event)" class="btn btn-mint px-6">
+                            Send
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Success State -->
+            <div id="victim-success" class="hidden sentient-card p-8 text-center">
+                <div class="w-20 h-20 rounded-full bg-mint-dim border border-mint-400/30 flex items-center justify-center text-4xl mx-auto mb-6 animate-entrance">
+                    ✓
+                </div>
+                <h3 class="text-heading text-white mb-2">Check-In Complete</h3>
+                <p class="text-body text-slate-400 mb-6 max-w-md mx-auto">
+                    Thank you for sharing. Your responses have been securely transmitted to your care team.
+                </p>
+
+                <div class="flex flex-wrap justify-center gap-3">
+                    <button onclick="retakeVictimCheckIn()" class="btn btn-secondary">Update Check-In</button>
+                    <button onclick="openConsultDoctorModal()" class="btn btn-mint">Consult Doctor</button>
+                </div>
+            </div>
+        </main>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- COUNSELOR PORTAL — CLINICAL INTELLIGENCE -->
+    <!-- ===================================================================== -->
+    <section id="counselor-view" class="relative z-10 hidden min-h-screen flex-col lg:flex-row flex-1">
+
+        <!-- Sidebar -->
+        <aside class="w-full lg:w-72 shrink-0 bg-slate-950/50 border-r border-white/5 p-6 lg:min-h-screen flex flex-col">
+            <!-- Brand -->
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 rounded-xl bg-cyan-dim border border-cyan-400/30 flex items-center justify-center">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-cyan-400">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="font-bold text-white">NEXORA</h2>
+                    <p class="text-xs text-slate-400 font-mono">Clinical Command</p>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="flex-1 space-y-1">
+                <button onclick="switchMonitorTab('dashboard')" id="mon-nav-dashboard" class="monitor-nav-btn active w-full text-left">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+                    </svg>
+                    <span>Dashboard</span>
+                </button>
+                <button onclick="switchMonitorTab('nexora-ai')" id="mon-nav-nexora-ai" class="monitor-nav-btn w-full text-left">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                    <span>NEXORA AI</span>
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 ml-auto animate-pulse"></span>
+                </button>
+                <button onclick="switchMonitorTab('cases')" id="mon-nav-cases" class="monitor-nav-btn w-full text-left">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                    <span>Cases</span>
+                    <span class="ml-auto bg-rose-500 text-white text-xs px-2 py-0.5 rounded-full">3</span>
+                </button>
+                <button onclick="switchMonitorTab('alerts')" id="mon-nav-alerts" class="monitor-nav-btn w-full text-left">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/>
+                    </svg>
+                    <span>Alerts</span>
+                    <span class="ml-auto bg-amber-500/20 text-amber-300 text-xs px-2 py-0.5 rounded-full">2</span>
+                </button>
+                <button onclick="switchMonitorTab('analytics')" id="mon-nav-analytics" class="monitor-nav-btn w-full text-left">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 20V10M12 20V4M6 20v-6"/>
+                    </svg>
+                    <span>Analytics</span>
+                </button>
+                <button onclick="switchMonitorTab('reports')" id="mon-nav-reports" class="monitor-nav-btn w-full text-left">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>
+                    </svg>
+                    <span>Reports</span>
+                </button>
+                <button onclick="switchMonitorTab('settings')" id="mon-nav-settings" class="monitor-nav-btn w-full text-left">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                    </svg>
+                    <span>Settings</span>
+                </button>
+            </nav>
+
+            <!-- Profile -->
+            <div class="pt-6 border-t border-white/5">
+                <div class="flex items-center gap-3 mb-3">
+                    <div id="sidebar-user-avatar" class="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-500 to-violet-500 flex items-center justify-center text-white font-bold">
+                        SJ
+                    </div>
+                    <div>
+                        <p id="sidebar-user-name" class="text-sm font-semibold text-white">Dr. Sarah Jenkins</p>
+                        <p id="sidebar-user-role" class="text-xs text-slate-400">Clinical Command</p>
+                    </div>
+                </div>
+                <button onclick="logoutToRoleSelection()" class="btn btn-secondary w-full text-sm">
+                    Switch Role
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+
+            <!-- Top Banner -->
+            <div id="counselor-top-banner" class="px-6 py-4 border-b border-white/5 bg-slate-950/30 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <span id="counselor-banner-icon" class="text-2xl">🩺</span>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h3 id="counselor-banner-title" class="font-bold text-white">Clinical Intelligence Command</h3>
+                            <span id="counselor-banner-badge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-sky-900/60 text-sky-300 border border-sky-500/40">Active Clinician</span>
+                        </div>
+                        <p id="counselor-banner-desc" class="text-xs text-slate-400">Real-time patient monitoring & intervention coordination</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div id="counselor-helplines" class="hidden xl:flex items-center gap-3 text-xs mr-2">
+                        <a href="tel:112" class="text-rose-400 hover:text-rose-300 font-semibold flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
+                            Emergency: 112
+                        </a>
+                        <span class="text-slate-600">|</span>
+                        <span class="text-slate-400">Mental Health: <strong class="text-white">14416</strong></span>
+                    </div>
+                    <select id="counselor-lang-select" onchange="changeLanguage(this.value)" class="bg-transparent text-xs text-slate-400 outline-none cursor-pointer border border-white/10 rounded-lg px-2 py-1">
+                        <option value="en">EN</option>
+                        <option value="hi">हिं</option>
+                        <option value="bn">বা</option>
+                        <option value="ta">தம</option>
+                    </select>
+                    <button onclick="logoutToRoleSelection()" class="btn btn-sm btn-secondary">Switch Role</button>
+                    <button onclick="goBackToIntro()" class="btn btn-sm btn-ghost">Home</button>
+                </div>
+            </div>
+
+            <!-- Dashboard Tab -->
+            <div id="tab-pane-dashboard" class="flex-1 p-6 space-y-6">
+
+                <!-- KPI Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="sentient-card p-5">
+                        <p class="text-micro text-slate-400 mb-2">Active Patients</p>
+                        <p id="metric-total" class="text-stat text-3xl">4</p>
+                        <p class="text-sm text-cyan-400 mt-1">Under Care</p>
+                    </div>
+                    <div class="sentient-card p-5 border-coral-400/20 bg-coral-dim/10">
+                        <p class="text-micro text-slate-400 mb-2">High Risk</p>
+                        <p id="metric-high" class="text-stat text-3xl text-coral-400">2</p>
+                        <p class="text-sm text-coral-300 mt-1">Need Attention</p>
+                    </div>
+                    <div class="sentient-card p-5 border-amber-400/20 bg-amber-dim/10">
+                        <p class="text-micro text-slate-400 mb-2">Follow-up</p>
+                        <p id="metric-moderate" class="text-stat text-3xl text-amber-400">1</p>
+                        <p class="text-sm text-amber-300 mt-1">Court Delay</p>
+                    </div>
+                    <div class="sentient-card p-5 border-mint-400/20 bg-mint-dim/10">
+                        <p class="text-micro text-slate-400 mb-2">Interventions</p>
+                        <p id="metric-interventions" class="text-stat text-3xl text-mint-400">3</p>
+                        <p class="text-sm text-mint-300 mt-1">Completed</p>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <button onclick="switchView('victim')" class="sentient-card sentient-card-interactive p-5 text-left">
+                        <div class="w-10 h-10 rounded-xl bg-mint-dim border border-mint-400/20 flex items-center justify-center text-xl mb-3">🌱</div>
+                        <h4 class="font-bold text-white mb-1">Survivor Check-In</h4>
+                        <p class="text-xs text-slate-400">Daily assessment</p>
+                    </button>
+                    <button onclick="switchMonitorTab('nexora-ai')" class="sentient-card sentient-card-interactive p-5 text-left">
+                        <div class="w-10 h-10 rounded-xl bg-cyan-dim border border-cyan-400/20 flex items-center justify-center text-xl mb-3">🤖</div>
+                        <h4 class="font-bold text-white mb-1">NEXORA AI</h4>
+                        <p class="text-xs text-slate-400">Clinical assistant</p>
+                    </button>
+                    <button onclick="toggleBreathingModal()" class="sentient-card sentient-card-interactive p-5 text-left">
+                        <div class="w-10 h-10 rounded-xl bg-mint-dim border border-mint-400/20 flex items-center justify-center text-xl mb-3">🌿</div>
+                        <h4 class="font-bold text-white mb-1">Breathe</h4>
+                        <p class="text-xs text-slate-400">4-7-8 breathing</p>
+                    </button>
+                    <button onclick="toggleNexChat()" class="sentient-card sentient-card-interactive p-5 text-left">
+                        <div class="w-10 h-10 rounded-xl bg-violet-dim border border-violet-400/20 flex items-center justify-center text-xl mb-3">💬</div>
+                        <h4 class="font-bold text-white mb-1">NEX Chat</h4>
+                        <p class="text-xs text-slate-400">24/7 companion</p>
+                    </button>
+                </div>
+
+                <!-- Alerts -->
+                <div class="sentient-card p-6">
+                    <h4 class="font-bold text-white mb-4 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
+                        Critical Alerts
+                    </h4>
+                    <div id="dashboard-urgent-escalations" class="space-y-3">
+                        <div class="p-4 rounded-xl bg-slate-900/50 border border-slate-700/50 text-center text-slate-400">
+                            No critical alerts at this time.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NEXORA AI Tab -->
+            <div id="tab-pane-nexora-ai" class="hidden flex-1 flex flex-col">
+                <div class="px-6 py-4 border-b border-white/5 bg-slate-900/50 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-teal-400 flex items-center justify-center">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-white">
+                                <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-white">NEXORA AI Assistant</h3>
+                            <p class="text-xs text-slate-400 flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                                Online • Clinical Intelligence
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="triggerEmergencyDispatch()" class="btn btn-sm bg-coral-dim text-coral-300 border border-coral-400/20">
+                            🚨 112 Dispatch
+                        </button>
+                        <button onclick="resetNexoraAiChat()" class="btn btn-sm btn-secondary">Clear</button>
+                    </div>
+                </div>
+
+                <div id="nexora-ai-messages" class="flex-1 p-6 space-y-4 overflow-y-auto max-w-4xl mx-auto w-full">
+                    <!-- AI Greeting -->
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-teal-400 flex items-center justify-center text-white font-bold shrink-0">
+                            AI
+                        </div>
+                        <div class="sentient-card p-4 max-w-2xl">
+                            <p class="text-white font-medium mb-2">Hello! I'm the NEXORA AI Assistant.</p>
+                            <p class="text-slate-400 text-sm">I analyze patient distress patterns, detect critical signals, and help coordinate care interventions. How can I assist you today?</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Prompts -->
+                <div class="px-6 py-3 border-t border-white/5 flex flex-wrap gap-2">
+                    <button onclick="sendAiPrompt('Triage urgent cases')" class="btn btn-sm bg-slate-800 hover:bg-slate-700 text-slate-300">🚨 Triage Urgent</button>
+                    <button onclick="sendAiPrompt('Summarize patient trends')" class="btn btn-sm bg-slate-800 hover:bg-slate-700 text-slate-300">📊 Patient Trends</button>
+                    <button onclick="sendAiPrompt('Draft intervention report')" class="btn btn-sm bg-slate-800 hover:bg-slate-700 text-slate-300">📄 Draft Report</button>
+                </div>
+
+                <!-- Input -->
+                <div class="p-4 border-t border-white/5 bg-slate-950/50">
+                    <form onsubmit="handleNexoraAiSend(event)" class="max-w-4xl mx-auto flex gap-3">
+                        <input type="text" id="nexora-ai-input" placeholder="Ask NEXORA AI..." class="sentient-input flex-1">
+                        <button type="submit" class="btn btn-primary px-6">Send</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Cases Tab -->
+            <div id="tab-pane-cases" class="hidden flex-1 p-6 space-y-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-heading text-white">Case Triage Queue</h3>
+                        <p class="text-sm text-slate-400">Auto-sorted by risk severity</p>
+                    </div>
+                    <div class="flex gap-2 text-xs">
+                        <button onclick="filterQueue('ALL')" id="filter-all" class="btn btn-sm bg-cyan-500 text-white">All (5)</button>
+                        <button onclick="filterQueue('HIGH')" id="filter-high" class="btn btn-sm bg-slate-800 text-slate-400">Red (2)</button>
+                        <button onclick="filterQueue('MODERATE')" id="filter-mod" class="btn btn-sm bg-slate-800 text-slate-400">Yellow (2)</button>
+                    </div>
+                </div>
+
+                <div class="sentient-card overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="bg-slate-900/50 border-b border-white/5">
+                                <tr class="text-xs text-slate-400 font-mono uppercase tracking-wider">
+                                    <th class="px-4 py-3">Case ID</th>
+                                    <th class="px-4 py-3">Category</th>
+                                    <th class="px-4 py-3">DDS</th>
+                                    <th class="px-4 py-3">Risk</th>
+                                    <th class="px-4 py-3">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="case-table-body" class="divide-y divide-white/5">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alerts Tab -->
+            <div id="tab-pane-alerts" class="hidden flex-1 p-6 space-y-6">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-heading text-white">Active Alerts</h3>
+                    <button onclick="triggerEmergencyDispatch()" class="btn btn-critical">
+                        🚨 Emergency Dispatch
+                    </button>
+                </div>
+
+                <div id="alerts-list-container" class="space-y-4">
+                    <div class="sentient-empty">
+                        <div class="sentient-empty-icon">🛡️</div>
+                        <p class="sentient-empty-title">No Active Alerts</p>
+                        <p class="sentient-empty-text">All systems are operating normally.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Tab (Admin) -->
+            <div id="tab-pane-analytics" class="hidden flex-1 p-6 space-y-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-heading text-white">Governance Analytics</h3>
+                        <p class="text-sm text-slate-400">MoSJE District Oversight</p>
+                    </div>
+                    <button onclick="exportAnonymizedReport()" class="btn btn-violet">
+                        📥 Export Report
+                    </button>
+                </div>
+
+                <!-- District Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="sentient-card sentient-card-glow p-5 border-rose-400/20">
+                        <div class="flex justify-between items-start mb-3">
+                            <h5 class="font-bold text-white">Pune</h5>
+                            <span class="text-xs font-mono bg-rose-500/20 text-rose-300 px-2 py-0.5 rounded">DDS: 74</span>
+                        </div>
+                        <div class="space-y-1 text-sm text-slate-400">
+                            <div class="flex justify-between"><span>Active:</span><strong class="text-white">18</strong></div>
+                            <div class="flex justify-between"><span>Critical:</span><strong class="text-rose-400">6</strong></div>
+                        </div>
+                    </div>
+                    <div class="sentient-card p-5 border-amber-400/20">
+                        <div class="flex justify-between items-start mb-3">
+                            <h5 class="font-bold text-white">Nagpur</h5>
+                            <span class="text-xs font-mono bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded">DDS: 68</span>
+                        </div>
+                        <div class="space-y-1 text-sm text-slate-400">
+                            <div class="flex justify-between"><span>Active:</span><strong class="text-white">22</strong></div>
+                            <div class="flex justify-between"><span>Elevated:</span><strong class="text-amber-400">4</strong></div>
+                        </div>
+                    </div>
+                    <div class="sentient-card p-5 border-cyan-400/20">
+                        <div class="flex justify-between items-start mb-3">
+                            <h5 class="font-bold text-white">Thane</h5>
+                            <span class="text-xs font-mono bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded">DDS: 52</span>
+                        </div>
+                        <div class="space-y-1 text-sm text-slate-400">
+                            <div class="flex justify-between"><span>Active:</span><strong class="text-white">12</strong></div>
+                            <div class="flex justify-between"><span>Moderate:</span><strong class="text-cyan-400">8</strong></div>
+                        </div>
+                    </div>
+                    <div class="sentient-card p-5 border-mint-400/20">
+                        <div class="flex justify-between items-start mb-3">
+                            <h5 class="font-bold text-white">Nashik</h5>
+                            <span class="text-xs font-mono bg-mint-500/20 text-mint-300 px-2 py-0.5 rounded">DDS: 44</span>
+                        </div>
+                        <div class="space-y-1 text-sm text-slate-400">
+                            <div class="flex justify-between"><span>Active:</span><strong class="text-white">15</strong></div>
+                            <div class="flex justify-between"><span>Stable:</span><strong class="text-mint-400">11</strong></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chart Area -->
+                <div class="sentient-card p-6">
+                    <h4 class="font-bold text-white mb-4">Distress Trends</h4>
+                    <div class="h-64 bg-slate-900/50 rounded-xl flex items-center justify-center">
+                        <canvas id="compensationRecoveryChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports Tab -->
+            <div id="tab-pane-reports" class="hidden flex-1 p-6 space-y-6">
+                <h3 class="text-heading text-white">Legal Reports</h3>
+                <div class="sentient-card p-6">
+                    <p class="text-slate-400">Select a case to generate a report.</p>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="tab-pane-settings" class="hidden flex-1 p-6 space-y-6">
+                <h3 class="text-heading text-white">System Settings</h3>
+
+                <!-- Profession Profile Settings -->
+                <div class="sentient-card p-6 space-y-4">
+                    <h4 class="text-white font-semibold flex items-center gap-2">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-cyan-400">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        Profession Profile (AI Intake Configuration)
+                    </h4>
+                    <p class="text-xs text-slate-400">Configure the profession profile to personalize AI-driven intake questions and distress analysis.</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                        <div>
+                            <label class="text-micro text-slate-400 block mb-2">Profession / Livelihood</label>
+                            <select id="settings-profession-select" class="sentient-input sentient-select" onchange="updateUserProfession(this.value)">
+                                <option value="">Select profession</option>
+                                <option value="Student">🎓 Student</option>
+                                <option value="Salaried">💼 Salaried Employee</option>
+                                <option value="Business">🏪 Business / Self-Employed</option>
+                                <option value="Unemployed">⚠️ Currently Unemployed / Seeking Work</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-micro text-slate-400 block mb-2">Current Profile Status</label>
+                            <div id="settings-profession-status" class="sentient-input bg-slate-800/50 text-slate-400 flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-slate-500"></span>
+                                <span>Not configured</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="settings-profession-info" class="hidden p-4 rounded-xl bg-slate-800/30 border border-slate-700/50 mt-4">
+                        <p id="settings-profession-desc" class="text-sm text-slate-300"></p>
+                    </div>
+                    <button onclick="saveMonitorSettings()" class="btn btn-primary mt-4">Save Preferences</button>
+                </div>
+
+                <!-- Alert Threshold Settings -->
+                <div class="sentient-card p-6 space-y-4">
+                    <h4 class="text-white font-semibold flex items-center gap-2">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-rose-400">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                            <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                        </svg>
+                        Alert Configuration
+                    </h4>
+                    <div>
+                        <label class="text-micro text-slate-400 block mb-2">High Risk Alert Threshold</label>
+                        <input type="range" id="settings-alert-threshold" min="50" max="90" value="70" class="w-full">
+                        <div class="flex justify-between text-xs text-slate-500 mt-1">
+                            <span>50 (Sensitive)</span>
+                            <span id="settings-threshold-value">70</span>
+                            <span>90 (Conservative)</span>
+                        </div>
+                    </div>
+                    <button onclick="saveMonitorSettings()" class="btn btn-primary">Save Preferences</button>
+                </div>
+            </div>
+
+            <!-- Patient Dossier View (Full Page Clinical Diagnostics) -->
+            <div id="patient-dossier-view" class="hidden flex-1 overflow-y-auto">
+                <!-- Dossier Header -->
+                <div class="sticky top-0 z-10 bg-slate-950/95 backdrop-blur-xl border-b border-white/10 px-6 py-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <button onclick="closePatientDossier()" class="btn btn-ghost btn-sm">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                                </svg>
+                                Return to Triage Feed
+                            </button>
+                            <div class="h-8 w-px bg-white/10"></div>
+                            <div>
+                                <div class="flex items-center gap-3">
+                                    <h2 id="dossier-patient-name" class="text-lg font-bold text-white">Patient Profile</h2>
+                                    <span id="dossier-patient-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">HIGH RISK</span>
+                                </div>
+                                <p id="dossier-patient-meta" class="text-xs text-slate-400 font-mono mt-1">Loading patient data...</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="dispatchCrisisEscalation()" class="btn btn-sm bg-coral-dim text-coral-300 border border-coral-400/30">
+                                🚨 Dispatch Crisis
+                            </button>
+                            <button onclick="prescribeGrounding()" class="btn btn-sm bg-cyan-dim text-cyan-300 border border-cyan-400/30">
+                                🌿 Prescribe Grounding
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dossier Content -->
+                <div class="p-6 space-y-6 max-w-8xl mx-auto">
+
+                    <!-- Patient Baseline & Narrative -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Baseline Card -->
+                        <div class="sentient-card sentient-card-glow p-6 lg:col-span-1">
+                            <h3 class="text-heading-sm text-white mb-4 flex items-center gap-2">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-cyan-400">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="12" cy="7" r="4"/>
+                                </svg>
+                                Baseline Profile
+                            </h3>
+                            <div class="space-y-3 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-slate-400">Patient ID:</span>
+                                    <span id="dossier-id" class="text-cyan-300 font-mono font-bold">--</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-400">Intake Date:</span>
+                                    <span id="dossier-intake" class="text-white font-mono">--</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-400">Profession:</span>
+                                    <span id="dossier-work" class="text-white">--</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-400">Contact:</span>
+                                    <span id="dossier-contact" class="text-white font-mono">--</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-400">Baseline Stress:</span>
+                                    <span id="dossier-stress" class="text-amber-300 font-bold">--</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-400">Total Check-ins:</span>
+                                    <span id="dossier-checkins" class="text-mint-300 font-bold">0</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Risk Gauge -->
+                        <div class="sentient-card p-6 lg:col-span-1 flex flex-col items-center justify-center">
+                            <h3 class="text-sm font-mono text-slate-400 uppercase tracking-wider mb-4">Current Risk Score</h3>
+                            <div class="relative w-40 h-40">
+                                <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                                    <circle cx="50" cy="50" r="40" stroke="rgba(255,255,255,0.08)" stroke-width="8" fill="none"/>
+                                    <circle id="dossier-gauge" cx="50" cy="50" r="40" stroke="var(--coral-400, #ff6b6b)" stroke-width="8" stroke-dasharray="251" stroke-dashoffset="100" stroke-linecap="round" fill="none" class="transition-all duration-1000"/>
+                                </svg>
+                                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                                    <span id="dossier-score" class="text-4xl font-black text-white font-mono">--</span>
+                                    <span class="text-xs text-slate-400 font-mono">DDS Index</span>
+                                </div>
+                            </div>
+                            <p id="dossier-risk-label" class="text-sm font-bold text-coral-300 mt-4">Assessing...</p>
+                        </div>
+
+                        <!-- Narrative Summary -->
+                        <div class="sentient-card p-6 lg:col-span-1">
+                            <h3 class="text-heading-sm text-white mb-4 flex items-center gap-2">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-violet-400">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14 2 14 8 20 8"/>
+                                    <line x1="16" y1="13" x2="8" y2="13"/>
+                                    <line x1="16" y1="17" x2="8" y2="17"/>
+                                </svg>
+                                Clinical Narrative
+                            </h3>
+                            <div id="dossier-narrative" class="space-y-3 text-sm text-slate-300 max-h-48 overflow-y-auto">
+                                <p class="text-slate-400 italic">Loading narrative data...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Visualization Tabs -->
+                    <div class="sentient-card overflow-hidden">
+                        <div class="flex border-b border-white/5 overflow-x-auto">
+                            <button onclick="switchDossierTab('radar')" id="dossier-tab-radar" class="dossier-tab active px-6 py-3 text-sm font-semibold text-white whitespace-nowrap">
+                                🕸️ Radar Analysis
+                            </button>
+                            <button onclick="switchDossierTab('timeline')" id="dossier-tab-timeline" class="dossier-tab px-6 py-3 text-sm font-semibold text-slate-400 whitespace-nowrap">
+                                📈 Longitudinal Pulse
+                            </button>
+                            <button onclick="switchDossierTab('genogram')" id="dossier-tab-genogram" class="dossier-tab px-6 py-3 text-sm font-semibold text-slate-400 whitespace-nowrap">
+                                👨‍👩‍👧 Genogram
+                            </button>
+                            <button onclick="switchDossierTab('knowledge')" id="dossier-tab-knowledge" class="dossier-tab px-6 py-3 text-sm font-semibold text-slate-400 whitespace-nowrap">
+                                🧠 Knowledge Graph
+                            </button>
+                            <button onclick="switchDossierTab('histogram')" id="dossier-tab-histogram" class="dossier-tab px-6 py-3 text-sm font-semibold text-slate-400 whitespace-nowrap">
+                                📊 Histograms
+                            </button>
+                        </div>
+
+                        <!-- Radar Tab -->
+                        <div id="dossier-content-radar" class="dossier-content p-6">
+                            <h4 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-cyan-400">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <path d="M12 2v10l7 4"/>
+                                </svg>
+                                Affective Dimensionality Radar
+                            </h4>
+                            <p class="text-xs text-slate-400 mb-6">Emotional spectrum metrics across 6 key dimensions</p>
+                            <div class="flex flex-col lg:flex-row gap-8">
+                                <div class="flex-1 flex justify-center">
+                                    <canvas id="radar-chart" width="400" height="400" class="max-w-full"></canvas>
+                                </div>
+                                <div class="lg:w-64 space-y-3">
+                                    <div class="p-3 rounded-xl bg-slate-900/50 border border-slate-700/50">
+                                        <p class="text-xs text-slate-400 mb-1">Anxiety</p>
+                                        <div class="flex items-center gap-2">
+                                            <div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
+                                                <div id="radar-val-anxiety" class="h-full bg-rose-400 rounded-full" style="width: 0%"></div>
+                                            </div>
+                                            <span id="radar-num-anxiety" class="text-xs font-mono text-rose-400 w-10 text-right">0%</span>
+                                        </div>
+                                    </div>
+                                    <div class="p-3 rounded-xl bg-slate-900/50 border border-slate-700/50">
+                                        <p class="text-xs text-slate-400 mb-1">Depressive Affect</p>
+                                        <div class="flex items-center gap-2">
+                                            <div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
+                                                <div id="radar-val-depressive" class="h-full bg-purple-400 rounded-full" style="width: 0%"></div>
+                                            </div>
+                                            <span id="radar-num-depressive" class="text-xs font-mono text-purple-400 w-10 text-right">0%</span>
+                                        </div>
+                                    </div>
+                                    <div class="p-3 rounded-xl bg-slate-900/50 border border-slate-700/50">
+                                        <p class="text-xs text-slate-400 mb-1">Sleep Disruption</p>
+                                        <div class="flex items-center gap-2">
+                                            <div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
+                                                <div id="radar-val-sleep" class="h-full bg-amber-400 rounded-full" style="width: 0%"></div>
+                                            </div>
+                                            <span id="radar-num-sleep" class="text-xs font-mono text-amber-400 w-10 text-right">0%</span>
+                                        </div>
+                                    </div>
+                                    <div class="p-3 rounded-xl bg-slate-900/50 border border-slate-700/50">
+                                        <p class="text-xs text-slate-400 mb-1">Cognitive Agitation</p>
+                                        <div class="flex items-center gap-2">
+                                            <div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
+                                                <div id="radar-val-cognitive" class="h-full bg-sky-400 rounded-full" style="width: 0%"></div>
+                                            </div>
+                                            <span id="radar-num-cognitive" class="text-xs font-mono text-sky-400 w-10 text-right">0%</span>
+                                        </div>
+                                    </div>
+                                    <div class="p-3 rounded-xl bg-slate-900/50 border border-slate-700/50">
+                                        <p class="text-xs text-slate-400 mb-1">Social Withdrawal</p>
+                                        <div class="flex items-center gap-2">
+                                            <div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
+                                                <div id="radar-val-social" class="h-full bg-violet-400 rounded-full" style="width: 0%"></div>
+                                            </div>
+                                            <span id="radar-num-social" class="text-xs font-mono text-violet-400 w-10 text-right">0%</span>
+                                        </div>
+                                    </div>
+                                    <div class="p-3 rounded-xl bg-slate-900/50 border border-slate-700/50">
+                                        <p class="text-xs text-slate-400 mb-1">Emotional Resilience</p>
+                                        <div class="flex items-center gap-2">
+                                            <div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
+                                                <div id="radar-val-resilience" class="h-full bg-emerald-400 rounded-full" style="width: 0%"></div>
+                                            </div>
+                                            <span id="radar-num-resilience" class="text-xs font-mono text-emerald-400 w-10 text-right">0%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Timeline Tab -->
+                        <div id="dossier-content-timeline" class="dossier-content hidden p-6">
+                            <h4 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-cyan-400">
+                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                                </svg>
+                                Longitudinal Pulse Tracker
+                            </h4>
+                            <p class="text-xs text-slate-400 mb-6">Multi-variable temporal tracking over time</p>
+                            <div class="h-80 bg-slate-900/30 rounded-xl p-4 border border-slate-700/30">
+                                <canvas id="timeline-chart"></canvas>
+                            </div>
+                            <div class="flex flex-wrap gap-4 mt-4 pt-4 border-t border-white/5">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-4 h-1 bg-rose-400 rounded"></div>
+                                    <span class="text-xs text-slate-400">Distress Index</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-4 h-1 bg-emerald-400 rounded"></div>
+                                    <span class="text-xs text-slate-400">Grounding Adherence</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-4 h-1 bg-amber-400 rounded"></div>
+                                    <span class="text-xs text-slate-400">Sleep Quality</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Genogram Tab -->
+                        <div id="dossier-content-genogram" class="dossier-content hidden p-6">
+                            <h4 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-violet-400">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="9" cy="7" r="4"/>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                </svg>
+                                Relational & Familial Network
+                            </h4>
+                            <p class="text-xs text-slate-400 mb-6">Systemic stressors, support anchors, and family dynamics</p>
+                            <div id="genogram-container" class="h-96 bg-slate-900/30 rounded-xl border border-slate-700/30 p-4 relative overflow-hidden">
+                                <svg id="genogram-svg" class="w-full h-full"></svg>
+                            </div>
+                            <div class="flex flex-wrap gap-6 mt-4 pt-4 border-t border-white/5 text-xs">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-8 h-0.5 bg-emerald-400"></div>
+                                    <span class="text-slate-400">Strong Bond</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-8 h-0.5 border-t-2 border-dashed border-slate-500"></div>
+                                    <span class="text-slate-400">Estrangement</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-8 h-0.5 bg-rose-400" style="background: repeating-linear-gradient(90deg, #ff6b6b, #ff6b6b 4px, transparent 4px, transparent 8px);"></div>
+                                    <span class="text-slate-400">Active Conflict</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Knowledge Graph Tab -->
+                        <div id="dossier-content-knowledge" class="dossier-content hidden p-6">
+                            <h4 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-cyan-400">
+                                    <path d="M12 2a10 10 0 1 0 10 10H12V2z"/>
+                                    <path d="M20.83 14.83a10 10 0 1 1-7.42-7.42"/>
+                                </svg>
+                                Semantic Trigger Mesh
+                            </h4>
+                            <p class="text-xs text-slate-400 mb-6">Cognitive triggers, coping mechanisms, and environmental stressors</p>
+                            <div id="knowledge-container" class="h-96 bg-slate-900/30 rounded-xl border border-slate-700/30 p-4 relative overflow-hidden">
+                                <svg id="knowledge-svg" class="w-full h-full"></svg>
+                            </div>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4 pt-4 border-t border-white/5">
+                                <div class="p-3 rounded-xl bg-slate-900/50 border border-slate-700/50 text-center">
+                                    <span class="text-2xl">🧠</span>
+                                    <p class="text-xs text-slate-400 mt-1">Cognitive</p>
+                                </div>
+                                <div class="p-3 rounded-xl bg-slate-900/50 border border-slate-700/50 text-center">
+                                    <span class="text-2xl">💊</span>
+                                    <p class="text-xs text-slate-400 mt-1">Medication</p>
+                                </div>
+                                <div class="p-3 rounded-xl bg-slate-900/50 border border-slate-700/50 text-center">
+                                    <span class="text-2xl">🌍</span>
+                                    <p class="text-xs text-slate-400 mt-1">Environmental</p>
+                                </div>
+                                <div class="p-3 rounded-xl bg-slate-900/50 border border-slate-700/50 text-center">
+                                    <span class="text-2xl">🤝</span>
+                                    <p class="text-xs text-slate-400 mt-1">Coping</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Histogram Tab -->
+                        <div id="dossier-content-histogram" class="dossier-content hidden p-6">
+                            <h4 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-cyan-400">
+                                    <line x1="18" y1="20" x2="18" y2="10"/>
+                                    <line x1="12" y1="20" x2="12" y2="4"/>
+                                    <line x1="6" y1="20" x2="6" y2="14"/>
+                                </svg>
+                                Symptom & Response Frequency
+                            </h4>
+                            <p class="text-xs text-slate-400 mb-6">Distress spike frequency by time of day</p>
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                <div class="bg-slate-900/30 rounded-xl p-4 border border-slate-700/30">
+                                    <h5 class="text-sm font-semibold text-white mb-4">Distress by Time of Day</h5>
+                                    <canvas id="histogram-time"></canvas>
+                                </div>
+                                <div class="bg-slate-900/30 rounded-xl p-4 border border-slate-700/30">
+                                    <h5 class="text-sm font-semibold text-white mb-4">Symptom Cluster Intensity</h5>
+                                    <canvas id="histogram-symptoms"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Counselor Action Matrix & Notes -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Quick Actions -->
+                        <div class="sentient-card p-6">
+                            <h3 class="text-heading-sm text-white mb-4 flex items-center gap-2">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-cyan-400">
+                                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                                </svg>
+                                Action Matrix
+                            </h3>
+                            <div class="space-y-3">
+                                <button onclick="dispatchCrisisEscalation()" class="btn btn-critical w-full justify-start">
+                                    🚨 Dispatch Crisis Escalation
+                                </button>
+                                <button onclick="prescribeGrounding()" class="btn btn-primary w-full justify-start">
+                                    🌿 Prescribe Grounding Module
+                                </button>
+                                <button onclick="scheduleFollowUp()" class="btn btn-secondary w-full justify-start">
+                                    📅 Schedule Follow-Up
+                                </button>
+                                <button onclick="generateLegalBrief()" class="btn btn-violet w-full justify-start">
+                                    📄 Generate Legal Brief
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Clinical Notes -->
+                        <div class="sentient-card p-6 lg:col-span-2">
+                            <h3 class="text-heading-sm text-white mb-4 flex items-center gap-2">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-cyan-400">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                </svg>
+                                Clinical Session Notes
+                            </h3>
+                            <textarea id="counselor-notes" rows="6" placeholder="Enter clinical observations, session notes, or intervention details..." class="sentient-input sentient-textarea mb-4"></textarea>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs text-slate-400">
+                                    <span id="notes-char-count">0</span> characters
+                                </span>
+                                <button onclick="saveClinicalNote()" class="btn btn-primary">
+                                    Save Note
+                                </button>
+                            </div>
+
+                            <!-- Notes History -->
+                            <div id="notes-history" class="mt-4 space-y-2 max-h-48 overflow-y-auto">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Log -->
+                    <div class="sentient-card p-6">
+                        <h3 class="text-heading-sm text-white mb-4 flex items-center gap-2">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-violet-400">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12 6 12 12 16 14"/>
+                            </svg>
+                            Counselor Action Log
+                        </h3>
+                        <div id="action-log" class="space-y-2 max-h-64 overflow-y-auto">
+                            <p class="text-sm text-slate-400 italic">No actions logged yet.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- BREATHING MODAL -->
+    <!-- ===================================================================== -->
+    <div id="breathe-modal" class="hidden fixed inset-0 z-50 items-center justify-center bg-black/90 backdrop-blur-md p-4">
+        <div class="sentient-modal max-w-md w-full p-8 text-center">
+            <button onclick="toggleBreathingModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-2xl">&times;</button>
+
+            <div class="mb-8">
+                <span class="text-4xl mb-4 block">🌿</span>
+                <h3 class="text-heading text-white mb-2">Breathe & Reset</h3>
+                <p class="text-slate-400 text-sm">Follow the rhythm to calm your mind</p>
+            </div>
+
+            <div class="breathing-chamber py-12">
+                <div class="breathing-core">
+                    <div class="breathing-ring"></div>
+                    <div class="breathing-ring"></div>
+                    <div class="breathing-ring"></div>
+                    <div class="breathing-glow"></div>
+                    <div id="breathing-inner" class="w-32 h-32 rounded-full bg-gradient-to-br from-mint-400 to-cyan-500 flex items-center justify-center">
+                        <span id="breathe-state" class="text-white font-bold text-lg">INHALE</span>
+                    </div>
+                </div>
+
+                <p id="breathe-timer" class="text-stat text-5xl my-8">4</p>
+
+                <div class="breathing-phases">
+                    <div class="breathing-phase active" id="phase-inhale">
+                        <div class="breathing-phase-dot"></div>
+                        <span>Inhale</span>
+                        <span class="text-xs">4s</span>
+                    </div>
+                    <div class="breathing-phase" id="phase-hold">
+                        <div class="breathing-phase-dot"></div>
+                        <span>Hold</span>
+                        <span class="text-xs">7s</span>
+                    </div>
+                    <div class="breathing-phase" id="phase-exhale">
+                        <div class="breathing-phase-dot"></div>
+                        <span>Exhale</span>
+                        <span class="text-xs">8s</span>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="toggleBreathingModal()" class="btn btn-mint btn-lg">I Feel Calmer</button>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- CONSULT DOCTOR MODAL -->
+    <!-- ===================================================================== -->
+    <div id="consult-doctor-modal" class="hidden fixed inset-0 z-50 items-center justify-center bg-black/90 backdrop-blur-md p-4">
+        <div class="sentient-modal max-w-2xl w-full">
+            <div class="sentient-modal-header">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-cyan-dim border border-cyan-400/30 flex items-center justify-center text-xl">🩺</div>
+                    <div>
+                        <h3 class="font-bold text-white">Consult a Doctor</h3>
+                        <p class="text-xs text-slate-400">Confidential clinical consultation</p>
+                    </div>
+                </div>
+                <button onclick="closeConsultDoctorModal()" class="text-2xl text-slate-400 hover:text-white">&times;</button>
+            </div>
+
+            <div class="sentient-modal-body space-y-6">
+                <!-- Doctor Selection -->
+                <div>
+                    <label class="text-micro text-slate-400 block mb-3">Select Specialist</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div onclick="selectDoctor('doc_1')" id="doc-card-doc_1" class="sentient-card sentient-card-interactive p-4 cursor-pointer border-cyan-400/30">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="w-10 h-10 rounded-full bg-slate-800 border border-slate-600 overflow-hidden">
+                                    <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=80" alt="Doctor" class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-white text-sm">Dr. Ananya Sharma</p>
+                                    <p class="text-xs text-cyan-400 font-mono">MD Psychiatry</p>
+                                </div>
+                            </div>
+                            <p class="text-xs text-slate-400">Trauma & PTSD Specialist</p>
+                            <p class="text-xs text-mint-400 mt-1">● Available Now</p>
+                        </div>
+                        <div onclick="selectDoctor('doc_2')" id="doc-card-doc_2" class="sentient-card p-4 cursor-pointer border-slate-700">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="w-10 h-10 rounded-full bg-slate-800 border border-slate-600 overflow-hidden">
+                                    <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=80" alt="Doctor" class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-white text-sm">Dr. Rajesh Verma</p>
+                                    <p class="text-xs text-slate-400 font-mono">PhD Clinical Psych</p>
+                                </div>
+                            </div>
+                            <p class="text-xs text-slate-400">CBT & Crisis Specialist</p>
+                            <p class="text-xs text-amber-400 mt-1">15 mins wait</p>
+                        </div>
+                        <div onclick="selectDoctor('doc_3')" id="doc-card-doc_3" class="sentient-card p-4 cursor-pointer border-slate-700">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="w-10 h-10 rounded-full bg-slate-800 border border-slate-600 overflow-hidden">
+                                    <img src="https://images.unsplash.com/photo-1594824813579-247c433383a1?w=80" alt="Doctor" class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-white text-sm">Dr. Priya Nair</p>
+                                    <p class="text-xs text-slate-400 font-mono">MPhil Medical Psych</p>
+                                </div>
+                            </div>
+                            <p class="text-xs text-slate-400">Anxiety & Victim Care</p>
+                            <p class="text-xs text-slate-400 mt-1">Today 5:30 PM</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Consultation Mode -->
+                <div>
+                    <label class="text-micro text-slate-400 block mb-3">Consultation Mode</label>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="selectConsultType('video')" id="consult-type-video" class="btn btn-sm bg-cyan-dim text-cyan-300 border border-cyan-400/30">📹 Video</button>
+                        <button onclick="selectConsultType('audio')" id="consult-type-audio" class="btn btn-sm bg-slate-800 text-slate-300 border border-slate-700">📞 Audio</button>
+                        <button onclick="selectConsultType('clinic')" id="consult-type-clinic" class="btn btn-sm bg-slate-800 text-slate-300 border border-slate-700">🏥 Clinic</button>
+                    </div>
+                </div>
+
+                <button onclick="confirmDoctorBooking()" class="btn btn-primary btn-lg w-full">
+                    🔒 Confirm Consultation
+                </button>
+            </div>
+
+            <!-- Success View -->
+            <div id="doctor-booking-success-view" class="hidden sentient-modal-body text-center py-12">
+                <div class="w-20 h-20 rounded-full bg-mint-dim border border-mint-400/30 flex items-center justify-center text-4xl mx-auto mb-6">✓</div>
+                <h4 class="text-heading text-white mb-2">Consultation Confirmed</h4>
+                <p class="text-slate-400 mb-6">Your appointment has been scheduled securely.</p>
+                <button onclick="closeConsultDoctorModal()" class="btn btn-mint">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- ACTION MODAL -->
+    <!-- ===================================================================== -->
+    <div id="closed-loop-modal" class="hidden fixed inset-0 z-50 items-center justify-center bg-black/90 backdrop-blur-md p-4">
+        <div class="sentient-modal max-w-lg w-full">
+            <div class="sentient-modal-header">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-cyan-dim border border-cyan-400/30 flex items-center justify-center text-xl">⚡</div>
+                    <div>
+                        <h3 class="font-bold text-white">Closed-Loop Action</h3>
+                        <p id="modal-case-token" class="text-xs text-cyan-400 font-mono">Case: --</p>
+                    </div>
+                </div>
+                <button onclick="closeActionModal()" class="text-2xl text-slate-400 hover:text-white">&times;</button>
+            </div>
+
+            <form onsubmit="handleModalActionSubmit(event)" class="sentient-modal-body space-y-4">
+                <div>
+                    <label class="text-micro text-slate-400 block mb-2">Intervention Type</label>
+                    <select id="modal-action-type" required class="sentient-input sentient-select">
+                        <option value="Deploy Tele-MANAS Counselor Call">Deploy Tele-MANAS Counselor (14416)</option>
+                        <option value="Police Witness Protection">Police Witness Protection (Sec 15A SC/ST Act)</option>
+                        <option value="Expedite Interim Relief">Expedite Interim Relief (MoSJE)</option>
+                        <option value="Legal Aid Representation">Legal Aid Representation (DLSA)</option>
+                        <option value="Emergency Safe Relocation">Emergency Safe Relocation</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="text-micro text-slate-400 block mb-2">Caseworker Notes</label>
+                    <textarea id="modal-action-notes" required rows="3" placeholder="Enter action notes..." class="sentient-input sentient-textarea"></textarea>
+                </div>
+
+                <div class="flex gap-3 pt-4">
+                    <button type="button" onclick="closeActionModal()" class="btn btn-secondary flex-1">Cancel</button>
+                    <button type="submit" class="btn btn-primary flex-1">Confirm & Log</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- STRESS REPORT MODAL -->
+    <!-- ===================================================================== -->
+    <div id="stress-report-modal" class="hidden fixed inset-0 z-50 items-center justify-center bg-black/90 backdrop-blur-md p-4">
+        <div class="sentient-modal max-w-2xl w-full">
+            <div class="sentient-modal-header">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-cyan-dim border border-cyan-400/30 flex items-center justify-center text-xl">🔬</div>
+                    <div>
+                        <h3 class="font-bold text-white">AI Stress Monitor</h3>
+                        <p class="text-xs text-slate-400">Clinical assessment</p>
+                    </div>
+                </div>
+                <button onclick="closeStressReportModal()" class="text-2xl text-slate-400 hover:text-white">&times;</button>
+            </div>
+
+            <div class="sentient-modal-body space-y-6">
+                <!-- Gauge -->
+                <div class="flex items-center gap-6 p-4 bg-slate-900/50 rounded-xl">
+                    <div class="relative w-24 h-24">
+                        <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="40" stroke="rgba(255,255,255,0.1)" stroke-width="8" fill="none"/>
+                            <circle id="stress-modal-radial-circle" cx="50" cy="50" r="40" stroke="var(--coral-400)" stroke-width="8" stroke-dasharray="251" stroke-dashoffset="75" stroke-linecap="round" fill="none"/>
+                        </svg>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center">
+                            <span id="stress-modal-score" class="text-2xl font-bold text-white">75%</span>
+                            <span class="text-[10px] text-slate-400">DDS</span>
+                        </div>
+                    </div>
+                    <div>
+                        <p id="stress-modal-headline" class="font-bold text-white mb-1">Elevated Stress Level</p>
+                        <p id="stress-modal-summary" class="text-sm text-slate-400">Proactive support recommended.</p>
+                    </div>
+                </div>
+
+                <!-- Tone Breakdown -->
+                <div>
+                    <label class="text-micro text-slate-400 block mb-3">Emotional Tone Analysis</label>
+                    <div class="grid grid-cols-3 gap-3">
+                        <div class="sentient-card p-3 text-center">
+                            <p class="text-2xl font-bold text-amber-400" id="tone-anxiety">75%</p>
+                            <p class="text-xs text-slate-400">Anxiety</p>
+                        </div>
+                        <div class="sentient-card p-3 text-center">
+                            <p class="text-2xl font-bold text-sky-400" id="tone-sadness">60%</p>
+                            <p class="text-xs text-slate-400">Sadness</p>
+                        </div>
+                        <div class="sentient-card p-3 text-center">
+                            <p class="text-2xl font-bold text-mint-400" id="tone-hope">30%</p>
+                            <p class="text-xs text-slate-400">Hope</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="openConsultDoctorModal(); closeStressReportModal();" class="btn btn-primary w-full">Consult Doctor</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- NEX CHAT BOT -->
+    <!-- ===================================================================== -->
+    <div id="nex-bot-container" class="fixed bottom-6 right-6 z-40">
+        <button id="nex-toggle-btn" onclick="toggleNexChat()" class="w-14 h-14 rounded-full bg-gradient-to-br from-cyan-500 to-violet-500 flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
+            <span class="text-white text-2xl">✨</span>
+        </button>
+
+        <div id="nex-chat-window" class="hidden flex-col w-80 sm:w-96 h-[500px] rounded-2xl bg-slate-950/95 backdrop-blur-xl border border-white/10 shadow-2xl overflow-hidden fixed bottom-24 right-6">
+            <div class="p-4 bg-gradient-to-r from-cyan-900/50 to-violet-900/50 border-b border-white/10 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-slate-800 border border-cyan-400/30 flex items-center justify-center text-xl">✨</div>
+                    <div>
+                        <h4 class="font-bold text-white">NEX AI</h4>
+                        <p class="text-xs text-cyan-300">Safe & Confidential</p>
+                    </div>
+                </div>
+                <button onclick="toggleNexChat()" class="text-2xl text-slate-400 hover:text-white">&times;</button>
+            </div>
+
+            <div id="nex-messages" class="flex-1 p-4 overflow-y-auto space-y-3">
+                <!-- Messages populated by JS -->
+            </div>
+
+            <div class="p-3 border-t border-white/5 space-y-2">
+                <div class="flex flex-wrap gap-1.5">
+                    <button onclick="sendQuickPrompt('safe')" class="btn btn-xs bg-slate-800 text-slate-300">🛡️ Unsafe</button>
+                    <button onclick="sendQuickPrompt('court')" class="btn btn-xs bg-slate-800 text-slate-300">⚖️ Court</button>
+                    <button onclick="sendQuickPrompt('breathe')" class="btn btn-xs bg-slate-800 text-slate-300">🌿 Breathe</button>
+                </div>
+                <form onsubmit="handleNexUserSend(event)" class="flex gap-2">
+                    <input type="text" id="nex-user-input" placeholder="Type to NEX..." class="sentient-input flex-1 text-sm">
+                    <button type="submit" class="btn btn-primary px-4">↑</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- SENTIENT SPATIAL TRANSITION -->
+    <!-- ===================================================================== -->
+    <div id="spatial-transition" class="spatial-transition">
+        <div class="spatial-transition-core"></div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- SCRIPT LOGIC -->
+    <!-- ===================================================================== -->
+    <script src="script.js"></script>
+
+    <!-- Sentient Canvas Animation -->
+    <script>
+        // Initialize Sentient Canvas
+        const sentientCanvas = document.getElementById('sentient-canvas');
+        const ctx = sentientCanvas.getContext('2d');
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+        let particles = [];
+        let time = 0;
+
+        function resizeCanvas() {
+            sentientCanvas.width = window.innerWidth;
+            sentientCanvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // Mouse tracking
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+
+            const spotlight = document.getElementById('cursor-spotlight');
+            if (spotlight) {
+                spotlight.style.left = mouseX + 'px';
+                spotlight.style.top = mouseY + 'px';
+            }
+        });
+
+        // Particle class
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * sentientCanvas.width;
+                this.y = Math.random() * sentientCanvas.height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.5;
+                this.speedY = (Math.random() - 0.5) * 0.5;
+                this.opacity = Math.random() * 0.5 + 0.1;
+                this.pulse = Math.random() * Math.PI * 2;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.pulse += 0.02;
+
+                // React to mouse
+                const dx = mouseX - this.x;
+                const dy = mouseY - this.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+
+                if (dist < 200) {
+                    this.opacity = Math.min(1, this.opacity + 0.05);
+                } else {
+                    this.opacity = Math.max(0.1, this.opacity - 0.01);
+                }
+
+                if (this.x < 0 || this.x > sentientCanvas.width ||
+                    this.y < 0 || this.y > sentientCanvas.height) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(34, 211, 238, ${this.opacity * (0.5 + 0.5 * Math.sin(this.pulse))})`;
+                ctx.fill();
+            }
+        }
+
+        // Initialize particles
+        for (let i = 0; i < 100; i++) {
+            particles.push(new Particle());
+        }
+
+        // Draw neural connections
+        function drawConnections() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < 150) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(34, 211, 238, ${0.1 * (1 - dist / 150)})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        // Animation loop
+        function animate() {
+            ctx.clearRect(0, 0, sentientCanvas.width, sentientCanvas.height);
+
+            // Draw connections
+            drawConnections();
+
+            // Update and draw particles
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+
+            time++;
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        // Awakening sequence on load
+        window.addEventListener('load', () => {
+            const core = document.getElementById('sentient-core');
+            if (core) {
+                core.setAttribute('data-state', 'aware');
+            }
+        });
+    </script>
+
+    <!-- Sidebar Nav Styles -->
+    <style>
+        .monitor-nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            border-radius: 12px;
+            color: #94a3b8;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 200ms ease;
+            width: 100%;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+        }
+        .monitor-nav-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #f0f4fc;
+        }
+        .monitor-nav-btn.active {
+            background: rgba(34, 211, 238, 0.1);
+            color: #67e8f9;
+        }
+        .monitor-nav-btn svg {
+            flex-shrink: 0;
+        }
+    </style>
+</body>
+</html>

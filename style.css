@@ -1,0 +1,2216 @@
+/* ============================================================================
+   NEXORA — SENTIENT AWARE
+   Complete Visual Architecture Design System
+   ============================================================================ */
+
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@300;400;500;600&display=swap');
+
+/* ============================================================================
+   1. CSS CUSTOM PROPERTIES (Design Tokens)
+   ============================================================================ */
+:root {
+  /* --- Color System: Sentient Aware --- */
+  /* Base Environment */
+  --bg-void: #03040a;
+  --bg-abyss: #060812;
+  --bg-deep: #0a0d18;
+  --bg-surface: #0f1320;
+  --bg-elevated: #151a28;
+  --bg-overlay: #1c2235;
+
+  /* Primary Spectrum: Intelligent Blue-Cyan */
+  --cyan-100: #ecfeff;
+  --cyan-200: #cffafe;
+  --cyan-300: #a5f3fc;
+  --cyan-400: #67e8f9;
+  --cyan-500: #22d3ee;
+  --cyan-glow: rgba(34, 211, 238, 0.4);
+  --cyan-dim: rgba(34, 211, 238, 0.12);
+
+  /* Ambient Theme System - Default Cyber Cyan */
+  --accent-primary: #06b6d4;
+  --accent-glow: rgba(6, 182, 212, 0.45);
+
+  /* Secondary Spectrum: Spectral Violet */
+  --violet-100: #f5f3ff;
+  --violet-200: #ede9fe;
+  --violet-300: #c4b5fd;
+  --violet-400: #a78bfa;
+  --violet-500: #8b5cf6;
+  --violet-glow: rgba(139, 92, 246, 0.4);
+  --violet-dim: rgba(139, 92, 246, 0.12);
+
+  /* Support: Warm Organic (Soft Apricot/Coral) */
+  --warm-100: #fef7f0;
+  --warm-200: #fdecd5;
+  --warm-300: #fbd6a8;
+  --warm-400: #f7a95a;
+  --warm-500: #f0833a;
+  --warm-glow: rgba(240, 131, 58, 0.3);
+
+  /* Recovery: Soft Mint */
+  --mint-100: #ecfdf5;
+  --mint-200: #d1fae5;
+  --mint-300: #a7f3d0;
+  --mint-400: #6ee7b7;
+  --mint-500: #34d399;
+  --mint-glow: rgba(52, 211, 153, 0.35);
+
+  /* Attention: Controlled Amber */
+  --amber-100: #fffbeb;
+  --amber-200: #fef3c7;
+  --amber-300: #fde68a;
+  --amber-400: #facc15;
+  --amber-500: #eab308;
+  --amber-glow: rgba(250, 204, 21, 0.35);
+
+  /* Critical: Controlled Coral */
+  --coral-100: #fff1f1;
+  --coral-200: #ffe0e0;
+  --coral-300: #ffb3b3;
+  --coral-400: #ff6b6b;
+  --coral-500: #ef4444;
+  --coral-glow: rgba(239, 68, 68, 0.4);
+
+  /* Neutrals */
+  --text-primary: #f0f4fc;
+  --text-secondary: #94a3b8;
+  --text-tertiary: #64748b;
+  --text-muted: #475569;
+
+  /* Glow Presets */
+  --glow-sm: 0 0 8px var(--cyan-glow);
+  --glow-md: 0 0 20px var(--cyan-glow);
+  --glow-lg: 0 0 40px var(--cyan-glow);
+  --glow-xl: 0 0 80px var(--cyan-glow);
+
+  /* Sentient Core States */
+  --core-dormant: var(--cyan-dim);
+  --core-aware: var(--cyan-400);
+  --core-listening: var(--cyan-500);
+  --core-thinking: var(--violet-400);
+  --core-calm: var(--mint-400);
+  --core-concerned: var(--amber-400);
+  --core-focused: var(--cyan-300);
+  --core-recovery: var(--mint-500);
+  --core-alert: var(--coral-400);
+
+  /* --- Typography System --- */
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Spacing Scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+
+  /* Animation Timings */
+  --ease-gentle: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-breathe: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-morph: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* Durations */
+  --dur-instant: 100ms;
+  --dur-fast: 200ms;
+  --dur-normal: 400ms;
+  --dur-slow: 600ms;
+  --dur-glacial: 1200ms;
+  --dur-breathing: 4000ms;
+
+  /* Border Radius */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 40px var(--cyan-glow);
+}
+
+/* ============================================================================
+   2. BASE RESET & GLOBAL STYLES
+   ============================================================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-void);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Typography Defaults */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+/* Selection */
+::selection {
+  background: var(--cyan-dim);
+  color: var(--cyan-100);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-deep);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-overlay);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--cyan-dim);
+}
+
+/* Focus States */
+:focus-visible {
+  outline: 2px solid var(--cyan-400);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ============================================================================
+   3. GLOBAL VISUAL ENVIRONMENT (Sentient Atmosphere)
+   ============================================================================ */
+
+/* Main Environment Container */
+.sentient-environment {
+  position: fixed;
+  inset: 0;
+  background: var(--bg-void);
+  overflow: hidden;
+  z-index: 0;
+}
+
+/* Layered Atmosphere */
+.atmosphere-base {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 20%, rgba(34, 211, 238, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 80% at 80% 80%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 100% 100% at 50% 50%, rgba(6, 8, 18, 1) 0%, var(--bg-void) 100%);
+}
+
+/* Volumetric Light Layers */
+.atmosphere-volumetric {
+  position: absolute;
+  inset: 0;
+  opacity: 0.4;
+  filter: blur(80px);
+}
+
+.atmosphere-volumetric-1 {
+  background: radial-gradient(circle at 30% 40%, var(--cyan-dim) 0%, transparent 50%);
+  animation: volumetric-drift-1 20s ease-in-out infinite;
+}
+
+.atmosphere-volumetric-2 {
+  background: radial-gradient(circle at 70% 60%, var(--violet-dim) 0%, transparent 50%);
+  animation: volumetric-drift-2 25s ease-in-out infinite;
+}
+
+/* Noise Texture Overlay */
+.atmosphere-noise {
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* Grid Lines (Subtle) */
+.atmosphere-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(34, 211, 238, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 211, 238, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* Neural Filament Canvas */
+#sentient-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Depth Gradient Overlay */
+.atmosphere-depth {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to top, var(--bg-void) 0%, transparent 30%),
+    linear-gradient(to bottom, var(--bg-void) 0%, transparent 20%);
+}
+
+/* Cursor Spotlight */
+.cursor-spotlight {
+  position: fixed;
+  width: 800px;
+  height: 800px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, var(--cyan-dim) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.5s var(--ease-gentle);
+}
+
+.cursor-spotlight.active {
+  opacity: 1;
+}
+
+/* ============================================================================
+   4. SENTIENT CORE — The Living Intelligence Presence
+   ============================================================================ */
+
+.sentient-core-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Core Canvas (for particles and filaments) */
+.sentient-core-canvas {
+  position: absolute;
+  inset: -100px;
+  pointer-events: none;
+}
+
+/* Core Nucleus */
+.sentient-core {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform var(--dur-slow) var(--ease-spring);
+}
+
+.sentient-core:hover {
+  transform: scale(1.05);
+}
+
+/* Inner Glow Layer */
+.core-inner-glow {
+  position: absolute;
+  inset: 20%;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--cyan-400) 0%, var(--cyan-500) 40%, transparent 70%);
+  opacity: 0.6;
+  filter: blur(30px);
+  animation: core-pulse var(--dur-breathing) ease-in-out infinite;
+}
+
+/* Main Orb */
+.core-orb {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 35% 35%,
+    rgba(255, 255, 255, 0.15) 0%,
+    var(--cyan-400) 20%,
+    var(--cyan-500) 50%,
+    var(--cyan-600) 80%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 60px var(--cyan-glow),
+    0 0 120px var(--cyan-dim),
+    inset 0 0 40px rgba(255, 255, 255, 0.1);
+  animation: core-breathe var(--dur-breathing) ease-in-out infinite;
+  transition: all var(--dur-slow) var(--ease-morph);
+}
+
+/* Orb Inner Light */
+.core-orb::before {
+  content: '';
+  position: absolute;
+  top: 15%;
+  left: 20%;
+  width: 30%;
+  height: 25%;
+  background: radial-gradient(ellipse, rgba(255, 255, 255, 0.4) 0%, transparent 70%);
+  border-radius: 50%;
+  transform: rotate(-30deg);
+}
+
+/* Orb Energy Ring */
+.core-orb::after {
+  content: '';
+  position: absolute;
+  inset: -15px;
+  border-radius: 50%;
+  border: 1px solid var(--cyan-400);
+  opacity: 0.3;
+  animation: core-ring-rotate 12s linear infinite;
+}
+
+/* Orbital Structures */
+.core-orbital {
+  position: absolute;
+  inset: -30px;
+  border: 1px solid var(--cyan-300);
+  border-radius: 50%;
+  opacity: 0.15;
+  animation: core-orbit 20s linear infinite;
+}
+
+.core-orbital:nth-child(2) {
+  inset: -60px;
+  animation-duration: 30s;
+  animation-direction: reverse;
+  border-color: var(--violet-300);
+}
+
+.core-orbital:nth-child(3) {
+  inset: -90px;
+  animation-duration: 40s;
+  border-color: var(--cyan-200);
+  opacity: 0.08;
+}
+
+/* Neural Filaments */
+.core-filaments {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.filament {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--cyan-400), transparent);
+  transform-origin: left center;
+  opacity: 0.3;
+  animation: filament-pulse 4s ease-in-out infinite;
+}
+
+.filament:nth-child(1) { width: 120px; transform: rotate(0deg); }
+.filament:nth-child(2) { width: 100px; transform: rotate(72deg); animation-delay: 0.5s; }
+.filament:nth-child(3) { width: 140px; transform: rotate(144deg); animation-delay: 1s; }
+.filament:nth-child(4) { width: 110px; transform: rotate(216deg); animation-delay: 1.5s; }
+.filament:nth-child(5) { width: 130px; transform: rotate(288deg); animation-delay: 2s; }
+
+/* Orbiting Particles */
+.core-particles {
+  position: absolute;
+  inset: -50px;
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: var(--cyan-300);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--cyan-glow);
+}
+
+.particle:nth-child(1) { animation: orbit-particle 8s linear infinite; top: 50%; left: 0; }
+.particle:nth-child(2) { animation: orbit-particle 12s linear infinite reverse; top: 0; left: 50%; }
+.particle:nth-child(3) { animation: orbit-particle 10s linear infinite; top: 100%; left: 50%; }
+.particle:nth-child(4) { animation: orbit-particle 14s linear infinite reverse; top: 50%; left: 100%; }
+.particle:nth-child(5) { animation: orbit-particle 16s linear infinite; top: 25%; left: 75%; }
+
+/* Outer Aura */
+.core-aura {
+  position: absolute;
+  inset: -150px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--cyan-dim) 0%, transparent 60%);
+  opacity: 0.5;
+  animation: aura-pulse 6s ease-in-out infinite;
+}
+
+/* Sensor Elements (subtle eye-like) */
+.core-sensors {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.sensor {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: var(--cyan-300);
+  border-radius: 50%;
+  opacity: 0.6;
+  transition: all var(--dur-normal) var(--ease-gentle);
+}
+
+.sensor::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid var(--cyan-400);
+  opacity: 0.3;
+}
+
+.sensor-1 { top: 30%; left: 35%; }
+.sensor-2 { top: 35%; right: 35%; }
+.sensor-3 { bottom: 30%; left: 40%; }
+.sensor-4 { bottom: 35%; right: 40%; }
+
+/* Core States */
+.sentient-core[data-state="dormant"] .core-orb {
+  opacity: 0.4;
+  transform: scale(0.9);
+  animation: core-dormant var(--dur-glacial) ease-in-out infinite;
+}
+
+.sentient-core[data-state="aware"] .core-orb {
+  background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.2) 0%, var(--cyan-300) 30%, var(--cyan-500) 60%, transparent 100%);
+  box-shadow: 0 0 80px var(--cyan-glow), 0 0 160px var(--cyan-dim);
+}
+
+.sentient-core[data-state="listening"] .core-orb {
+  animation: core-listen var(--dur-breathing) ease-in-out infinite;
+}
+
+.sentient-core[data-state="thinking"] .core-orb {
+  background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.2) 0%, var(--violet-300) 30%, var(--violet-500) 60%, transparent 100%);
+  box-shadow: 0 0 80px var(--violet-glow), 0 0 160px var(--violet-dim);
+  animation: core-think var(--dur-normal) ease-in-out infinite;
+}
+
+.sentient-core[data-state="calm"] .core-orb {
+  background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.2) 0%, var(--mint-300) 30%, var(--mint-500) 60%, transparent 100%);
+  box-shadow: 0 0 80px var(--mint-glow);
+  animation: core-calm var(--dur-glacial) ease-in-out infinite;
+}
+
+.sentient-core[data-state="concerned"] .core-orb {
+  background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.15) 0%, var(--amber-300) 30%, var(--amber-500) 60%, transparent 100%);
+  box-shadow: 0 0 80px var(--amber-glow);
+  animation: core-concern var(--dur-slow) ease-in-out infinite;
+}
+
+.sentient-core[data-state="alert"] .core-orb {
+  background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.2) 0%, var(--coral-300) 30%, var(--coral-500) 60%, transparent 100%);
+  box-shadow: 0 0 100px var(--coral-glow);
+  animation: core-alert var(--dur-normal) ease-in-out infinite;
+}
+
+/* ============================================================================
+   5. TYPOGRAPHY SYSTEM
+   ============================================================================ */
+
+/* Display Headings */
+.text-display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(3rem, 10vw, 8rem);
+  letter-spacing: -0.04em;
+  line-height: 0.9;
+  background: linear-gradient(135deg, var(--text-primary) 0%, var(--cyan-300) 50%, var(--violet-300) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-display-sm {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2rem, 5vw, 4rem);
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+/* Section Headings */
+.text-heading {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  letter-spacing: -0.02em;
+}
+
+/* Body Text */
+.text-body {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+/* Micro / Labels */
+.text-micro {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+/* Large Numbers */
+.text-stat {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(3rem, 8vw, 6rem);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  background: linear-gradient(135deg, var(--text-primary) 0%, var(--cyan-300) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* System / Telemetry Text */
+.text-telemetry {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--text-tertiary);
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================================
+   6. NAVIGATION — Sentient Navigation System
+   ============================================================================ */
+
+.sentient-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: var(--space-4) var(--space-6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(to bottom, var(--bg-void) 0%, transparent 100%);
+}
+
+/* Hide global fixed navigation when counselor dashboard is active to prevent overlap */
+body:has(#counselor-view:not(.hidden)) #sentient-nav,
+body:has(#counselor-view.flex) #sentient-nav,
+body:has(#counselor-view:not(.hidden)) #sentient-nav-bottom,
+body:has(#counselor-view.flex) #sentient-nav-bottom {
+  display: none !important;
+}
+
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.nav-brand-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--cyan-dim) 0%, var(--violet-dim) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  color: var(--cyan-300);
+  border: 1px solid var(--cyan-dim);
+}
+
+.nav-brand-text {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.nav-link {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  transition: all var(--dur-fast) var(--ease-gentle);
+  cursor: pointer;
+  border: none;
+  background: transparent;
+}
+
+.nav-link:hover {
+  color: var(--text-primary);
+  background: var(--bg-elevated);
+}
+
+.nav-link.active {
+  color: var(--cyan-300);
+  background: var(--cyan-dim);
+}
+
+/* Bottom Navigation (Mobile) */
+.sentient-nav-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: var(--space-3) var(--space-4);
+  background: linear-gradient(to top, var(--bg-void) 0%, transparent 100%);
+  display: none;
+}
+
+.nav-bottom-links {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.nav-bottom-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  color: var(--text-tertiary);
+  transition: all var(--dur-fast) var(--ease-gentle);
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.nav-bottom-link.active {
+  color: var(--cyan-300);
+}
+
+.nav-bottom-link svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* ============================================================================
+   7. CARDS & PANELS
+   ============================================================================ */
+
+.sentient-card {
+  background: rgba(15, 19, 32, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(34, 211, 238, 0.08);
+  border-radius: var(--radius-lg);
+  transition: all var(--dur-normal) var(--ease-gentle);
+}
+
+.sentient-card:hover {
+  background: rgba(15, 19, 32, 0.8);
+  border-color: rgba(34, 211, 238, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 40px var(--cyan-dim);
+}
+
+.sentient-card-interactive {
+  cursor: pointer;
+}
+
+.sentient-card-glow {
+  box-shadow: 0 0 40px var(--cyan-dim);
+}
+
+/* Info Cards */
+.info-card {
+  padding: var(--space-6);
+}
+
+.info-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+}
+
+.info-card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  background: var(--cyan-dim);
+  border: 1px solid rgba(34, 211, 238, 0.15);
+}
+
+.info-card-title {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin-bottom: var(--space-2);
+}
+
+.info-card-description {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ============================================================================
+   8. BUTTONS
+   ============================================================================ */
+
+.btn {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-full);
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  transition: all var(--dur-fast) var(--ease-gentle);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--cyan-500) 0%, var(--cyan-600) 100%);
+  color: var(--bg-void);
+  box-shadow: 0 4px 20px var(--cyan-glow);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px var(--cyan-glow);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-secondary:hover {
+  background: var(--bg-overlay);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.btn-ghost:hover {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+.btn-violet {
+  background: linear-gradient(135deg, var(--violet-500) 0%, var(--violet-600) 100%);
+  color: white;
+  box-shadow: 0 4px 20px var(--violet-glow);
+}
+
+.btn-mint {
+  background: linear-gradient(135deg, var(--mint-400) 0%, var(--mint-500) 100%);
+  color: var(--bg-void);
+  box-shadow: 0 4px 20px var(--mint-glow);
+}
+
+.btn-warning {
+  background: linear-gradient(135deg, var(--amber-400) 0%, var(--amber-500) 100%);
+  color: var(--bg-void);
+}
+
+.btn-critical {
+  background: linear-gradient(135deg, var(--coral-400) 0%, var(--coral-500) 100%);
+  color: white;
+  box-shadow: 0 4px 20px var(--coral-glow);
+}
+
+.btn-lg {
+  font-size: 1rem;
+  padding: var(--space-4) var(--space-8);
+}
+
+.btn-sm {
+  font-size: 0.75rem;
+  padding: var(--space-2) var(--space-4);
+}
+
+/* ============================================================================
+   9. FORM ELEMENTS
+   ============================================================================ */
+
+.sentient-input {
+  width: 100%;
+  padding: var(--space-4);
+  background: var(--bg-deep);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  transition: all var(--dur-fast) var(--ease-gentle);
+}
+
+.sentient-input::placeholder {
+  color: var(--text-muted);
+}
+
+.sentient-input:focus {
+  outline: none;
+  border-color: var(--cyan-400);
+  box-shadow: 0 0 0 3px var(--cyan-dim);
+}
+
+.sentient-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 40px;
+}
+
+.sentient-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* ============================================================================
+   10. MODALS & DRAWERS
+   ============================================================================ */
+
+.sentient-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 4, 10, 0.9);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6);
+  opacity: 0;
+  animation: modal-fade-in var(--dur-normal) var(--ease-gentle) forwards;
+}
+
+.sentient-modal {
+  background: var(--bg-surface);
+  border: 1px solid rgba(34, 211, 238, 0.1);
+  border-radius: var(--radius-xl);
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6), 0 0 60px var(--cyan-dim);
+  animation: modal-scale-in var(--dur-normal) var(--ease-spring) forwards;
+}
+
+.sentient-modal-header {
+  padding: var(--space-6);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sentient-modal-body {
+  padding: var(--space-6);
+  overflow-y: auto;
+  flex: 1;
+}
+
+.sentient-modal-footer {
+  padding: var(--space-4) var(--space-6);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
+
+/* ============================================================================
+   11. SENTIENT ROLE MODES
+   ============================================================================ */
+
+/* Patient Mode */
+.role-patient .sentient-core .core-orb {
+  background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.2) 0%, var(--mint-300) 30%, var(--mint-400) 60%, transparent 100%);
+  box-shadow: 0 0 80px var(--mint-glow);
+}
+
+.role-patient .sentient-card {
+  border-color: rgba(52, 211, 153, 0.15);
+}
+
+.role-patient .btn-primary {
+  background: linear-gradient(135deg, var(--mint-400) 0%, var(--mint-500) 100%);
+}
+
+/* Counselor Mode */
+.role-counselor .sentient-core .core-orb {
+  background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.2) 0%, var(--cyan-300) 30%, var(--cyan-500) 60%, transparent 100%);
+  box-shadow: 0 0 80px var(--cyan-glow);
+}
+
+.role-counselor .sentient-card {
+  border-color: rgba(34, 211, 238, 0.15);
+}
+
+.role-counselor .btn-primary {
+  background: linear-gradient(135deg, var(--cyan-500) 0%, var(--cyan-600) 100%);
+}
+
+/* Admin Mode */
+.role-admin .sentient-core .core-orb {
+  background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.2) 0%, var(--violet-300) 30%, var(--violet-500) 60%, transparent 100%);
+  box-shadow: 0 0 80px var(--violet-glow);
+}
+
+.role-admin .sentient-card {
+  border-color: rgba(139, 92, 246, 0.15);
+}
+
+.role-admin .btn-primary {
+  background: linear-gradient(135deg, var(--violet-500) 0%, var(--violet-600) 100%);
+}
+
+/* ============================================================================
+   12. EMOTIONAL INTERACTION FIELD
+   ============================================================================ */
+
+.emotion-field {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  background: var(--bg-deep);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  cursor: crosshair;
+}
+
+.emotion-gradient {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 30% 40%, var(--mint-dim, rgba(52, 211, 153, 0.2)) 0%, transparent 40%),
+    radial-gradient(circle at 70% 60%, var(--amber-dim, rgba(250, 204, 21, 0.2)) 0%, transparent 40%),
+    radial-gradient(circle at 50% 30%, var(--cyan-dim) 0%, transparent 30%),
+    radial-gradient(circle at 50% 70%, var(--coral-dim, rgba(239, 68, 68, 0.15)) 0%, transparent 35%);
+  transition: all var(--dur-slow) var(--ease-gentle);
+}
+
+.emotion-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.emotion-marker {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--cyan-400);
+  box-shadow: 0 0 20px var(--cyan-glow);
+  transition: all var(--dur-normal) var(--ease-spring);
+}
+
+.emotion-label {
+  position: absolute;
+  bottom: var(--space-4);
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  background: var(--bg-surface);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ============================================================================
+   13. MEMORY THREAD (Emotional Timeline)
+   ============================================================================ */
+
+.memory-thread {
+  position: relative;
+  padding: var(--space-6) 0;
+}
+
+.thread-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  background: linear-gradient(to bottom, transparent, var(--cyan-dim), var(--cyan-400), var(--cyan-dim), transparent);
+}
+
+.thread-node {
+  position: relative;
+  margin: var(--space-8) 0;
+  padding-left: calc(50% + var(--space-8));
+}
+
+.thread-node:nth-child(even) {
+  padding-left: 0;
+  padding-right: calc(50% + var(--space-8));
+  text-align: right;
+}
+
+.thread-node::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--cyan-400);
+  box-shadow: 0 0 20px var(--cyan-glow);
+  border: 3px solid var(--bg-void);
+}
+
+.thread-node-alert::before {
+  background: var(--coral-400);
+  box-shadow: 0 0 20px var(--coral-glow);
+}
+
+.thread-node-recovery::before {
+  background: var(--mint-400);
+  box-shadow: 0 0 20px var(--mint-glow);
+}
+
+.thread-content {
+  background: var(--bg-surface);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  max-width: 400px;
+}
+
+.thread-date {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-2);
+}
+
+.thread-text {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+/* ============================================================================
+   14. BREATHING EXPERIENCE
+   ============================================================================ */
+
+.breathing-chamber {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  padding: var(--space-8);
+}
+
+.breathing-core {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.breathing-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid var(--mint-400);
+  opacity: 0.3;
+}
+
+.breathing-ring:nth-child(2) {
+  inset: -20px;
+  animation: breathe-ring 8s ease-in-out infinite;
+}
+
+.breathing-ring:nth-child(3) {
+  inset: -40px;
+  animation: breathe-ring 8s ease-in-out infinite 0.5s;
+}
+
+.breathing-glow {
+  position: absolute;
+  inset: 20%;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--mint-400) 0%, transparent 70%);
+  opacity: 0.4;
+}
+
+.breathing-instruction {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--mint-300);
+  margin-top: var(--space-8);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  animation: breathe-text 8s ease-in-out infinite;
+}
+
+.breathing-timer {
+  font-family: var(--font-mono);
+  font-size: 3rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-top: var(--space-4);
+}
+
+.breathing-phases {
+  display: flex;
+  gap: var(--space-8);
+  margin-top: var(--space-12);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+}
+
+.breathing-phase {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  opacity: 0.5;
+  transition: all var(--dur-normal) var(--ease-gentle);
+}
+
+.breathing-phase.active {
+  opacity: 1;
+  color: var(--mint-300);
+}
+
+.breathing-phase-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* ============================================================================
+   15. SIGNAL NODES (Patient Network)
+   ============================================================================ */
+
+.signal-network {
+  position: relative;
+  min-height: 400px;
+  background: var(--bg-deep);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+}
+
+.signal-node {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--bg-surface);
+  border: 2px solid var(--cyan-400);
+  cursor: pointer;
+  transition: all var(--dur-fast) var(--ease-gentle);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--cyan-300);
+}
+
+.signal-node:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 30px var(--cyan-glow);
+}
+
+.signal-node-critical {
+  border-color: var(--coral-400);
+  color: var(--coral-300);
+  animation: signal-pulse var(--dur-normal) ease-in-out infinite;
+}
+
+.signal-node-warning {
+  border-color: var(--amber-400);
+  color: var(--amber-300);
+}
+
+.signal-node-stable {
+  border-color: var(--mint-400);
+  color: var(--mint-300);
+}
+
+.signal-connection {
+  position: absolute;
+  height: 1px;
+  background: linear-gradient(90deg, var(--cyan-dim), transparent);
+  transform-origin: left center;
+  pointer-events: none;
+}
+
+/* ============================================================================
+   16. OBSERVATION LAYER
+   ============================================================================ */
+
+.observation-panel {
+  background: var(--bg-surface);
+  border: 1px solid rgba(34, 211, 238, 0.1);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+}
+
+.observation-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--cyan-400);
+}
+
+.observation-content {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.observation-confidence {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.confidence-bar {
+  flex: 1;
+  height: 4px;
+  background: var(--bg-overlay);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.confidence-fill {
+  height: 100%;
+  background: var(--cyan-400);
+  border-radius: var(--radius-full);
+  transition: width var(--dur-slow) var(--ease-gentle);
+}
+
+.confidence-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  min-width: 80px;
+  text-align: right;
+}
+
+/* ============================================================================
+   17. SYSTEM PERCEPTION LAYER (Admin Telemetry)
+   ============================================================================ */
+
+.system-perception {
+  position: relative;
+  padding: var(--space-8);
+}
+
+.perception-radial {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--bg-surface) 0%, var(--bg-deep) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.perception-layer {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.perception-layer:nth-child(2) { inset: 10%; }
+.perception-layer:nth-child(3) { inset: 20%; }
+.perception-layer:nth-child(4) { inset: 30%; }
+.perception-layer:nth-child(5) { inset: 40%; }
+
+.perception-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 30%;
+  height: 30%;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--violet-500) 0%, transparent 70%);
+  opacity: 0.6;
+  animation: perception-pulse 4s ease-in-out infinite;
+}
+
+.perception-stats {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.perception-stat {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+}
+
+.perception-stat:nth-child(1) { top: 15%; left: 50%; transform: translateX(-50%); }
+.perception-stat:nth-child(2) { top: 50%; right: 5%; }
+.perception-stat:nth-child(3) { bottom: 15%; left: 50%; transform: translateX(-50%); }
+.perception-stat:nth-child(4) { top: 50%; left: 5%; }
+
+/* ============================================================================
+   18. LOADING, EMPTY & ERROR STATES
+   ============================================================================ */
+
+.sentient-loader {
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+.loader-orb {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: var(--cyan-400);
+  animation: loader-spin 1s linear infinite;
+}
+
+.loader-orb:nth-child(2) {
+  inset: 8px;
+  border-top-color: var(--violet-400);
+  animation-duration: 1.5s;
+  animation-direction: reverse;
+}
+
+.loader-orb:nth-child(3) {
+  inset: 16px;
+  border-top-color: var(--mint-400);
+  animation-duration: 2s;
+}
+
+.sentient-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-16);
+  text-align: center;
+}
+
+.sentient-empty-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--bg-elevated);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  margin-bottom: var(--space-6);
+  opacity: 0.5;
+}
+
+.sentient-empty-title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
+}
+
+.sentient-empty-text {
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+  max-width: 300px;
+}
+
+.sentient-error {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--coral-300);
+  font-size: 0.875rem;
+}
+
+/* ============================================================================
+   19. CHAT & MESSAGING
+   ============================================================================ */
+
+.sentient-chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-height: 600px;
+  background: var(--bg-surface);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.chat-message {
+  max-width: 80%;
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.chat-message-ai {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border-bottom-left-radius: var(--space-1);
+  align-self: flex-start;
+}
+
+.chat-message-user {
+  background: var(--cyan-dim);
+  color: var(--cyan-100);
+  border-bottom-right-radius: var(--space-1);
+  align-self: flex-end;
+}
+
+.chat-input-area {
+  padding: var(--space-4);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  gap: var(--space-3);
+}
+
+.chat-input {
+  flex: 1;
+}
+
+/* ============================================================================
+   20. TRANSITIONS & SPATIAL EFFECTS
+   ============================================================================ */
+
+.spatial-transition {
+  position: fixed;
+  inset: 0;
+  background: var(--bg-void);
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-slow) var(--ease-gentle);
+}
+
+.spatial-transition.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.spatial-transition-core {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--cyan-400) 0%, transparent 70%);
+  animation: transition-expand 1s var(--ease-morph) forwards;
+}
+
+/* ============================================================================
+   21. KEYFRAME ANIMATIONS
+   ============================================================================ */
+
+@keyframes volumetric-drift-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.4; }
+  33% { transform: translate(30px, -20px) scale(1.1); opacity: 0.5; }
+  66% { transform: translate(-20px, 30px) scale(0.95); opacity: 0.35; }
+}
+
+@keyframes volumetric-drift-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.4; }
+  33% { transform: translate(-30px, 20px) scale(1.05); opacity: 0.45; }
+  66% { transform: translate(20px, -30px) scale(1.1); opacity: 0.35; }
+}
+
+@keyframes core-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+@keyframes core-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+}
+
+@keyframes core-dormant {
+  0%, 100% { transform: scale(0.95); opacity: 0.5; }
+  50% { transform: scale(1); opacity: 0.6; }
+}
+
+@keyframes core-listen {
+  0%, 100% { transform: scale(1); }
+  25% { transform: scale(1.02); }
+  75% { transform: scale(0.98); }
+}
+
+@keyframes core-think {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  25% { transform: scale(1.05) rotate(1deg); }
+  75% { transform: scale(0.95) rotate(-1deg); }
+}
+
+@keyframes core-calm {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.02); opacity: 1; }
+}
+
+@keyframes core-concern {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(0.98); }
+}
+
+@keyframes core-alert {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.9; }
+}
+
+@keyframes core-ring-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes core-orbit {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes filament-pulse {
+  0%, 100% { opacity: 0.3; width: var(--filament-length, 100px); }
+  50% { opacity: 0.6; width: calc(var(--filament-length, 100px) * 1.2); }
+}
+
+@keyframes orbit-particle {
+  from { transform: rotate(0deg) translateX(60px) rotate(0deg); }
+  to { transform: rotate(360deg) translateX(60px) rotate(-360deg); }
+}
+
+@keyframes aura-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.2); opacity: 0.3; }
+}
+
+@keyframes modal-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modal-scale-in {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes breathe-ring {
+  0%, 100% { transform: scale(1); opacity: 0.3; }
+  50% { transform: scale(1.1); opacity: 0.5; }
+}
+
+@keyframes breathe-text {
+  0%, 100% { opacity: 1; }
+  45% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes signal-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 var(--coral-glow); }
+  50% { box-shadow: 0 0 20px 10px transparent; }
+}
+
+@keyframes perception-pulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+  50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.4; }
+}
+
+@keyframes loader-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes transition-expand {
+  0% { transform: scale(0); opacity: 0; }
+  50% { transform: scale(1.5); opacity: 1; }
+  100% { transform: scale(0); opacity: 0; }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes typewriter {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* Staggered entrance animations */
+.animate-entrance {
+  opacity: 0;
+  animation: fade-in-up var(--dur-slow) var(--ease-gentle) forwards;
+}
+
+.animate-entrance:nth-child(1) { animation-delay: 0.1s; }
+.animate-entrance:nth-child(2) { animation-delay: 0.2s; }
+.animate-entrance:nth-child(3) { animation-delay: 0.3s; }
+.animate-entrance:nth-child(4) { animation-delay: 0.4s; }
+.animate-entrance:nth-child(5) { animation-delay: 0.5s; }
+.animate-entrance:nth-child(6) { animation-delay: 0.6s; }
+
+/* ============================================================================
+   22. UTILITY CLASSES
+   ============================================================================ */
+
+/* Text Colors */
+.text-cyan { color: var(--cyan-300); }
+.text-violet { color: var(--violet-300); }
+.text-mint { color: var(--mint-300); }
+.text-amber { color: var(--amber-300); }
+.text-coral { color: var(--coral-300); }
+
+/* Background Colors */
+.bg-cyan-dim { background: var(--cyan-dim); }
+.bg-violet-dim { background: var(--violet-dim); }
+.bg-mint-dim { background: rgba(52, 211, 153, 0.12); }
+.bg-amber-dim { background: rgba(250, 204, 21, 0.12); }
+.bg-coral-dim { background: rgba(239, 68, 68, 0.12); }
+
+/* Glow Effects */
+.glow-cyan { box-shadow: var(--glow-md); }
+.glow-violet { box-shadow: 0 0 20px var(--violet-glow); }
+.glow-mint { box-shadow: 0 0 20px var(--mint-glow); }
+.glow-amber { box-shadow: 0 0 20px var(--amber-glow); }
+.glow-coral { box-shadow: 0 0 20px var(--coral-glow); }
+
+/* Spacing */
+.p-sentient { padding: var(--space-8); }
+.m-sentient { margin: var(--space-8); }
+
+/* Flex */
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.flex-col-center { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+/* Layout */
+.container-sentient {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+}
+
+/* ============================================================================
+   23. RESPONSIVE DESIGN
+   ============================================================================ */
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .sentient-nav {
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .sentient-nav-bottom {
+    display: block;
+  }
+
+  .sentient-card {
+    border-radius: var(--radius-md);
+  }
+
+  .info-card {
+    padding: var(--space-4);
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  :root {
+    --space-8: 24px;
+    --space-10: 32px;
+    --space-12: 40px;
+  }
+
+  .text-display {
+    font-size: clamp(2.5rem, 12vw, 4rem);
+  }
+
+  .sentient-core {
+    width: 200px;
+    height: 200px;
+  }
+
+  .core-orb {
+    width: 120px;
+    height: 120px;
+  }
+
+  .container-sentient {
+    padding: 0 var(--space-4);
+  }
+
+  .sentient-modal-backdrop {
+    padding: var(--space-4);
+  }
+
+  .sentient-modal {
+    border-radius: var(--radius-lg);
+  }
+
+  .emotion-field {
+    height: 250px;
+  }
+
+  .memory-thread .thread-line {
+    left: var(--space-4);
+  }
+
+  .memory-thread .thread-node,
+  .memory-thread .thread-node:nth-child(even) {
+    padding-left: calc(var(--space-8) + var(--space-4));
+    padding-right: 0;
+    text-align: left;
+  }
+
+  .memory-thread .thread-node::before {
+    left: var(--space-4);
+  }
+
+  .memory-thread .thread-content {
+    max-width: 100%;
+  }
+}
+
+/* ============================================================================
+   24. REDUCED MOTION
+   ============================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .sentient-core .core-orb {
+    animation: none;
+  }
+
+  .core-orbital,
+  .core-particles .particle {
+    animation: none;
+  }
+
+  .atmosphere-volumetric-1,
+  .atmosphere-volumetric-2 {
+    animation: none;
+  }
+}
+
+/* ============================================================================
+   25. EXISTING UTILITY OVERRIDES (Preserving Functionality)
+   ============================================================================ */
+
+/* Ensure old Tailwind classes still work where needed */
+.monitor-card,
+.glass-panel,
+.glass-panel-hover {
+  background: rgba(15, 19, 32, 0.6) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(34, 211, 238, 0.08) !important;
+  border-radius: var(--radius-lg) !important;
+}
+
+/* Transition all interactive elements smoothly */
+button, a, input, select, textarea {
+  transition: all var(--dur-fast) var(--ease-gentle);
+}
+
+/* Hide elements with old classes but preserve in DOM for JS functionality */
+.hidden {
+  display: none !important;
+}
+
+.relative { position: relative; }
+.z-10 { z-index: 10; }
+.z-50 { z-index: 50; }
+.z-100 { z-index: 100; }
+
+/* Ensure sections are properly layered */
+section, div[id$="-view"] {
+  position: relative;
+  z-index: 10;
+}
+
+/* ============================================================================
+   26. PATIENT DOSSIER STYLES
+   ============================================================================ */
+
+/* Dossier Tab Navigation */
+.dossier-tab {
+  border-bottom: 2px solid transparent;
+  transition: all 200ms ease;
+  cursor: pointer;
+  background: transparent;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+}
+
+.dossier-tab:hover {
+  background: rgba(255, 255, 255, 0.03);
+  color: #f0f4fc;
+}
+
+.dossier-tab.active {
+  color: #67e8f9;
+  border-bottom-color: #22d3ee;
+  background: rgba(34, 211, 238, 0.05);
+}
+
+/* Dossier entrance animation */
+#patient-dossier-view {
+  animation: dossier-fade-in 600ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes dossier-fade-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+#patient-dossier-view.hidden {
+  display: none !important;
+}
+
+/* Smaller heading style */
+.text-heading-sm {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.125rem;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+/* Sticky header for dossier */
+#patient-dossier-view .sticky {
+  position: sticky;
+  z-index: 10;
+}
+
+/* Force dossier to fill remaining space */
+#patient-dossier-view {
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  overflow-y: auto;
+  background: #03040a;
+}
+
+/* Make dossier scrollable on mobile */
+@media (max-width: 768px) {
+  #patient-dossier-view .sticky {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  #patient-dossier-view .sticky > div {
+    flex-wrap: wrap;
+  }
+}
+
+/* Force visible case-details to show when needed */
+#case-details {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100%;
+  overflow: hidden;
+}
+
+#case-details.hidden {
+  display: none !important;
+}
+
+/* ============================================================================
+   ADMIN / GOVERNANCE SCROLLING FIX
+   ============================================================================ */
+/* Ensure counselor/admin view main content area scrolls properly */
+#counselor-view > .flex-1,
+.counselor-main-content {
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  padding-bottom: 5rem;
+}
+
+/* Ensure all tab panes within admin view are scrollable */
+#counselor-view .tab-pane,
+#tab-pane-analytics,
+#tab-pane-dashboard,
+#tab-pane-cases,
+#tab-pane-reports {
+  min-height: 100%;
+}
+
+/* Fix for analytics view - ensure full scroll to bottom */
+#tab-pane-analytics {
+  padding-bottom: 6rem !important;
+}
+
+/* Ensure district cards and charts are visible */
+#tab-pane-analytics .grid {
+  visibility: visible;
+}
+
+/* Allow main content to grow and scroll */
+#counselor-view:not(.hidden) {
+  height: 100vh;
+  overflow: hidden;
+}
+
+#counselor-view:not(.hidden) > .flex-1 {
+  height: calc(100vh - 0px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Ensure charts and tables within analytics are fully visible */
+#compensationRecoveryChart,
+#districtHeatmap,
+.district-card {
+  max-width: 100%;
+  overflow: visible;
+}
+
+/* ============================================================================
+   NEXORA UNIVERSAL AMBIENT CANVAS - Global Persistent Background
+   ============================================================================ */
+#nexora-ambient-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  pointer-events: none;
+  background: #010308;
+}
+
+/* ============================================================================
+   OMNIPRESENT FLOATING SWITCHER CONTROLLER
+   ============================================================================ */
+#ambient-switcher {
+  font-family: var(--font-mono, 'SF Mono', monospace);
+}
+
+#ambient-switcher-btn {
+  box-shadow:
+    0 0 20px rgba(6, 182, 212, 0.3),
+    0 0 40px rgba(6, 182, 212, 0.1),
+    0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+#ambient-switcher-btn:hover {
+  box-shadow:
+    0 0 25px rgba(6, 182, 212, 0.5),
+    0 0 50px rgba(6, 182, 212, 0.2),
+    0 8px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* Engine Selector Buttons */
+.engine-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(148, 163, 184, 0.8);
+  font-size: 11px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.engine-btn:hover {
+  background: rgba(51, 65, 85, 0.8);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: rgba(226, 232, 240, 1);
+  transform: translateY(-1px);
+}
+
+.engine-btn.active {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.2) 0%, rgba(99, 102, 241, 0.2) 100%);
+  border-color: rgba(6, 182, 212, 0.5);
+  color: #67e8f9;
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+}
+
+/* Theme Selector Swatches */
+.theme-btn {
+  padding: 2px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  transform: scale(1);
+}
+
+.theme-btn:hover {
+  transform: scale(1.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.theme-btn.active {
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: scale(1.1);
+  box-shadow: 0 0 15px var(--swatch-color, rgba(6, 182, 212, 0.5));
+}
+
+/* Range Input Styling */
+#ambient-opacity::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+}
+
+#ambient-opacity::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+}
+
+/* Opacity Display */
+#opacity-display {
+  color: var(--accent-primary, #06b6d4);
+  text-shadow: 0 0 10px var(--accent-glow, rgba(6, 182, 212, 0.3));
+}

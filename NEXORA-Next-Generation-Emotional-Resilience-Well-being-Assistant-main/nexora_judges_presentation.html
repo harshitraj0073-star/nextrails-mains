@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEXORA — Project Summary & Technical Architecture</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+    @page {
+      size: A4;
+      margin: 15mm 15mm 15mm 15mm;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: #1e293b;
+      background-color: #ffffff;
+      line-height: 1.5;
+      font-size: 13px;
+    }
+
+    .container {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    .page-break {
+      page-break-before: always;
+    }
+
+    .no-break {
+      page-break-inside: avoid;
+    }
+
+    /* Header Banner */
+    .header-banner {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+      color: white;
+      padding: 24px 28px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    .header-badge {
+      display: inline-block;
+      background: rgba(99, 102, 241, 0.25);
+      border: 1px solid rgba(165, 180, 252, 0.4);
+      color: #c7d2fe;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .header-title {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+      color: #ffffff;
+    }
+
+    .header-subtitle {
+      font-size: 13px;
+      color: #cbd5e1;
+      max-width: 85%;
+      font-weight: 400;
+    }
+
+    .header-meta {
+      display: flex;
+      gap: 16px;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 11px;
+      color: #94a3b8;
+    }
+
+    .header-meta span strong {
+      color: #e2e8f0;
+    }
+
+    /* Section Styles */
+    .section {
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid #e2e8f0;
+      letter-spacing: -0.2px;
+    }
+
+    .section-title .icon-box {
+      width: 24px;
+      height: 24px;
+      background: #e0e7ff;
+      color: #4338ca;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+    }
+
+    /* Problem / Solution Grid */
+    .problem-solution-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .card {
+      padding: 14px 16px;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+    }
+
+    .card-problem {
+      background: #fff1f2;
+      border-color: #fecdd3;
+    }
+
+    .card-problem h4 {
+      color: #be123c;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .card-solution {
+      background: #f0fdf4;
+      border-color: #bbf7d0;
+    }
+
+    .card-solution h4 {
+      color: #15803d;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .card p {
+      font-size: 12px;
+      color: #334155;
+    }
+
+    /* Table Styles */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 14px;
+      font-size: 12px;
+    }
+
+    th {
+      background: #f1f5f9;
+      color: #334155;
+      font-weight: 600;
+      text-align: left;
+      padding: 8px 10px;
+      border: 1px solid #e2e8f0;
+    }
+
+    td {
+      padding: 8px 10px;
+      border: 1px solid #e2e8f0;
+      color: #334155;
+      vertical-align: top;
+    }
+
+    tr:nth-child(even) td {
+      background: #fafafa;
+    }
+
+    .role-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .role-victim { background: #dbeafe; color: #1e40af; }
+    .role-counsellor { background: #fef3c7; color: #92400e; }
+    .role-admin { background: #e0e7ff; color: #3730a3; }
+
+    /* Features Grid */
+    .features-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .feature-item {
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 10px 12px;
+      background: #ffffff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+
+    .feature-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      background: #4f46e5;
+      color: white;
+      border-radius: 50%;
+      font-size: 10px;
+      font-weight: 700;
+      margin-right: 6px;
+    }
+
+    .feature-title {
+      font-weight: 700;
+      font-size: 12px;
+      color: #0f172a;
+      display: inline;
+    }
+
+    .feature-desc {
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+
+    /* Workflow Box */
+    .workflow-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+    }
+
+    .workflow-steps {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .workflow-step {
+      flex: 1;
+      background: white;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-size: 11px;
+      text-align: center;
+      position: relative;
+    }
+
+    .workflow-step-num {
+      font-weight: 700;
+      color: #4f46e5;
+      font-size: 10px;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .workflow-step strong {
+      display: block;
+      color: #0f172a;
+      font-size: 11px;
+    }
+
+    /* Pitch Box */
+    .pitch-quote {
+      background: #eff6ff;
+      border-left: 4px solid #3b82f6;
+      padding: 12px 16px;
+      border-radius: 0 8px 8px 0;
+      font-size: 12px;
+      font-style: italic;
+      color: #1e3a8a;
+      line-height: 1.6;
+    }
+
+    .tech-category-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #4338ca;
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- Header Banner -->
+    <div class="header-banner no-break">
+      <div class="header-badge">Executive Brief & Technical Overview</div>
+      <h1 class="header-title">NEXORA</h1>
+      <p class="header-subtitle">
+        Next-Generation Emotional Resilience & Distress-Monitoring Assistant for Victims in Legal & Rehabilitation Proceedings.
+      </p>
+      <div class="header-meta">
+        <span><strong>Role:</strong> Human-in-the-Loop Clinical AI Platform</span>
+        <span><strong>AI Model:</strong> Google Gemini 1.5/2.0 Flash</span>
+        <span><strong>UI:</strong> React 19 + Vite + Tailwind CSS</span>
+        <span><strong>Target:</strong> Legal, Police & Health Casework</span>
+      </div>
+    </div>
+
+    <!-- 1. Problem & Solution -->
+    <div class="section no-break">
+      <div class="section-title">
+        <span class="icon-box">🎯</span>
+        1. Problem Statement & The NEXORA Solution
+      </div>
+      <div class="problem-solution-grid">
+        <div class="card card-problem">
+          <h4>The Critical Problem</h4>
+          <p>
+            Victims of crime and trauma undergo protracted legal trials lasting months or years. Caseworkers handle 50+ cases simultaneously, resulting in infrequent check-ins. Emotional distress, anxiety, and suicidal ideation are usually detected <strong>reactively after an emergency occurs</strong>.
+          </p>
+        </div>
+        <div class="card card-solution">
+          <h4>The NEXORA Innovation</h4>
+          <p>
+            NEXORA transforms victim support from reactive crisis control into <strong>proactive prevention</strong>. It provides continuous, empathetic AI check-ins, calculates clinical distress metrics, and alerts counsellors immediately when trauma thresholds are breached.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Three Gated Roles & Portals -->
+    <div class="section no-break">
+      <div class="section-title">
+        <span class="icon-box">👥</span>
+        2. Role-Based Access Control (RBAC) & Portals
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 22%;">Portal Role</th>
+            <th style="width: 38%;">Core Functionality</th>
+            <th style="width: 40%;">Impact & Clinical Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="role-badge role-victim">Victim Portal</span></td>
+            <td>Empathetic AI Companion chat, conversational stress analysis (High/Medium/Low), integrated 'Consult a Doctor' portal for instant specialist tele-consultations, and milestone tracking.</td>
+            <td>Provides safe, judgment-free expression with no clinical stigma, available 24/7 in native languages.</td>
+          </tr>
+          <tr>
+            <td><span class="role-badge role-counsellor">Counsellor Portal</span></td>
+            <td>Clinical triage dashboard, active distress telemetry (0–100), predictive trend warnings, and clinical notes management.</td>
+            <td>Enables counsellors to prioritize high-risk victims immediately and conduct targeted interventions.</td>
+          </tr>
+          <tr>
+            <td><span class="role-badge role-admin">Authority / Admin</span></td>
+            <td>Aggregated caseload analytics, resolution rates, caseworker workload distribution, and judicial phase tracking.</td>
+            <td>Gives administrative leaders complete institutional oversight and optimal resource deployment.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 3. Workflow Flow -->
+    <div class="section no-break">
+      <div class="section-title">
+        <span class="icon-box">🔄</span>
+        3. End-to-End System Workflow
+      </div>
+      <div class="workflow-box">
+        <div class="workflow-steps">
+          <div class="workflow-step">
+            <span class="workflow-step-num">STEP 1</span>
+            <strong>Victim Interaction</strong>
+            Daily check-in / freeform chat with Gemini AI Companion
+          </div>
+          <div class="workflow-step">
+            <span class="workflow-step-num">STEP 2</span>
+            <strong>Distress Scoring</strong>
+            Algorithm scores PHQ-9 / GAD-7 metrics (0–100)
+          </div>
+          <div class="workflow-step">
+            <span class="workflow-step-num">STEP 3</span>
+            <strong>Predictive Trigger</strong>
+            Spike detected (>75) → automated high-priority alert
+          </div>
+          <div class="workflow-step">
+            <span class="workflow-step-num">STEP 4</span>
+            <strong>Human Intervention</strong>
+            Counsellor reviews XAI insights and schedules outreach
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- 4. 10 Flagship Features -->
+    <div class="section no-break">
+      <div class="section-title">
+        <span class="icon-box">⭐</span>
+        4. 10 Core Architectural & AI Capabilities
+      </div>
+      <div class="features-grid">
+        <div class="feature-item">
+          <div><span class="feature-num">1</span><span class="feature-title">Dynamic Distress & Stress Monitor</span></div>
+          <div class="feature-desc">Continuous 0–100% scoring calculated from conversational sentiment, linguistic distress markers, and check-in surveys.</div>
+        </div>
+        <div class="feature-item">
+          <div><span class="feature-num">2</span><span class="feature-title">Predictive Distress Engine</span></div>
+          <div class="feature-desc">Trajectory forecasting using historical trend curves to identify crisis points before they occur.</div>
+        </div>
+        <div class="feature-item">
+          <div><span class="feature-num">3</span><span class="feature-title">Multimodal Analysis</span></div>
+          <div class="feature-desc">Multi-variable assessment synthesizing user sentiment, response frequency, and semantic markers.</div>
+        </div>
+        <div class="feature-item">
+          <div><span class="feature-num">4</span><span class="feature-title">Adaptive Clinical Check-ins</span></div>
+          <div class="feature-desc">Grounded in clinical psychology standards (PHQ-9 for depression, GAD-7 for generalized anxiety).</div>
+        </div>
+        <div class="feature-item">
+          <div><span class="feature-num">5</span><span class="feature-title">AI Companion & Concluding Stress Assessment</span></div>
+          <div class="feature-desc">Google Gemini-powered companion that evaluates conversational distress and provides an instant 0–100% stress breakdown with emotional tone telemetry on session conclusion.</div>
+        </div>
+        <div class="feature-item">
+          <div><span class="feature-num">6</span><span class="feature-title">Crisis & Threat Detection</span></div>
+          <div class="feature-desc">Instant detection of self-harm or critical triggers with automatic emergency hotline injection (Tele-MANAS, 1091).</div>
+        </div>
+        <div class="feature-item">
+          <div><span class="feature-num">7</span><span class="feature-title">Smart Alert Escalation Matrix</span></div>
+          <div class="feature-desc">Automated tiering (Low, Moderate, High, Critical) ensuring prompt notification to caseworkers.</div>
+        </div>
+        <div class="feature-item">
+          <div><span class="feature-num">8</span><span class="feature-title">Human-in-the-Loop Interventions</span></div>
+          <div class="feature-desc">AI recommends; human experts decide. Caseworkers log notes, resolve alerts, and schedule sessions.</div>
+        </div>
+        <div class="feature-item">
+          <div><span class="feature-num">9</span><span class="feature-title">Victim Case Journey Tracker</span></div>
+          <div class="feature-desc">Visual legal & recovery milestone tracker (FIR, Court Hearings, Therapy, Rehabilitation).</div>
+        </div>
+        <div class="feature-item">
+          <div><span class="feature-num">10</span><span class="feature-title">Explainable AI & Privacy (XAI)</span></div>
+          <div class="feature-desc">Transparent rationales detailing why scores altered, maintaining ethical and clinical compliance.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Technology Stack Breakdown -->
+    <div class="section no-break" style="margin-top: 18px;">
+      <div class="section-title">
+        <span class="icon-box">💻</span>
+        5. Full Technology Stack Breakdown
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 25%;">Layer</th>
+            <th style="width: 30%;">Technologies Used</th>
+            <th style="width: 45%;">Implementation Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Frontend Application</strong></td>
+            <td>React 19, TypeScript, Vite, Tailwind CSS</td>
+            <td>High-performance Single Page Application (SPA), responsive medical-grade design, Dark/Light mode theme system.</td>
+          </tr>
+          <tr>
+            <td><strong>Visualizations & UI</strong></td>
+            <td>Recharts, Lucide Icons, Canvas-Confetti</td>
+            <td>Predictive distress area/line charts, triage badges, milestone celebration micro-interactions.</td>
+          </tr>
+          <tr>
+            <td><strong>Artificial Intelligence</strong></td>
+            <td>Google Gemini API (Flash models), Prompt Engineering</td>
+            <td>Empathetic conversation engine, sentiment analysis, clinical distress keyword extraction, safety guardrails.</td>
+          </tr>
+          <tr>
+            <td><strong>Clinical Scoring Engine</strong></td>
+            <td>Custom TypeScript Algorithm (`aiService.ts`)</td>
+            <td>PHQ-9 and GAD-7 mathematical weighting, crisis keyword triggers, threshold evaluation.</td>
+          </tr>
+          <tr>
+            <td><strong>State & Data Layer</strong></td>
+            <td>React Context API (`useStore`), LocalStorage</td>
+            <td>Role-based authentication, persistent session management, reactive state updates across modules.</td>
+          </tr>
+          <tr>
+            <td><strong>Version Control & Tooling</strong></td>
+            <td>Git, GitHub, ESLint, npm</td>
+            <td>Modular feature branching, strict linting, clean component separation.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 6. 60-Second Judges Pitch -->
+    <div class="section no-break">
+      <div class="section-title">
+        <span class="icon-box">🎤</span>
+        6. 60-Second Elevator Pitch for Judges
+      </div>
+      <div class="pitch-quote">
+        "Good morning judges. In our legal and rehabilitation systems, victims suffer in silence during long legal battles while counsellors are overwhelmed with 50+ cases. NEXORA bridges this gap with a Human-in-the-Loop AI platform. On the victim side, a 24/7 empathetic Gemini-powered companion provides safe check-ins. On the caseworker side, an intelligent clinical triage dashboard tracks a Dynamic Distress Score and predicts emotional downturns before a crisis occurs. With strict safety guardrails and explainable AI, NEXORA ensures that no victim falls through the cracks."
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
