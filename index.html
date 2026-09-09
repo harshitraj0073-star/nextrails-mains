@@ -164,7 +164,7 @@
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M19 12H5M12 19l-7-7 7-7"/>
                 </svg>
-                <span>Back</span>
+                <span data-i18n="nav_back">Back</span>
             </button>
             <!-- Dynamic nav links populated by role -->
         </div>
@@ -173,10 +173,10 @@
             <div id="header-helplines" class="hidden sm:flex items-center gap-3 text-xs">
                 <a href="tel:112" class="text-rose-400 hover:text-rose-300 font-semibold flex items-center gap-1.5">
                     <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
-                    Emergency: 112
+                    <span data-i18n="nav_emergency">Emergency: 112</span>
                 </a>
                 <span class="text-slate-600">|</span>
-                <span class="text-slate-400">Mental Health: <strong class="text-white">14416</strong></span>
+                <span class="text-slate-400"><span data-i18n="nav_mental_health">Mental Health:</span> <strong class="text-white">14416</strong></span>
             </div>
 
             <div class="flex items-center gap-2">
@@ -185,6 +185,8 @@
                     <option value="hi">हिं</option>
                     <option value="bn">বা</option>
                     <option value="ta">தம</option>
+                    <option value="ml">മല</option>
+                    <option value="ur">اردو</option>
                 </select>
             </div>
         </div>
@@ -197,25 +199,25 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
                 </svg>
-                <span>Home</span>
+                <span data-i18n="nav_home">Home</span>
             </button>
             <button class="nav-bottom-link" onclick="openPortal('pulse')">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
                 </svg>
-                <span>Emotions</span>
+                <span data-i18n="nav_emotions">Emotions</span>
             </button>
             <button class="nav-bottom-link" onclick="openPortal('triage')">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                 </svg>
-                <span>Triage</span>
+                <span data-i18n="nav_triage">Triage</span>
             </button>
             <button class="nav-bottom-link" onclick="openPortal('analytics')">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M18 20V10M12 20V4M6 20v-6"/>
                 </svg>
-                <span>Analytics</span>
+                <span data-i18n="nav_analytics">Analytics</span>
             </button>
         </div>
     </nav>
@@ -266,7 +268,7 @@
                 <!-- Status Badge -->
                 <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-xs font-mono uppercase tracking-widest">
                     <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
-                    <span>Sentient Intelligence Active</span>
+                    <span data-i18n="intro_status">Sentient Intelligence Active</span>
                 </div>
 
                 <!-- Main Title -->
@@ -275,12 +277,12 @@
                 </h1>
 
                 <!-- Subtitle -->
-                <p id="main-subtitle" class="text-display-sm text-cyan-300/80" style="animation: fade-in-up 1.5s ease-out 1s both;">
+                <p id="main-subtitle" class="text-display-sm text-cyan-300/80" style="animation: fade-in-up 1.5s ease-out 1s both;" data-i18n="intro_subtitle">
                     I'm Here.
                 </p>
 
                 <!-- Description -->
-                <p id="main-description" class="text-body max-w-2xl mx-auto" style="animation: fade-in-up 1.5s ease-out 1.5s both;">
+                <p id="main-description" class="text-body max-w-2xl mx-auto" style="animation: fade-in-up 1.5s ease-out 1.5s both;" data-i18n="intro_desc">
                     I detect potential changes in psychological distress and alert authorized support personnel for human assessment. Your safety and well-being matter to me.
                 </p>
 
@@ -291,14 +293,14 @@
                             <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
                             <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
                         </svg>
-                        Listen in your language
+                        <span data-i18n="btn_listen">Listen in your language</span>
                     </button>
                 </div>
 
                 <!-- CTA Button -->
                 <div id="main-cta" class="pt-4" style="animation: fade-in-up 1.5s ease-out 2.5s both;">
                     <button onclick="goToSecondPage()" class="btn btn-primary btn-lg group">
-                        <span>Begin Connection</span>
+                        <span data-i18n="btn_begin_connection">Begin Connection</span>
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="group-hover:translate-x-1 transition-transform">
                             <path d="M5 12h14M12 5l7 7-7 7"/>
                         </svg>
@@ -308,7 +310,7 @@
 
             <!-- Minimal Footer Info -->
             <div id="main-footer" class="pt-16" style="animation: fade-in-up 1.5s ease-out 3s both;">
-                <p class="text-telemetry">
+                <p class="text-telemetry" data-i18n="footer_credit">
                     MoSJE SIH-26094 • AI Psychological Safety & Witness Care
                 </p>
             </div>
@@ -324,10 +326,10 @@
             <!-- Header -->
             <div class="text-center space-y-4">
                 <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-300 text-xs font-mono uppercase tracking-widest">
-                    <span>Choose Your Path</span>
+                    <span data-i18n="role_badge">Choose Your Path</span>
                 </div>
-                <h2 class="text-heading text-white">Select Your Sentient Mode</h2>
-                <p class="text-body max-w-xl mx-auto">
+                <h2 class="text-heading text-white" data-i18n="role_title">Select Your Sentient Mode</h2>
+                <p class="text-body max-w-xl mx-auto" data-i18n="role_desc">
                     Each mode shapes how NEXORA interacts with you. Choose the perspective that fits your purpose.
                 </p>
             </div>
@@ -344,11 +346,11 @@
                         </div>
 
                         <!-- Title -->
-                        <h3 class="text-heading text-white mb-2">Patient</h3>
-                        <p class="text-violet-300 text-sm font-mono mb-4">Survivor Wellness Mode</p>
+                        <h3 class="text-heading text-white mb-2" data-i18n="role_patient_title">Patient</h3>
+                        <p class="text-violet-300 text-sm font-mono mb-4" data-i18n="role_patient_sub">Survivor Wellness Mode</p>
 
                         <!-- Description -->
-                        <p class="text-body text-sm flex-1 mb-6">
+                        <p class="text-body text-sm flex-1 mb-6" data-i18n="role_patient_desc">
                             A calm, supportive space for survivors. Gentle conversations, emotional tracking, and breathing exercises in a safe environment.
                         </p>
 
@@ -358,25 +360,25 @@
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-mint-400">
                                     <path d="M20 6L9 17l-5-5"/>
                                 </svg>
-                                <span>Daily emotional check-ins</span>
+                                <span data-i18n="feature_checkins">Daily emotional check-ins</span>
                             </div>
                             <div class="flex items-center gap-2 text-sm text-slate-400">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-mint-400">
                                     <path d="M20 6L9 17l-5-5"/>
                                 </svg>
-                                <span>Guided breathing exercises</span>
+                                <span data-i18n="feature_breathing">Guided breathing exercises</span>
                             </div>
                             <div class="flex items-center gap-2 text-sm text-slate-400">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-mint-400">
                                     <path d="M20 6L9 17l-5-5"/>
                                 </svg>
-                                <span>Private journal & insights</span>
+                                <span data-i18n="feature_journal">Private journal & insights</span>
                             </div>
                         </div>
 
                         <!-- CTA -->
                         <button class="btn btn-mint w-full">
-                            <span>Enter Patient Mode</span>
+                            <span data-i18n="btn_patient_mode">Enter Patient Mode</span>
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M5 12h14M12 5l7 7-7 7"/>
                             </svg>
@@ -393,11 +395,11 @@
                         </div>
 
                         <!-- Title -->
-                        <h3 class="text-heading text-white mb-2">Counselor</h3>
-                        <p class="text-cyan-300 text-sm font-mono mb-4">Clinical Intelligence Mode</p>
+                        <h3 class="text-heading text-white mb-2" data-i18n="role_counselor_title">Counselor</h3>
+                        <p class="text-cyan-300 text-sm font-mono mb-4" data-i18n="role_counselor_sub">Clinical Intelligence Mode</p>
 
                         <!-- Description -->
-                        <p class="text-body text-sm flex-1 mb-6">
+                        <p class="text-body text-sm flex-1 mb-6" data-i18n="role_counselor_desc">
                             Advanced patient monitoring with AI-powered insights. Track distress trends, analyze patterns, and coordinate care interventions.
                         </p>
 
@@ -407,25 +409,25 @@
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-cyan-400">
                                     <path d="M20 6L9 17l-5-5"/>
                                 </svg>
-                                <span>Patient signal network</span>
+                                <span data-i18n="feature_signal">Patient signal network</span>
                             </div>
                             <div class="flex items-center gap-2 text-sm text-slate-400">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-cyan-400">
                                     <path d="M20 6L9 17l-5-5"/>
                                 </svg>
-                                <span>6-week distress analytics</span>
+                                <span data-i18n="feature_distress_analytics">6-week distress analytics</span>
                             </div>
                             <div class="flex items-center gap-2 text-sm text-slate-400">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-cyan-400">
                                     <path d="M20 6L9 17l-5-5"/>
                                 </svg>
-                                <span>Intervention coordination</span>
+                                <span data-i18n="feature_coordination">Intervention coordination</span>
                             </div>
                         </div>
 
                         <!-- CTA -->
                         <button class="btn btn-primary w-full">
-                            <span>Enter Clinical Mode</span>
+                            <span data-i18n="btn_counselor_mode">Enter Clinical Mode</span>
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M5 12h14M12 5l7 7-7 7"/>
                             </svg>
@@ -442,11 +444,11 @@
                         </div>
 
                         <!-- Title -->
-                        <h3 class="text-heading text-white mb-2">Administration</h3>
-                        <p class="text-violet-300 text-sm font-mono mb-4">System Awareness Mode</p>
+                        <h3 class="text-heading text-white mb-2" data-i18n="role_admin_title">Administration</h3>
+                        <p class="text-violet-300 text-sm font-mono mb-4" data-i18n="role_admin_sub">System Awareness Mode</p>
 
                         <!-- Description -->
-                        <p class="text-body text-sm flex-1 mb-6">
+                        <p class="text-body text-sm flex-1 mb-6" data-i18n="role_admin_desc">
                             Governance oversight across districts. Monitor platform health, track compensation flows, and analyze statewide vulnerability patterns.
                         </p>
 
@@ -456,25 +458,25 @@
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-violet-400">
                                     <path d="M20 6L9 17l-5-5"/>
                                 </svg>
-                                <span>District vulnerability heatmap</span>
+                                <span data-i18n="feature_heatmap">District vulnerability heatmap</span>
                             </div>
                             <div class="flex items-center gap-2 text-sm text-slate-400">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-violet-400">
                                     <path d="M20 6L9 17l-5-5"/>
                                 </svg>
-                                <span>Compensation tracking</span>
+                                <span data-i18n="feature_comp">Compensation tracking</span>
                             </div>
                             <div class="flex items-center gap-2 text-sm text-slate-400">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-violet-400">
                                     <path d="M20 6L9 17l-5-5"/>
                                 </svg>
-                                <span>Policy compliance reports</span>
+                                <span data-i18n="feature_policy">Policy compliance reports</span>
                             </div>
                         </div>
 
                         <!-- CTA -->
                         <button class="btn btn-violet w-full">
-                            <span>Enter Governance Mode</span>
+                            <span data-i18n="btn_admin_mode">Enter Governance Mode</span>
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M5 12h14M12 5l7 7-7 7"/>
                             </svg>
@@ -489,7 +491,7 @@
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M19 12H5M12 19l-7-7 7-7"/>
                     </svg>
-                    Return to Home
+                    <span data-i18n="btn_back_home">Return to Home</span>
                 </button>
             </div>
         </div>
@@ -506,7 +508,7 @@
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M19 12H5M12 19l-7-7 7-7"/>
                 </svg>
-                Back to Home
+                <span data-i18n="victim_back_home">Back to Home</span>
             </button>
 
             <!-- Welcome Header -->
@@ -516,21 +518,21 @@
                         🌿
                     </div>
                     <div>
-                        <h2 class="text-heading text-white">Your Safe Space</h2>
-                        <p class="text-body text-sm text-slate-400">A confidential environment for your well-being</p>
+                        <h2 class="text-heading text-white" data-i18n="victim_title">Your Safe Space</h2>
+                        <p class="text-body text-sm text-slate-400" data-i18n="victim_desc">A confidential environment for your well-being</p>
                     </div>
                 </div>
 
                 <!-- Quick Actions -->
                 <div class="flex flex-wrap gap-3">
                     <a href="tel:14416" class="btn btn-sm bg-mint-dim text-mint-300 border border-mint-400/20">
-                        📞 Tele-MANAS: 14416
+                        <span data-i18n="btn_telemanas">📞 Tele-MANAS: 14416</span>
                     </a>
                     <a href="tel:112" class="btn btn-sm bg-coral-dim text-coral-300 border border-coral-400/20">
-                        🚨 Emergency: 112
+                        <span data-i18n="btn_emergency">🚨 Emergency: 112</span>
                     </a>
                     <button onclick="toggleBreathingModal()" class="btn btn-sm btn-secondary">
-                        🌿 Breathe
+                        <span data-i18n="btn_breathe">🌿 Breathe</span>
                     </button>
                 </div>
             </div>
@@ -542,45 +544,45 @@
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                         <circle cx="12" cy="7" r="4"/>
                     </svg>
-                    Your Profile
+                    <span data-i18n="profile_title">Your Profile</span>
                 </h3>
 
                 <form onsubmit="handleVictimProfileSubmit(event)" class="space-y-4">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="text-micro text-slate-400 block mb-2">Full Name</label>
-                            <input type="text" id="victim-intake-name" required placeholder="Your name" class="sentient-input">
+                            <label class="text-micro text-slate-400 block mb-2" data-i18n="profile_name_label">Full Name</label>
+                            <input type="text" id="victim-intake-name" required placeholder="Your name" class="sentient-input" data-i18n-placeholder="profile_name_ph">
                         </div>
                         <div>
-                            <label class="text-micro text-slate-400 block mb-2">Mobile Number</label>
-                            <input type="tel" id="victim-intake-phone" required placeholder="Your phone" class="sentient-input">
+                            <label class="text-micro text-slate-400 block mb-2" data-i18n="profile_phone_label">Mobile Number</label>
+                            <input type="tel" id="victim-intake-phone" required placeholder="Your phone" class="sentient-input" data-i18n-placeholder="profile_phone_ph">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="text-micro text-slate-400 block mb-2">Profession / Livelihood</label>
+                            <label class="text-micro text-slate-400 block mb-2" data-i18n="profile_profession_label">Profession / Livelihood</label>
                             <select id="victim-intake-profession" required class="sentient-input sentient-select" onchange="onProfessionChange(this.value)">
-                                <option value="">Select your profession</option>
-                                <option value="Student">🎓 Student</option>
-                                <option value="Salaried">💼 Salaried Employee</option>
-                                <option value="Business">🏪 Business / Self-Employed</option>
-                                <option value="Unemployed">⚠️ Currently Unemployed / Seeking Work</option>
+                                <option value="" data-i18n="prof_select">Select your profession</option>
+                                <option value="Student" data-i18n="prof_student">🎓 Student</option>
+                                <option value="Salaried" data-i18n="prof_salaried">💼 Salaried Employee</option>
+                                <option value="Business" data-i18n="prof_business">🏪 Business / Self-Employed</option>
+                                <option value="Unemployed" data-i18n="prof_unemployed">⚠️ Currently Unemployed / Seeking Work</option>
                             </select>
                             <input type="hidden" id="victim-intake-work" value="">
                         </div>
                         <div>
-                            <label class="text-micro text-slate-400 block mb-2">Daily Stress Level</label>
+                            <label class="text-micro text-slate-400 block mb-2" data-i18n="profile_stress_label">Daily Stress Level</label>
                             <select id="victim-intake-stress" class="sentient-input sentient-select">
-                                <option value="Low / Manageable">Low / Manageable</option>
-                                <option value="Moderate" selected>Moderate</option>
-                                <option value="High / Severe">High / Severe</option>
+                                <option value="Low / Manageable" data-i18n="stress_low">Low / Manageable</option>
+                                <option value="Moderate" selected data-i18n="stress_moderate">Moderate</option>
+                                <option value="High / Severe" data-i18n="stress_high">High / Severe</option>
                             </select>
                         </div>
                     </div>
 
                     <button type="submit" class="btn btn-mint btn-lg w-full sm:w-auto">
-                        <span>Begin Daily Check-In</span>
+                        <span data-i18n="btn_begin_checkin">Begin Daily Check-In</span>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M5 12h14M12 5l7 7-7 7"/>
                         </svg>
@@ -597,12 +599,12 @@
                             ✨
                         </div>
                         <div>
-                            <h4 class="font-semibold text-white">Daily Check-In</h4>
-                            <p class="text-xs text-slate-400">10 gentle questions • Private & secure</p>
+                            <h4 class="font-semibold text-white" data-i18n="checkin_title">Daily Check-In</h4>
+                            <p class="text-xs text-slate-400" data-i18n="checkin_sub">10 gentle questions • Private & secure</p>
                         </div>
                     </div>
                     <span id="checkin-progress-badge" class="text-xs font-mono bg-cyan-dim text-cyan-300 px-3 py-1 rounded-full">
-                        Question 1 of 10
+                        <span data-i18n="checkin_progress">Question 1 of 10</span>
                     </span>
                 </div>
 
@@ -619,17 +621,17 @@
                 <!-- Quick Responses -->
                 <div class="p-4 border-t border-white/5 space-y-3">
                     <div class="flex flex-wrap gap-2">
-                        <button onclick="handleQuickCheckInResponse('😊 Very good')" class="btn btn-sm bg-slate-800 hover:bg-mint-dim text-slate-300">😊 Very good</button>
-                        <button onclick="handleQuickCheckInResponse('🙂 Good')" class="btn btn-sm bg-slate-800 hover:bg-mint-dim text-slate-300">🙂 Good</button>
-                        <button onclick="handleQuickCheckInResponse('😐 Okay')" class="btn btn-sm bg-slate-800 hover:bg-slate-700 text-slate-300">😐 Okay</button>
-                        <button onclick="handleQuickCheckInResponse('😟 Worried')" class="btn btn-sm bg-slate-800 hover:bg-amber-dim text-slate-300">😟 Worried</button>
-                        <button onclick="handleQuickCheckInResponse('😞 Difficult')" class="btn btn-sm bg-slate-800 hover:bg-coral-dim text-slate-300">😞 Difficult</button>
+                        <button onclick="handleQuickCheckInResponse('😊 Very good')" class="btn btn-sm bg-slate-800 hover:bg-mint-dim text-slate-300" data-i18n="resp_very_good">😊 Very good</button>
+                        <button onclick="handleQuickCheckInResponse('🙂 Good')" class="btn btn-sm bg-slate-800 hover:bg-mint-dim text-slate-300" data-i18n="resp_good">🙂 Good</button>
+                        <button onclick="handleQuickCheckInResponse('😐 Okay')" class="btn btn-sm bg-slate-800 hover:bg-slate-700 text-slate-300" data-i18n="resp_okay">😐 Okay</button>
+                        <button onclick="handleQuickCheckInResponse('😟 Worried')" class="btn btn-sm bg-slate-800 hover:bg-amber-dim text-slate-300" data-i18n="resp_worried">😟 Worried</button>
+                        <button onclick="handleQuickCheckInResponse('😞 Difficult')" class="btn btn-sm bg-slate-800 hover:bg-coral-dim text-slate-300" data-i18n="resp_difficult">😞 Difficult</button>
                     </div>
 
                     <div class="flex gap-2">
-                        <input type="text" id="checkin-freeform-input" onkeydown="if(event.key === 'Enter'){ event.preventDefault(); handleConversationalCheckInSend(event); }" placeholder="Type your response..." class="sentient-input flex-1">
+                        <input type="text" id="checkin-freeform-input" onkeydown="if(event.key === 'Enter'){ event.preventDefault(); handleConversationalCheckInSend(event); }" placeholder="Type your response..." class="sentient-input flex-1" data-i18n-placeholder="checkin_input_ph">
                         <button onclick="handleConversationalCheckInSend(event)" class="btn btn-mint px-6">
-                            Send
+                            <span data-i18n="btn_send">Send</span>
                         </button>
                     </div>
                 </div>
@@ -640,14 +642,14 @@
                 <div class="w-20 h-20 rounded-full bg-mint-dim border border-mint-400/30 flex items-center justify-center text-4xl mx-auto mb-6 animate-entrance">
                     ✓
                 </div>
-                <h3 class="text-heading text-white mb-2">Check-In Complete</h3>
-                <p class="text-body text-slate-400 mb-6 max-w-md mx-auto">
+                <h3 class="text-heading text-white mb-2" data-i18n="checkin_done_title">Check-In Complete</h3>
+                <p class="text-body text-slate-400 mb-6 max-w-md mx-auto" data-i18n="checkin_done_desc">
                     Thank you for sharing. Your responses have been securely transmitted to your care team.
                 </p>
 
                 <div class="flex flex-wrap justify-center gap-3">
-                    <button onclick="retakeVictimCheckIn()" class="btn btn-secondary">Update Check-In</button>
-                    <button onclick="openConsultDoctorModal()" class="btn btn-mint">Consult Doctor</button>
+                    <button onclick="retakeVictimCheckIn()" class="btn btn-secondary"><span data-i18n="btn_update_checkin">Update Check-In</span></button>
+                    <button onclick="openConsultDoctorModal()" class="btn btn-mint"><span data-i18n="btn_consult_doctor">Consult Doctor</span></button>
                 </div>
             </div>
         </main>
@@ -669,7 +671,7 @@
                 </div>
                 <div>
                     <h2 class="font-bold text-white">NEXORA</h2>
-                    <p class="text-xs text-slate-400 font-mono">Clinical Command</p>
+                    <p class="text-xs text-slate-400 font-mono" data-i18n="mon_clinical_command">Clinical Command</p>
                 </div>
             </div>
 
@@ -679,46 +681,46 @@
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
                     </svg>
-                    <span>Dashboard</span>
+                    <span data-i18n="mon_dashboard">Dashboard</span>
                 </button>
                 <button onclick="switchMonitorTab('nexora-ai')" id="mon-nav-nexora-ai" class="monitor-nav-btn w-full text-left">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
                     </svg>
-                    <span>NEXORA AI</span>
+                    <span data-i18n="mon_nexora_ai">NEXORA AI</span>
                     <span class="w-2 h-2 rounded-full bg-emerald-400 ml-auto animate-pulse"></span>
                 </button>
                 <button onclick="switchMonitorTab('cases')" id="mon-nav-cases" class="monitor-nav-btn w-full text-left">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
                     </svg>
-                    <span>Cases</span>
+                    <span data-i18n="mon_cases">Cases</span>
                     <span class="ml-auto bg-rose-500 text-white text-xs px-2 py-0.5 rounded-full">3</span>
                 </button>
                 <button onclick="switchMonitorTab('alerts')" id="mon-nav-alerts" class="monitor-nav-btn w-full text-left">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/>
                     </svg>
-                    <span>Alerts</span>
+                    <span data-i18n="mon_alerts">Alerts</span>
                     <span class="ml-auto bg-amber-500/20 text-amber-300 text-xs px-2 py-0.5 rounded-full">2</span>
                 </button>
                 <button onclick="switchMonitorTab('analytics')" id="mon-nav-analytics" class="monitor-nav-btn w-full text-left">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M18 20V10M12 20V4M6 20v-6"/>
                     </svg>
-                    <span>Analytics</span>
+                    <span data-i18n="mon_analytics">Analytics</span>
                 </button>
                 <button onclick="switchMonitorTab('reports')" id="mon-nav-reports" class="monitor-nav-btn w-full text-left">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>
                     </svg>
-                    <span>Reports</span>
+                    <span data-i18n="mon_reports">Reports</span>
                 </button>
                 <button onclick="switchMonitorTab('settings')" id="mon-nav-settings" class="monitor-nav-btn w-full text-left">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
                     </svg>
-                    <span>Settings</span>
+                    <span data-i18n="mon_settings">Settings</span>
                 </button>
             </nav>
 
@@ -729,12 +731,12 @@
                         SJ
                     </div>
                     <div>
-                        <p id="sidebar-user-name" class="text-sm font-semibold text-white">Dr. Sarah Jenkins</p>
-                        <p id="sidebar-user-role" class="text-xs text-slate-400">Clinical Command</p>
+                        <p id="sidebar-user-name" class="text-sm font-semibold text-white" data-i18n="mon_user_name">Dr. Sarah Jenkins</p>
+                        <p id="sidebar-user-role" class="text-xs text-slate-400" data-i18n="mon_user_role">Clinical Command</p>
                     </div>
                 </div>
                 <button onclick="logoutToRoleSelection()" class="btn btn-secondary w-full text-sm">
-                    Switch Role
+                    <span data-i18n="btn_switch_role">Switch Role</span>
                 </button>
             </div>
         </aside>
@@ -748,29 +750,31 @@
                     <span id="counselor-banner-icon" class="text-2xl">🩺</span>
                     <div>
                         <div class="flex items-center gap-2">
-                            <h3 id="counselor-banner-title" class="font-bold text-white">Clinical Intelligence Command</h3>
-                            <span id="counselor-banner-badge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-sky-900/60 text-sky-300 border border-sky-500/40">Active Clinician</span>
+                            <h3 id="counselor-banner-title" class="font-bold text-white" data-i18n="counselor_banner_title">Clinical Intelligence Command</h3>
+                            <span id="counselor-banner-badge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-sky-900/60 text-sky-300 border border-sky-500/40" data-i18n="counselor_banner_badge">Active Clinician</span>
                         </div>
-                        <p id="counselor-banner-desc" class="text-xs text-slate-400">Real-time patient monitoring & intervention coordination</p>
+                        <p id="counselor-banner-desc" class="text-xs text-slate-400" data-i18n="counselor_banner_desc">Real-time patient monitoring & intervention coordination</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-3">
                     <div id="counselor-helplines" class="hidden xl:flex items-center gap-3 text-xs mr-2">
                         <a href="tel:112" class="text-rose-400 hover:text-rose-300 font-semibold flex items-center gap-1.5">
                             <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
-                            Emergency: 112
+                            <span data-i18n="nav_emergency">Emergency: 112</span>
                         </a>
                         <span class="text-slate-600">|</span>
-                        <span class="text-slate-400">Mental Health: <strong class="text-white">14416</strong></span>
+                        <span class="text-slate-400"><span data-i18n="nav_mental_health">Mental Health:</span> <strong class="text-white">14416</strong></span>
                     </div>
                     <select id="counselor-lang-select" onchange="changeLanguage(this.value)" class="bg-transparent text-xs text-slate-400 outline-none cursor-pointer border border-white/10 rounded-lg px-2 py-1">
                         <option value="en">EN</option>
                         <option value="hi">हिं</option>
                         <option value="bn">বা</option>
                         <option value="ta">தம</option>
+                        <option value="ml">മല</option>
+                        <option value="ur">اردو</option>
                     </select>
-                    <button onclick="logoutToRoleSelection()" class="btn btn-sm btn-secondary">Switch Role</button>
-                    <button onclick="goBackToIntro()" class="btn btn-sm btn-ghost">Home</button>
+                    <button onclick="logoutToRoleSelection()" class="btn btn-sm btn-secondary"><span data-i18n="btn_switch_role">Switch Role</span></button>
+                    <button onclick="goBackToIntro()" class="btn btn-sm btn-ghost"><span data-i18n="btn_home">Home</span></button>
                 </div>
             </div>
 
@@ -780,24 +784,24 @@
                 <!-- KPI Cards -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div class="sentient-card p-5">
-                        <p class="text-micro text-slate-400 mb-2">Active Patients</p>
+                        <p class="text-micro text-slate-400 mb-2" data-i18n="kpi_active_patients">Active Patients</p>
                         <p id="metric-total" class="text-stat text-3xl">4</p>
-                        <p class="text-sm text-cyan-400 mt-1">Under Care</p>
+                        <p class="text-sm text-cyan-400 mt-1" data-i18n="kpi_under_care">Under Care</p>
                     </div>
                     <div class="sentient-card p-5 border-coral-400/20 bg-coral-dim/10">
-                        <p class="text-micro text-slate-400 mb-2">High Risk</p>
+                        <p class="text-micro text-slate-400 mb-2" data-i18n="kpi_high_risk">High Risk</p>
                         <p id="metric-high" class="text-stat text-3xl text-coral-400">2</p>
-                        <p class="text-sm text-coral-300 mt-1">Need Attention</p>
+                        <p class="text-sm text-coral-300 mt-1" data-i18n="kpi_need_attention">Need Attention</p>
                     </div>
                     <div class="sentient-card p-5 border-amber-400/20 bg-amber-dim/10">
-                        <p class="text-micro text-slate-400 mb-2">Follow-up</p>
+                        <p class="text-micro text-slate-400 mb-2" data-i18n="kpi_followup">Follow-up</p>
                         <p id="metric-moderate" class="text-stat text-3xl text-amber-400">1</p>
-                        <p class="text-sm text-amber-300 mt-1">Court Delay</p>
+                        <p class="text-sm text-amber-300 mt-1" data-i18n="kpi_court_delay">Court Delay</p>
                     </div>
                     <div class="sentient-card p-5 border-mint-400/20 bg-mint-dim/10">
-                        <p class="text-micro text-slate-400 mb-2">Interventions</p>
+                        <p class="text-micro text-slate-400 mb-2" data-i18n="kpi_interventions">Interventions</p>
                         <p id="metric-interventions" class="text-stat text-3xl text-mint-400">3</p>
-                        <p class="text-sm text-mint-300 mt-1">Completed</p>
+                        <p class="text-sm text-mint-300 mt-1" data-i18n="kpi_completed">Completed</p>
                     </div>
                 </div>
 
@@ -805,23 +809,23 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <button onclick="switchView('victim')" class="sentient-card sentient-card-interactive p-5 text-left">
                         <div class="w-10 h-10 rounded-xl bg-mint-dim border border-mint-400/20 flex items-center justify-center text-xl mb-3">🌱</div>
-                        <h4 class="font-bold text-white mb-1">Survivor Check-In</h4>
-                        <p class="text-xs text-slate-400">Daily assessment</p>
+                        <h4 class="font-bold text-white mb-1" data-i18n="qa_survivor_checkin">Survivor Check-In</h4>
+                        <p class="text-xs text-slate-400" data-i18n="qa_daily_assessment">Daily assessment</p>
                     </button>
                     <button onclick="switchMonitorTab('nexora-ai')" class="sentient-card sentient-card-interactive p-5 text-left">
                         <div class="w-10 h-10 rounded-xl bg-cyan-dim border border-cyan-400/20 flex items-center justify-center text-xl mb-3">🤖</div>
-                        <h4 class="font-bold text-white mb-1">NEXORA AI</h4>
-                        <p class="text-xs text-slate-400">Clinical assistant</p>
+                        <h4 class="font-bold text-white mb-1" data-i18n="qa_nexora_ai">NEXORA AI</h4>
+                        <p class="text-xs text-slate-400" data-i18n="qa_clinical_assistant">Clinical assistant</p>
                     </button>
                     <button onclick="toggleBreathingModal()" class="sentient-card sentient-card-interactive p-5 text-left">
                         <div class="w-10 h-10 rounded-xl bg-mint-dim border border-mint-400/20 flex items-center justify-center text-xl mb-3">🌿</div>
-                        <h4 class="font-bold text-white mb-1">Breathe</h4>
-                        <p class="text-xs text-slate-400">4-7-8 breathing</p>
+                        <h4 class="font-bold text-white mb-1" data-i18n="qa_breathe">Breathe</h4>
+                        <p class="text-xs text-slate-400" data-i18n="qa_478_breathing">4-7-8 breathing</p>
                     </button>
                     <button onclick="toggleNexChat()" class="sentient-card sentient-card-interactive p-5 text-left">
                         <div class="w-10 h-10 rounded-xl bg-violet-dim border border-violet-400/20 flex items-center justify-center text-xl mb-3">💬</div>
-                        <h4 class="font-bold text-white mb-1">NEX Chat</h4>
-                        <p class="text-xs text-slate-400">24/7 companion</p>
+                        <h4 class="font-bold text-white mb-1" data-i18n="qa_nex_chat">NEX Chat</h4>
+                        <p class="text-xs text-slate-400" data-i18n="qa_247_companion">24/7 companion</p>
                     </button>
                 </div>
 
@@ -829,11 +833,11 @@
                 <div class="sentient-card p-6">
                     <h4 class="font-bold text-white mb-4 flex items-center gap-2">
                         <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
-                        Critical Alerts
+                        <span data-i18n="critical_alerts">Critical Alerts</span>
                     </h4>
                     <div id="dashboard-urgent-escalations" class="space-y-3">
                         <div class="p-4 rounded-xl bg-slate-900/50 border border-slate-700/50 text-center text-slate-400">
-                            No critical alerts at this time.
+                            <span data-i18n="no_critical_alerts">No critical alerts at this time.</span>
                         </div>
                     </div>
                 </div>
@@ -858,9 +862,9 @@
                     </div>
                     <div class="flex gap-2">
                         <button onclick="triggerEmergencyDispatch()" class="btn btn-sm bg-coral-dim text-coral-300 border border-coral-400/20">
-                            🚨 112 Dispatch
+                            <span data-i18n="btn_112_dispatch">🚨 112 Dispatch</span>
                         </button>
-                        <button onclick="resetNexoraAiChat()" class="btn btn-sm btn-secondary">Clear</button>
+                        <button onclick="resetNexoraAiChat()" class="btn btn-sm btn-secondary"><span data-i18n="btn_clear">Clear</span></button>
                     </div>
                 </div>
 
@@ -871,24 +875,24 @@
                             AI
                         </div>
                         <div class="sentient-card p-4 max-w-2xl">
-                            <p class="text-white font-medium mb-2">Hello! I'm the NEXORA AI Assistant.</p>
-                            <p class="text-slate-400 text-sm">I analyze patient distress patterns, detect critical signals, and help coordinate care interventions. How can I assist you today?</p>
+                            <p class="text-white font-medium mb-2" data-i18n="ai_greeting">Hello! I'm the NEXORA AI Assistant.</p>
+                            <p class="text-slate-400 text-sm" data-i18n="ai_desc">I analyze patient distress patterns, detect critical signals, and help coordinate care interventions. How can I assist you today?</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Quick Prompts -->
                 <div class="px-6 py-3 border-t border-white/5 flex flex-wrap gap-2">
-                    <button onclick="sendAiPrompt('Triage urgent cases')" class="btn btn-sm bg-slate-800 hover:bg-slate-700 text-slate-300">🚨 Triage Urgent</button>
-                    <button onclick="sendAiPrompt('Summarize patient trends')" class="btn btn-sm bg-slate-800 hover:bg-slate-700 text-slate-300">📊 Patient Trends</button>
-                    <button onclick="sendAiPrompt('Draft intervention report')" class="btn btn-sm bg-slate-800 hover:bg-slate-700 text-slate-300">📄 Draft Report</button>
+                    <button onclick="sendAiPrompt('Triage urgent cases')" class="btn btn-sm bg-slate-800 hover:bg-slate-700 text-slate-300" data-i18n="ai_prompt_triage">🚨 Triage Urgent</button>
+                    <button onclick="sendAiPrompt('Summarize patient trends')" class="btn btn-sm bg-slate-800 hover:bg-slate-700 text-slate-300" data-i18n="ai_prompt_trends">📊 Patient Trends</button>
+                    <button onclick="sendAiPrompt('Draft intervention report')" class="btn btn-sm bg-slate-800 hover:bg-slate-700 text-slate-300" data-i18n="ai_prompt_report">📄 Draft Report</button>
                 </div>
 
                 <!-- Input -->
                 <div class="p-4 border-t border-white/5 bg-slate-950/50">
                     <form onsubmit="handleNexoraAiSend(event)" class="max-w-4xl mx-auto flex gap-3">
-                        <input type="text" id="nexora-ai-input" placeholder="Ask NEXORA AI..." class="sentient-input flex-1">
-                        <button type="submit" class="btn btn-primary px-6">Send</button>
+                        <input type="text" id="nexora-ai-input" placeholder="Ask NEXORA AI..." class="sentient-input flex-1" data-i18n-placeholder="ai_input_ph">
+                        <button type="submit" class="btn btn-primary px-6"><span data-i18n="btn_send">Send</span></button>
                     </form>
                 </div>
             </div>
@@ -897,13 +901,13 @@
             <div id="tab-pane-cases" class="hidden flex-1 p-6 space-y-6">
                 <div class="flex items-center justify-between">
                     <div>
-                        <h3 class="text-heading text-white">Case Triage Queue</h3>
-                        <p class="text-sm text-slate-400">Auto-sorted by risk severity</p>
+                        <h3 class="text-heading text-white" data-i18n="queue_title">Case Triage Queue</h3>
+                        <p class="text-sm text-slate-400" data-i18n="queue_sub">Auto-sorted by risk severity</p>
                     </div>
                     <div class="flex gap-2 text-xs">
-                        <button onclick="filterQueue('ALL')" id="filter-all" class="btn btn-sm bg-cyan-500 text-white">All (5)</button>
-                        <button onclick="filterQueue('HIGH')" id="filter-high" class="btn btn-sm bg-slate-800 text-slate-400">Red (2)</button>
-                        <button onclick="filterQueue('MODERATE')" id="filter-mod" class="btn btn-sm bg-slate-800 text-slate-400">Yellow (2)</button>
+                        <button onclick="filterQueue('ALL')" id="filter-all" class="btn btn-sm bg-cyan-500 text-white"><span data-i18n="filter_all">All</span> (5)</button>
+                        <button onclick="filterQueue('HIGH')" id="filter-high" class="btn btn-sm bg-slate-800 text-slate-400"><span data-i18n="filter_red">Red</span> (2)</button>
+                        <button onclick="filterQueue('MODERATE')" id="filter-mod" class="btn btn-sm bg-slate-800 text-slate-400"><span data-i18n="filter_yellow">Yellow</span> (2)</button>
                     </div>
                 </div>
 
@@ -912,11 +916,11 @@
                         <table class="w-full text-left">
                             <thead class="bg-slate-900/50 border-b border-white/5">
                                 <tr class="text-xs text-slate-400 font-mono uppercase tracking-wider">
-                                    <th class="px-4 py-3">Case ID</th>
-                                    <th class="px-4 py-3">Category</th>
-                                    <th class="px-4 py-3">DDS</th>
-                                    <th class="px-4 py-3">Risk</th>
-                                    <th class="px-4 py-3">Action</th>
+                                    <th class="px-4 py-3"><span data-i18n="th_case_id">Case ID</span></th>
+                                    <th class="px-4 py-3"><span data-i18n="th_category">Category</span></th>
+                                    <th class="px-4 py-3"><span data-i18n="th_dds">DDS</span></th>
+                                    <th class="px-4 py-3"><span data-i18n="th_risk">Risk</span></th>
+                                    <th class="px-4 py-3"><span data-i18n="th_action">Action</span></th>
                                 </tr>
                             </thead>
                             <tbody id="case-table-body" class="divide-y divide-white/5">
@@ -930,17 +934,17 @@
             <!-- Alerts Tab -->
             <div id="tab-pane-alerts" class="hidden flex-1 p-6 space-y-6">
                 <div class="flex items-center justify-between">
-                    <h3 class="text-heading text-white">Active Alerts</h3>
+                    <h3 class="text-heading text-white" data-i18n="active_alerts_title">Active Alerts</h3>
                     <button onclick="triggerEmergencyDispatch()" class="btn btn-critical">
-                        🚨 Emergency Dispatch
+                        <span data-i18n="btn_emergency_dispatch">🚨 Emergency Dispatch</span>
                     </button>
                 </div>
 
                 <div id="alerts-list-container" class="space-y-4">
                     <div class="sentient-empty">
                         <div class="sentient-empty-icon">🛡️</div>
-                        <p class="sentient-empty-title">No Active Alerts</p>
-                        <p class="sentient-empty-text">All systems are operating normally.</p>
+                        <p class="sentient-empty-title" data-i18n="no_active_alerts">No Active Alerts</p>
+                        <p class="sentient-empty-text" data-i18n="systems_normal">All systems are operating normally.</p>
                     </div>
                 </div>
             </div>
@@ -949,11 +953,11 @@
             <div id="tab-pane-analytics" class="hidden flex-1 p-6 space-y-6">
                 <div class="flex items-center justify-between">
                     <div>
-                        <h3 class="text-heading text-white">Governance Analytics</h3>
-                        <p class="text-sm text-slate-400">MoSJE District Oversight</p>
+                        <h3 class="text-heading text-white" data-i18n="analytics_title">Governance Analytics</h3>
+                        <p class="text-sm text-slate-400" data-i18n="analytics_sub">MoSJE District Oversight</p>
                     </div>
                     <button onclick="exportAnonymizedReport()" class="btn btn-violet">
-                        📥 Export Report
+                        <span data-i18n="btn_export_report">📥 Export Report</span>
                     </button>
                 </div>
 
@@ -965,8 +969,8 @@
                             <span class="text-xs font-mono bg-rose-500/20 text-rose-300 px-2 py-0.5 rounded">DDS: 74</span>
                         </div>
                         <div class="space-y-1 text-sm text-slate-400">
-                            <div class="flex justify-between"><span>Active:</span><strong class="text-white">18</strong></div>
-                            <div class="flex justify-between"><span>Critical:</span><strong class="text-rose-400">6</strong></div>
+                            <div class="flex justify-between"><span data-i18n="analytics_active">Active:</span><strong class="text-white">18</strong></div>
+                            <div class="flex justify-between"><span data-i18n="analytics_critical">Critical:</span><strong class="text-rose-400">6</strong></div>
                         </div>
                     </div>
                     <div class="sentient-card p-5 border-amber-400/20">
@@ -975,8 +979,8 @@
                             <span class="text-xs font-mono bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded">DDS: 68</span>
                         </div>
                         <div class="space-y-1 text-sm text-slate-400">
-                            <div class="flex justify-between"><span>Active:</span><strong class="text-white">22</strong></div>
-                            <div class="flex justify-between"><span>Elevated:</span><strong class="text-amber-400">4</strong></div>
+                            <div class="flex justify-between"><span data-i18n="analytics_active">Active:</span><strong class="text-white">22</strong></div>
+                            <div class="flex justify-between"><span data-i18n="analytics_elevated">Elevated:</span><strong class="text-amber-400">4</strong></div>
                         </div>
                     </div>
                     <div class="sentient-card p-5 border-cyan-400/20">
@@ -985,8 +989,8 @@
                             <span class="text-xs font-mono bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded">DDS: 52</span>
                         </div>
                         <div class="space-y-1 text-sm text-slate-400">
-                            <div class="flex justify-between"><span>Active:</span><strong class="text-white">12</strong></div>
-                            <div class="flex justify-between"><span>Moderate:</span><strong class="text-cyan-400">8</strong></div>
+                            <div class="flex justify-between"><span data-i18n="analytics_active">Active:</span><strong class="text-white">12</strong></div>
+                            <div class="flex justify-between"><span data-i18n="analytics_moderate">Moderate:</span><strong class="text-cyan-400">8</strong></div>
                         </div>
                     </div>
                     <div class="sentient-card p-5 border-mint-400/20">
@@ -995,15 +999,15 @@
                             <span class="text-xs font-mono bg-mint-500/20 text-mint-300 px-2 py-0.5 rounded">DDS: 44</span>
                         </div>
                         <div class="space-y-1 text-sm text-slate-400">
-                            <div class="flex justify-between"><span>Active:</span><strong class="text-white">15</strong></div>
-                            <div class="flex justify-between"><span>Stable:</span><strong class="text-mint-400">11</strong></div>
+                            <div class="flex justify-between"><span data-i18n="analytics_active">Active:</span><strong class="text-white">15</strong></div>
+                            <div class="flex justify-between"><span data-i18n="analytics_stable">Stable:</span><strong class="text-mint-400">11</strong></div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Chart Area -->
                 <div class="sentient-card p-6">
-                    <h4 class="font-bold text-white mb-4">Distress Trends</h4>
+                    <h4 class="font-bold text-white mb-4" data-i18n="chart_distress_trends">Distress Trends</h4>
                     <div class="h-64 bg-slate-900/50 rounded-xl flex items-center justify-center">
                         <canvas id="compensationRecoveryChart"></canvas>
                     </div>
@@ -1012,15 +1016,15 @@
 
             <!-- Reports Tab -->
             <div id="tab-pane-reports" class="hidden flex-1 p-6 space-y-6">
-                <h3 class="text-heading text-white">Legal Reports</h3>
+                <h3 class="text-heading text-white" data-i18n="reports_title">Legal Reports</h3>
                 <div class="sentient-card p-6">
-                    <p class="text-slate-400">Select a case to generate a report.</p>
+                    <p class="text-slate-400" data-i18n="reports_empty">Select a case to generate a report.</p>
                 </div>
             </div>
 
             <!-- Settings Tab -->
             <div id="tab-pane-settings" class="hidden flex-1 p-6 space-y-6">
-                <h3 class="text-heading text-white">System Settings</h3>
+                <h3 class="text-heading text-white" data-i18n="settings_title">System Settings</h3>
 
                 <!-- Profession Profile Settings -->
                 <div class="sentient-card p-6 space-y-4">
@@ -1029,32 +1033,32 @@
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                             <circle cx="12" cy="7" r="4"/>
                         </svg>
-                        Profession Profile (AI Intake Configuration)
+                        <span data-i18n="settings_profession_title">Profession Profile (AI Intake Configuration)</span>
                     </h4>
-                    <p class="text-xs text-slate-400">Configure the profession profile to personalize AI-driven intake questions and distress analysis.</p>
+                    <p class="text-xs text-slate-400" data-i18n="settings_profession_desc">Configure the profession profile to personalize AI-driven intake questions and distress analysis.</p>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                         <div>
-                            <label class="text-micro text-slate-400 block mb-2">Profession / Livelihood</label>
+                            <label class="text-micro text-slate-400 block mb-2" data-i18n="profile_profession_label">Profession / Livelihood</label>
                             <select id="settings-profession-select" class="sentient-input sentient-select" onchange="updateUserProfession(this.value)">
-                                <option value="">Select profession</option>
-                                <option value="Student">🎓 Student</option>
-                                <option value="Salaried">💼 Salaried Employee</option>
-                                <option value="Business">🏪 Business / Self-Employed</option>
-                                <option value="Unemployed">⚠️ Currently Unemployed / Seeking Work</option>
+                                <option value="" data-i18n="prof_select">Select profession</option>
+                                <option value="Student" data-i18n="prof_student">🎓 Student</option>
+                                <option value="Salaried" data-i18n="prof_salaried">💼 Salaried Employee</option>
+                                <option value="Business" data-i18n="prof_business">🏪 Business / Self-Employed</option>
+                                <option value="Unemployed" data-i18n="prof_unemployed">⚠️ Currently Unemployed / Seeking Work</option>
                             </select>
                         </div>
                         <div>
-                            <label class="text-micro text-slate-400 block mb-2">Current Profile Status</label>
+                            <label class="text-micro text-slate-400 block mb-2" data-i18n="settings_profile_status">Current Profile Status</label>
                             <div id="settings-profession-status" class="sentient-input bg-slate-800/50 text-slate-400 flex items-center gap-2">
                                 <span class="w-2 h-2 rounded-full bg-slate-500"></span>
-                                <span>Not configured</span>
+                                <span data-i18n="status_not_configured">Not configured</span>
                             </div>
                         </div>
                     </div>
                     <div id="settings-profession-info" class="hidden p-4 rounded-xl bg-slate-800/30 border border-slate-700/50 mt-4">
                         <p id="settings-profession-desc" class="text-sm text-slate-300"></p>
                     </div>
-                    <button onclick="saveMonitorSettings()" class="btn btn-primary mt-4">Save Preferences</button>
+                    <button onclick="saveMonitorSettings()" class="btn btn-primary mt-4"><span data-i18n="btn_save_preferences">Save Preferences</span></button>
                 </div>
 
                 <!-- Alert Threshold Settings -->
@@ -1064,18 +1068,18 @@
                             <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
                             <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
                         </svg>
-                        Alert Configuration
+                        <span data-i18n="settings_alert_title">Alert Configuration</span>
                     </h4>
                     <div>
-                        <label class="text-micro text-slate-400 block mb-2">High Risk Alert Threshold</label>
+                        <label class="text-micro text-slate-400 block mb-2" data-i18n="settings_threshold_label">High Risk Alert Threshold</label>
                         <input type="range" id="settings-alert-threshold" min="50" max="90" value="70" class="w-full">
                         <div class="flex justify-between text-xs text-slate-500 mt-1">
-                            <span>50 (Sensitive)</span>
+                            <span data-i18n="settings_sensitive">50 (Sensitive)</span>
                             <span id="settings-threshold-value">70</span>
-                            <span>90 (Conservative)</span>
+                            <span data-i18n="settings_conservative">90 (Conservative)</span>
                         </div>
                     </div>
-                    <button onclick="saveMonitorSettings()" class="btn btn-primary">Save Preferences</button>
+                    <button onclick="saveMonitorSettings()" class="btn btn-primary"><span data-i18n="btn_save_preferences">Save Preferences</span></button>
                 </div>
             </div>
 
@@ -1089,23 +1093,23 @@
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M19 12H5M12 19l-7-7 7-7"/>
                                 </svg>
-                                Return to Triage Feed
+                                <span data-i18n="dossier_back_triage">Return to Triage Feed</span>
                             </button>
                             <div class="h-8 w-px bg-white/10"></div>
                             <div>
                                 <div class="flex items-center gap-3">
-                                    <h2 id="dossier-patient-name" class="text-lg font-bold text-white">Patient Profile</h2>
-                                    <span id="dossier-patient-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">HIGH RISK</span>
+                                    <h2 id="dossier-patient-name" class="text-lg font-bold text-white" data-i18n="dossier_title">Patient Profile</h2>
+                                    <span id="dossier-patient-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30" data-i18n="dossier_high_risk">HIGH RISK</span>
                                 </div>
-                                <p id="dossier-patient-meta" class="text-xs text-slate-400 font-mono mt-1">Loading patient data...</p>
+                                <p id="dossier-patient-meta" class="text-xs text-slate-400 font-mono mt-1" data-i18n="dossier_loading">Loading patient data...</p>
                             </div>
                         </div>
                         <div class="flex items-center gap-2">
                             <button onclick="dispatchCrisisEscalation()" class="btn btn-sm bg-coral-dim text-coral-300 border border-coral-400/30">
-                                🚨 Dispatch Crisis
+                                <span data-i18n="btn_dispatch_crisis">🚨 Dispatch Crisis</span>
                             </button>
                             <button onclick="prescribeGrounding()" class="btn btn-sm bg-cyan-dim text-cyan-300 border border-cyan-400/30">
-                                🌿 Prescribe Grounding
+                                <span data-i18n="btn_prescribe_grounding">🌿 Prescribe Grounding</span>
                             </button>
                         </div>
                     </div>
@@ -1123,31 +1127,31 @@
                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                                     <circle cx="12" cy="7" r="4"/>
                                 </svg>
-                                Baseline Profile
+                                <span data-i18n="baseline_profile">Baseline Profile</span>
                             </h3>
                             <div class="space-y-3 text-sm">
                                 <div class="flex justify-between">
-                                    <span class="text-slate-400">Patient ID:</span>
+                                    <span class="text-slate-400" data-i18n="dossier_patient_id">Patient ID:</span>
                                     <span id="dossier-id" class="text-cyan-300 font-mono font-bold">--</span>
                                 </div>
                                 <div class="flex justify-between">
-                                    <span class="text-slate-400">Intake Date:</span>
+                                    <span class="text-slate-400" data-i18n="dossier_intake_date">Intake Date:</span>
                                     <span id="dossier-intake" class="text-white font-mono">--</span>
                                 </div>
                                 <div class="flex justify-between">
-                                    <span class="text-slate-400">Profession:</span>
+                                    <span class="text-slate-400" data-i18n="dossier_profession">Profession:</span>
                                     <span id="dossier-work" class="text-white">--</span>
                                 </div>
                                 <div class="flex justify-between">
-                                    <span class="text-slate-400">Contact:</span>
+                                    <span class="text-slate-400" data-i18n="dossier_contact">Contact:</span>
                                     <span id="dossier-contact" class="text-white font-mono">--</span>
                                 </div>
                                 <div class="flex justify-between">
-                                    <span class="text-slate-400">Baseline Stress:</span>
+                                    <span class="text-slate-400" data-i18n="dossier_baseline_stress">Baseline Stress:</span>
                                     <span id="dossier-stress" class="text-amber-300 font-bold">--</span>
                                 </div>
                                 <div class="flex justify-between">
-                                    <span class="text-slate-400">Total Check-ins:</span>
+                                    <span class="text-slate-400" data-i18n="dossier_total_checkins">Total Check-ins:</span>
                                     <span id="dossier-checkins" class="text-mint-300 font-bold">0</span>
                                 </div>
                             </div>
@@ -1155,7 +1159,7 @@
 
                         <!-- Risk Gauge -->
                         <div class="sentient-card p-6 lg:col-span-1 flex flex-col items-center justify-center">
-                            <h3 class="text-sm font-mono text-slate-400 uppercase tracking-wider mb-4">Current Risk Score</h3>
+                            <h3 class="text-sm font-mono text-slate-400 uppercase tracking-wider mb-4" data-i18n="dossier_risk_score">Current Risk Score</h3>
                             <div class="relative w-40 h-40">
                                 <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
                                     <circle cx="50" cy="50" r="40" stroke="rgba(255,255,255,0.08)" stroke-width="8" fill="none"/>
@@ -1163,10 +1167,10 @@
                                 </svg>
                                 <div class="absolute inset-0 flex flex-col items-center justify-center">
                                     <span id="dossier-score" class="text-4xl font-black text-white font-mono">--</span>
-                                    <span class="text-xs text-slate-400 font-mono">DDS Index</span>
+                                    <span class="text-xs text-slate-400 font-mono" data-i18n="dds_index">DDS Index</span>
                                 </div>
                             </div>
-                            <p id="dossier-risk-label" class="text-sm font-bold text-coral-300 mt-4">Assessing...</p>
+                            <p id="dossier-risk-label" class="text-sm font-bold text-coral-300 mt-4" data-i18n="dossier_assessing">Assessing...</p>
                         </div>
 
                         <!-- Narrative Summary -->
@@ -1178,10 +1182,10 @@
                                     <line x1="16" y1="13" x2="8" y2="13"/>
                                     <line x1="16" y1="17" x2="8" y2="17"/>
                                 </svg>
-                                Clinical Narrative
+                                <span data-i18n="clinical_narrative">Clinical Narrative</span>
                             </h3>
                             <div id="dossier-narrative" class="space-y-3 text-sm text-slate-300 max-h-48 overflow-y-auto">
-                                <p class="text-slate-400 italic">Loading narrative data...</p>
+                                <p class="text-slate-400 italic" data-i18n="narrative_loading">Loading narrative data...</p>
                             </div>
                         </div>
                     </div>
@@ -1189,13 +1193,13 @@
                     <!-- Visualization Tabs -->
                     <div class="sentient-card overflow-hidden">
                         <div class="flex border-b border-white/5 overflow-x-auto">
-                            <button onclick="switchDossierTab('radar')" id="dossier-tab-radar" class="dossier-tab active px-6 py-3 text-sm font-semibold text-white whitespace-nowrap">
+                            <button onclick="switchDossierTab('radar')" id="dossier-tab-radar" class="dossier-tab active px-6 py-3 text-sm font-semibold text-white whitespace-nowrap" data-i18n="tab_radar">
                                 🕸️ Radar Analysis
                             </button>
-                            <button onclick="switchDossierTab('timeline')" id="dossier-tab-timeline" class="dossier-tab px-6 py-3 text-sm font-semibold text-slate-400 whitespace-nowrap">
+                            <button onclick="switchDossierTab('timeline')" id="dossier-tab-timeline" class="dossier-tab px-6 py-3 text-sm font-semibold text-slate-400 whitespace-nowrap" data-i18n="tab_timeline">
                                 📈 Longitudinal Pulse
                             </button>
-                            <button onclick="switchDossierTab('genogram')" id="dossier-tab-genogram" class="dossier-tab px-6 py-3 text-sm font-semibold text-slate-400 whitespace-nowrap">
+                            <button onclick="switchDossierTab('genogram')" id="dossier-tab-genogram" class="dossier-tab px-6 py-3 text-sm font-semibold text-slate-400 whitespace-nowrap" data-i18n="tab_genogram">
                                 👨‍👩‍👧 Genogram
                             </button>
                             <button onclick="switchDossierTab('knowledge')" id="dossier-tab-knowledge" class="dossier-tab px-6 py-3 text-sm font-semibold text-slate-400 whitespace-nowrap">
@@ -1213,16 +1217,16 @@
                                     <circle cx="12" cy="12" r="10"/>
                                     <path d="M12 2v10l7 4"/>
                                 </svg>
-                                Affective Dimensionality Radar
+                                <span data-i18n="radar_title">Affective Dimensionality Radar</span>
                             </h4>
-                            <p class="text-xs text-slate-400 mb-6">Emotional spectrum metrics across 6 key dimensions</p>
+                            <p class="text-xs text-slate-400 mb-6" data-i18n="radar_desc">Emotional spectrum metrics across 6 key dimensions</p>
                             <div class="flex flex-col lg:flex-row gap-8">
                                 <div class="flex-1 flex justify-center">
                                     <canvas id="radar-chart" width="400" height="400" class="max-w-full"></canvas>
                                 </div>
                                 <div class="lg:w-64 space-y-3">
                                     <div class="p-3 rounded-xl bg-slate-900/50 border border-slate-700/50">
-                                        <p class="text-xs text-slate-400 mb-1">Anxiety</p>
+                                        <p class="text-xs text-slate-400 mb-1" data-i18n="dim_anxiety">Anxiety</p>
                                         <div class="flex items-center gap-2">
                                             <div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
                                                 <div id="radar-val-anxiety" class="h-full bg-rose-400 rounded-full" style="width: 0%"></div>
@@ -1231,7 +1235,7 @@
                                         </div>
                                     </div>
                                     <div class="p-3 rounded-xl bg-slate-900/50 border border-slate-700/50">
-                                        <p class="text-xs text-slate-400 mb-1">Depressive Affect</p>
+                                        <p class="text-xs text-slate-400 mb-1" data-i18n="dim_depressive">Depressive Affect</p>
                                         <div class="flex items-center gap-2">
                                             <div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
                                                 <div id="radar-val-depressive" class="h-full bg-purple-400 rounded-full" style="width: 0%"></div>
@@ -1240,7 +1244,7 @@
                                         </div>
                                     </div>
                                     <div class="p-3 rounded-xl bg-slate-900/50 border border-slate-700/50">
-                                        <p class="text-xs text-slate-400 mb-1">Sleep Disruption</p>
+                                        <p class="text-xs text-slate-400 mb-1" data-i18n="dim_sleep">Sleep Disruption</p>
                                         <div class="flex items-center gap-2">
                                             <div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
                                                 <div id="radar-val-sleep" class="h-full bg-amber-400 rounded-full" style="width: 0%"></div>
@@ -1249,7 +1253,7 @@
                                         </div>
                                     </div>
                                     <div class="p-3 rounded-xl bg-slate-900/50 border border-slate-700/50">
-                                        <p class="text-xs text-slate-400 mb-1">Cognitive Agitation</p>
+                                        <p class="text-xs text-slate-400 mb-1" data-i18n="dim_cognitive">Cognitive Agitation</p>
                                         <div class="flex items-center gap-2">
                                             <div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
                                                 <div id="radar-val-cognitive" class="h-full bg-sky-400 rounded-full" style="width: 0%"></div>
@@ -1258,7 +1262,7 @@
                                         </div>
                                     </div>
                                     <div class="p-3 rounded-xl bg-slate-900/50 border border-slate-700/50">
-                                        <p class="text-xs text-slate-400 mb-1">Social Withdrawal</p>
+                                        <p class="text-xs text-slate-400 mb-1" data-i18n="dim_social">Social Withdrawal</p>
                                         <div class="flex items-center gap-2">
                                             <div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
                                                 <div id="radar-val-social" class="h-full bg-violet-400 rounded-full" style="width: 0%"></div>
@@ -1267,7 +1271,7 @@
                                         </div>
                                     </div>
                                     <div class="p-3 rounded-xl bg-slate-900/50 border border-slate-700/50">
-                                        <p class="text-xs text-slate-400 mb-1">Emotional Resilience</p>
+                                        <p class="text-xs text-slate-400 mb-1" data-i18n="dim_resilience">Emotional Resilience</p>
                                         <div class="flex items-center gap-2">
                                             <div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
                                                 <div id="radar-val-resilience" class="h-full bg-emerald-400 rounded-full" style="width: 0%"></div>
@@ -1285,24 +1289,24 @@
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-cyan-400">
                                     <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
                                 </svg>
-                                Longitudinal Pulse Tracker
+                                <span data-i18n="timeline_title">Longitudinal Pulse Tracker</span>
                             </h4>
-                            <p class="text-xs text-slate-400 mb-6">Multi-variable temporal tracking over time</p>
+                            <p class="text-xs text-slate-400 mb-6" data-i18n="timeline_desc">Multi-variable temporal tracking over time</p>
                             <div class="h-80 bg-slate-900/30 rounded-xl p-4 border border-slate-700/30">
                                 <canvas id="timeline-chart"></canvas>
                             </div>
                             <div class="flex flex-wrap gap-4 mt-4 pt-4 border-t border-white/5">
                                 <div class="flex items-center gap-2">
                                     <div class="w-4 h-1 bg-rose-400 rounded"></div>
-                                    <span class="text-xs text-slate-400">Distress Index</span>
+                                    <span class="text-xs text-slate-400" data-i18n="legend_distress_index">Distress Index</span>
                                 </div>
                                 <div class="flex items-center gap-2">
                                     <div class="w-4 h-1 bg-emerald-400 rounded"></div>
-                                    <span class="text-xs text-slate-400">Grounding Adherence</span>
+                                    <span class="text-xs text-slate-400" data-i18n="legend_grounding">Grounding Adherence</span>
                                 </div>
                                 <div class="flex items-center gap-2">
                                     <div class="w-4 h-1 bg-amber-400 rounded"></div>
-                                    <span class="text-xs text-slate-400">Sleep Quality</span>
+                                    <span class="text-xs text-slate-400" data-i18n="legend_sleep_quality">Sleep Quality</span>
                                 </div>
                             </div>
                         </div>
@@ -1316,24 +1320,24 @@
                                     <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
                                     <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                                 </svg>
-                                Relational & Familial Network
+                                <span data-i18n="genogram_title">Relational & Familial Network</span>
                             </h4>
-                            <p class="text-xs text-slate-400 mb-6">Systemic stressors, support anchors, and family dynamics</p>
+                            <p class="text-xs text-slate-400 mb-6" data-i18n="genogram_desc">Systemic stressors, support anchors, and family dynamics</p>
                             <div id="genogram-container" class="h-96 bg-slate-900/30 rounded-xl border border-slate-700/30 p-4 relative overflow-hidden">
                                 <svg id="genogram-svg" class="w-full h-full"></svg>
                             </div>
                             <div class="flex flex-wrap gap-6 mt-4 pt-4 border-t border-white/5 text-xs">
                                 <div class="flex items-center gap-2">
                                     <div class="w-8 h-0.5 bg-emerald-400"></div>
-                                    <span class="text-slate-400">Strong Bond</span>
+                                    <span class="text-slate-400" data-i18n="legend_strong_bond">Strong Bond</span>
                                 </div>
                                 <div class="flex items-center gap-2">
                                     <div class="w-8 h-0.5 border-t-2 border-dashed border-slate-500"></div>
-                                    <span class="text-slate-400">Estrangement</span>
+                                    <span class="text-slate-400" data-i18n="legend_estrangement">Estrangement</span>
                                 </div>
                                 <div class="flex items-center gap-2">
                                     <div class="w-8 h-0.5 bg-rose-400" style="background: repeating-linear-gradient(90deg, #ff6b6b, #ff6b6b 4px, transparent 4px, transparent 8px);"></div>
-                                    <span class="text-slate-400">Active Conflict</span>
+                                    <span class="text-slate-400" data-i18n="legend_active_conflict">Active Conflict</span>
                                 </div>
                             </div>
                         </div>
@@ -1345,28 +1349,28 @@
                                     <path d="M12 2a10 10 0 1 0 10 10H12V2z"/>
                                     <path d="M20.83 14.83a10 10 0 1 1-7.42-7.42"/>
                                 </svg>
-                                Semantic Trigger Mesh
+                                <span data-i18n="knowledge_title">Semantic Trigger Mesh</span>
                             </h4>
-                            <p class="text-xs text-slate-400 mb-6">Cognitive triggers, coping mechanisms, and environmental stressors</p>
+                            <p class="text-xs text-slate-400 mb-6" data-i18n="knowledge_desc">Cognitive triggers, coping mechanisms, and environmental stressors</p>
                             <div id="knowledge-container" class="h-96 bg-slate-900/30 rounded-xl border border-slate-700/30 p-4 relative overflow-hidden">
                                 <svg id="knowledge-svg" class="w-full h-full"></svg>
                             </div>
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4 pt-4 border-t border-white/5">
                                 <div class="p-3 rounded-xl bg-slate-900/50 border border-slate-700/50 text-center">
                                     <span class="text-2xl">🧠</span>
-                                    <p class="text-xs text-slate-400 mt-1">Cognitive</p>
+                                    <p class="text-xs text-slate-400 mt-1" data-i18n="cat_cognitive">Cognitive</p>
                                 </div>
                                 <div class="p-3 rounded-xl bg-slate-900/50 border border-slate-700/50 text-center">
                                     <span class="text-2xl">💊</span>
-                                    <p class="text-xs text-slate-400 mt-1">Medication</p>
+                                    <p class="text-xs text-slate-400 mt-1" data-i18n="cat_medication">Medication</p>
                                 </div>
                                 <div class="p-3 rounded-xl bg-slate-900/50 border border-slate-700/50 text-center">
                                     <span class="text-2xl">🌍</span>
-                                    <p class="text-xs text-slate-400 mt-1">Environmental</p>
+                                    <p class="text-xs text-slate-400 mt-1" data-i18n="cat_environmental">Environmental</p>
                                 </div>
                                 <div class="p-3 rounded-xl bg-slate-900/50 border border-slate-700/50 text-center">
                                     <span class="text-2xl">🤝</span>
-                                    <p class="text-xs text-slate-400 mt-1">Coping</p>
+                                    <p class="text-xs text-slate-400 mt-1" data-i18n="cat_coping">Coping</p>
                                 </div>
                             </div>
                         </div>
@@ -1379,16 +1383,16 @@
                                     <line x1="12" y1="20" x2="12" y2="4"/>
                                     <line x1="6" y1="20" x2="6" y2="14"/>
                                 </svg>
-                                Symptom & Response Frequency
+                                <span data-i18n="histogram_title">Symptom & Response Frequency</span>
                             </h4>
-                            <p class="text-xs text-slate-400 mb-6">Distress spike frequency by time of day</p>
+                            <p class="text-xs text-slate-400 mb-6" data-i18n="histogram_desc">Distress spike frequency by time of day</p>
                             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                 <div class="bg-slate-900/30 rounded-xl p-4 border border-slate-700/30">
-                                    <h5 class="text-sm font-semibold text-white mb-4">Distress by Time of Day</h5>
+                                    <h5 class="text-sm font-semibold text-white mb-4" data-i18n="histogram_time_title">Distress by Time of Day</h5>
                                     <canvas id="histogram-time"></canvas>
                                 </div>
                                 <div class="bg-slate-900/30 rounded-xl p-4 border border-slate-700/30">
-                                    <h5 class="text-sm font-semibold text-white mb-4">Symptom Cluster Intensity</h5>
+                                    <h5 class="text-sm font-semibold text-white mb-4" data-i18n="histogram_symptom_title">Symptom Cluster Intensity</h5>
                                     <canvas id="histogram-symptoms"></canvas>
                                 </div>
                             </div>
@@ -1403,20 +1407,20 @@
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-cyan-400">
                                     <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
                                 </svg>
-                                Action Matrix
+                                <span data-i18n="action_matrix">Action Matrix</span>
                             </h3>
                             <div class="space-y-3">
                                 <button onclick="dispatchCrisisEscalation()" class="btn btn-critical w-full justify-start">
-                                    🚨 Dispatch Crisis Escalation
+                                    <span data-i18n="btn_dispatch_escalation">🚨 Dispatch Crisis Escalation</span>
                                 </button>
                                 <button onclick="prescribeGrounding()" class="btn btn-primary w-full justify-start">
-                                    🌿 Prescribe Grounding Module
+                                    <span data-i18n="btn_prescribe_module">🌿 Prescribe Grounding Module</span>
                                 </button>
                                 <button onclick="scheduleFollowUp()" class="btn btn-secondary w-full justify-start">
-                                    📅 Schedule Follow-Up
+                                    <span data-i18n="btn_schedule_followup">📅 Schedule Follow-Up</span>
                                 </button>
                                 <button onclick="generateLegalBrief()" class="btn btn-violet w-full justify-start">
-                                    📄 Generate Legal Brief
+                                    <span data-i18n="btn_legal_brief">📄 Generate Legal Brief</span>
                                 </button>
                             </div>
                         </div>
@@ -1428,15 +1432,15 @@
                                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
                                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
                                 </svg>
-                                Clinical Session Notes
+                                <span data-i18n="session_notes_title">Clinical Session Notes</span>
                             </h3>
-                            <textarea id="counselor-notes" rows="6" placeholder="Enter clinical observations, session notes, or intervention details..." class="sentient-input sentient-textarea mb-4"></textarea>
+                            <textarea id="counselor-notes" rows="6" placeholder="Enter clinical observations, session notes, or intervention details..." class="sentient-input sentient-textarea mb-4" data-i18n-placeholder="notes_placeholder"></textarea>
                             <div class="flex justify-between items-center">
                                 <span class="text-xs text-slate-400">
-                                    <span id="notes-char-count">0</span> characters
+                                    <span id="notes-char-count">0</span> <span data-i18n="notes_characters">characters</span>
                                 </span>
                                 <button onclick="saveClinicalNote()" class="btn btn-primary">
-                                    Save Note
+                                    <span data-i18n="btn_save_note">Save Note</span>
                                 </button>
                             </div>
 
@@ -1454,10 +1458,10 @@
                                 <circle cx="12" cy="12" r="10"/>
                                 <polyline points="12 6 12 12 16 14"/>
                             </svg>
-                            Counselor Action Log
+                            <span data-i18n="action_log_title">Counselor Action Log</span>
                         </h3>
                         <div id="action-log" class="space-y-2 max-h-64 overflow-y-auto">
-                            <p class="text-sm text-slate-400 italic">No actions logged yet.</p>
+                            <p class="text-sm text-slate-400 italic" data-i18n="no_actions_logged">No actions logged yet.</p>
                         </div>
                     </div>
 
@@ -1475,8 +1479,8 @@
 
             <div class="mb-8">
                 <span class="text-4xl mb-4 block">🌿</span>
-                <h3 class="text-heading text-white mb-2">Breathe & Reset</h3>
-                <p class="text-slate-400 text-sm">Follow the rhythm to calm your mind</p>
+                <h3 class="text-heading text-white mb-2" data-i18n="breathe_title">Breathe & Reset</h3>
+                <p class="text-slate-400 text-sm" data-i18n="breathe_desc">Follow the rhythm to calm your mind</p>
             </div>
 
             <div class="breathing-chamber py-12">
@@ -1486,7 +1490,7 @@
                     <div class="breathing-ring"></div>
                     <div class="breathing-glow"></div>
                     <div id="breathing-inner" class="w-32 h-32 rounded-full bg-gradient-to-br from-mint-400 to-cyan-500 flex items-center justify-center">
-                        <span id="breathe-state" class="text-white font-bold text-lg">INHALE</span>
+                        <span id="breathe-state" class="text-white font-bold text-lg" data-i18n="breathe_inhale">INHALE</span>
                     </div>
                 </div>
 
@@ -1497,23 +1501,23 @@
                 <div class="breathing-phases">
                     <div class="breathing-phase active" id="phase-inhale">
                         <div class="breathing-phase-dot"></div>
-                        <span>Inhale</span>
+                        <span data-i18n="breathe_inhale">Inhale</span>
                         <span class="text-xs">4s</span>
                     </div>
                     <div class="breathing-phase" id="phase-hold">
                         <div class="breathing-phase-dot"></div>
-                        <span>Hold</span>
+                        <span data-i18n="breathe_hold">Hold</span>
                         <span class="text-xs">7s</span>
                     </div>
                     <div class="breathing-phase" id="phase-exhale">
                         <div class="breathing-phase-dot"></div>
-                        <span>Exhale</span>
+                        <span data-i18n="breathe_exhale">Exhale</span>
                         <span class="text-xs">8s</span>
                     </div>
                 </div>
             </div>
 
-            <button onclick="toggleBreathingModal()" class="btn btn-mint btn-lg">I Feel Calmer</button>
+            <button onclick="toggleBreathingModal()" class="btn btn-mint btn-lg"><span data-i18n="btn_feel_calmer">I Feel Calmer</span></button>
         </div>
     </div>
 
@@ -1526,8 +1530,8 @@
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-xl bg-cyan-dim border border-cyan-400/30 flex items-center justify-center text-xl">🩺</div>
                     <div>
-                        <h3 class="font-bold text-white">Consult a Doctor</h3>
-                        <p class="text-xs text-slate-400">Confidential clinical consultation</p>
+                        <h3 class="font-bold text-white" data-i18n="consult_title">Consult a Doctor</h3>
+                        <p class="text-xs text-slate-400" data-i18n="consult_sub">Confidential clinical consultation</p>
                     </div>
                 </div>
                 <button onclick="closeConsultDoctorModal()" class="text-2xl text-slate-400 hover:text-white">&times;</button>
@@ -1536,7 +1540,7 @@
             <div class="sentient-modal-body space-y-6">
                 <!-- Doctor Selection -->
                 <div>
-                    <label class="text-micro text-slate-400 block mb-3">Select Specialist</label>
+                    <label class="text-micro text-slate-400 block mb-3" data-i18n="consult_select_specialist">Select Specialist</label>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                         <div onclick="selectDoctor('doc_1')" id="doc-card-doc_1" class="sentient-card sentient-card-interactive p-4 cursor-pointer border-cyan-400/30">
                             <div class="flex items-center gap-3 mb-2">
@@ -1548,8 +1552,8 @@
                                     <p class="text-xs text-cyan-400 font-mono">MD Psychiatry</p>
                                 </div>
                             </div>
-                            <p class="text-xs text-slate-400">Trauma & PTSD Specialist</p>
-                            <p class="text-xs text-mint-400 mt-1">● Available Now</p>
+                            <p class="text-xs text-slate-400" data-i18n="doc1_spec">Trauma & PTSD Specialist</p>
+                            <p class="text-xs text-mint-400 mt-1" data-i18n="doc_available_now">● Available Now</p>
                         </div>
                         <div onclick="selectDoctor('doc_2')" id="doc-card-doc_2" class="sentient-card p-4 cursor-pointer border-slate-700">
                             <div class="flex items-center gap-3 mb-2">
@@ -1561,8 +1565,8 @@
                                     <p class="text-xs text-slate-400 font-mono">PhD Clinical Psych</p>
                                 </div>
                             </div>
-                            <p class="text-xs text-slate-400">CBT & Crisis Specialist</p>
-                            <p class="text-xs text-amber-400 mt-1">15 mins wait</p>
+                            <p class="text-xs text-slate-400" data-i18n="doc2_spec">CBT & Crisis Specialist</p>
+                            <p class="text-xs text-amber-400 mt-1" data-i18n="doc_15_min_wait">15 mins wait</p>
                         </div>
                         <div onclick="selectDoctor('doc_3')" id="doc-card-doc_3" class="sentient-card p-4 cursor-pointer border-slate-700">
                             <div class="flex items-center gap-3 mb-2">
@@ -1574,23 +1578,23 @@
                                     <p class="text-xs text-slate-400 font-mono">MPhil Medical Psych</p>
                                 </div>
                             </div>
-                            <p class="text-xs text-slate-400">Anxiety & Victim Care</p>
-                            <p class="text-xs text-slate-400 mt-1">Today 5:30 PM</p>
+                            <p class="text-xs text-slate-400" data-i18n="doc3_spec">Anxiety & Victim Care</p>
+                            <p class="text-xs text-slate-400 mt-1" data-i18n="doc_today_530">Today 5:30 PM</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Consultation Mode -->
                 <div>
-                    <label class="text-micro text-slate-400 block mb-3">Consultation Mode</label>
+                    <label class="text-micro text-slate-400 block mb-3" data-i18n="consult_mode_label">Consultation Mode</label>
                     <div class="flex flex-wrap gap-2">
-                        <button onclick="selectConsultType('video')" id="consult-type-video" class="btn btn-sm bg-cyan-dim text-cyan-300 border border-cyan-400/30">📹 Video</button>
-                        <button onclick="selectConsultType('audio')" id="consult-type-audio" class="btn btn-sm bg-slate-800 text-slate-300 border border-slate-700">📞 Audio</button>
-                        <button onclick="selectConsultType('clinic')" id="consult-type-clinic" class="btn btn-sm bg-slate-800 text-slate-300 border border-slate-700">🏥 Clinic</button>
+                        <button onclick="selectConsultType('video')" id="consult-type-video" class="btn btn-sm bg-cyan-dim text-cyan-300 border border-cyan-400/30" data-i18n="btn_video">📹 Video</button>
+                        <button onclick="selectConsultType('audio')" id="consult-type-audio" class="btn btn-sm bg-slate-800 text-slate-300 border border-slate-700" data-i18n="btn_audio">📞 Audio</button>
+                        <button onclick="selectConsultType('clinic')" id="consult-type-clinic" class="btn btn-sm bg-slate-800 text-slate-300 border border-slate-700" data-i18n="btn_clinic">🏥 Clinic</button>
                     </div>
                 </div>
 
-                <button onclick="confirmDoctorBooking()" class="btn btn-primary btn-lg w-full">
+                <button onclick="confirmDoctorBooking()" class="btn btn-primary btn-lg w-full" data-i18n="btn_confirm_consult">
                     🔒 Confirm Consultation
                 </button>
             </div>
@@ -1598,9 +1602,9 @@
             <!-- Success View -->
             <div id="doctor-booking-success-view" class="hidden sentient-modal-body text-center py-12">
                 <div class="w-20 h-20 rounded-full bg-mint-dim border border-mint-400/30 flex items-center justify-center text-4xl mx-auto mb-6">✓</div>
-                <h4 class="text-heading text-white mb-2">Consultation Confirmed</h4>
-                <p class="text-slate-400 mb-6">Your appointment has been scheduled securely.</p>
-                <button onclick="closeConsultDoctorModal()" class="btn btn-mint">Done</button>
+                <h4 class="text-heading text-white mb-2" data-i18n="consult_confirmed_title">Consultation Confirmed</h4>
+                <p class="text-slate-400 mb-6" data-i18n="consult_confirmed_desc">Your appointment has been scheduled securely.</p>
+                <button onclick="closeConsultDoctorModal()" class="btn btn-mint" data-i18n="btn_done">Done</button>
             </div>
         </div>
     </div>
@@ -1614,7 +1618,7 @@
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-xl bg-cyan-dim border border-cyan-400/30 flex items-center justify-center text-xl">⚡</div>
                     <div>
-                        <h3 class="font-bold text-white">Closed-Loop Action</h3>
+                        <h3 class="font-bold text-white" data-i18n="action_title">Closed-Loop Action</h3>
                         <p id="modal-case-token" class="text-xs text-cyan-400 font-mono">Case: --</p>
                     </div>
                 </div>
@@ -1623,7 +1627,7 @@
 
             <form onsubmit="handleModalActionSubmit(event)" class="sentient-modal-body space-y-4">
                 <div>
-                    <label class="text-micro text-slate-400 block mb-2">Intervention Type</label>
+                    <label class="text-micro text-slate-400 block mb-2" data-i18n="action_type_label">Intervention Type</label>
                     <select id="modal-action-type" required class="sentient-input sentient-select">
                         <option value="Deploy Tele-MANAS Counselor Call">Deploy Tele-MANAS Counselor (14416)</option>
                         <option value="Police Witness Protection">Police Witness Protection (Sec 15A SC/ST Act)</option>
@@ -1634,13 +1638,13 @@
                 </div>
 
                 <div>
-                    <label class="text-micro text-slate-400 block mb-2">Caseworker Notes</label>
-                    <textarea id="modal-action-notes" required rows="3" placeholder="Enter action notes..." class="sentient-input sentient-textarea"></textarea>
+                    <label class="text-micro text-slate-400 block mb-2" data-i18n="action_notes_label">Caseworker Notes</label>
+                    <textarea id="modal-action-notes" required rows="3" placeholder="Enter action notes..." class="sentient-input sentient-textarea" data-i18n-placeholder="action_notes_ph"></textarea>
                 </div>
 
                 <div class="flex gap-3 pt-4">
-                    <button type="button" onclick="closeActionModal()" class="btn btn-secondary flex-1">Cancel</button>
-                    <button type="submit" class="btn btn-primary flex-1">Confirm & Log</button>
+                    <button type="button" onclick="closeActionModal()" class="btn btn-secondary flex-1" data-i18n="btn_cancel">Cancel</button>
+                    <button type="submit" class="btn btn-primary flex-1" data-i18n="btn_confirm_log">Confirm & Log</button>
                 </div>
             </form>
         </div>
@@ -1655,8 +1659,8 @@
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-xl bg-cyan-dim border border-cyan-400/30 flex items-center justify-center text-xl">🔬</div>
                     <div>
-                        <h3 class="font-bold text-white">AI Stress Monitor</h3>
-                        <p class="text-xs text-slate-400">Clinical assessment</p>
+                        <h3 class="font-bold text-white" data-i18n="stress_title">AI Stress Monitor</h3>
+                        <p class="text-xs text-slate-400" data-i18n="stress_sub">Clinical assessment</p>
                     </div>
                 </div>
                 <button onclick="closeStressReportModal()" class="text-2xl text-slate-400 hover:text-white">&times;</button>
@@ -1676,31 +1680,31 @@
                         </div>
                     </div>
                     <div>
-                        <p id="stress-modal-headline" class="font-bold text-white mb-1">Elevated Stress Level</p>
-                        <p id="stress-modal-summary" class="text-sm text-slate-400">Proactive support recommended.</p>
+                        <p id="stress-modal-headline" class="font-bold text-white mb-1" data-i18n="stress_headline">Elevated Stress Level</p>
+                        <p id="stress-modal-summary" class="text-sm text-slate-400" data-i18n="stress_summary">Proactive support recommended.</p>
                     </div>
                 </div>
 
                 <!-- Tone Breakdown -->
                 <div>
-                    <label class="text-micro text-slate-400 block mb-3">Emotional Tone Analysis</label>
+                    <label class="text-micro text-slate-400 block mb-3" data-i18n="tone_analysis_label">Emotional Tone Analysis</label>
                     <div class="grid grid-cols-3 gap-3">
                         <div class="sentient-card p-3 text-center">
                             <p class="text-2xl font-bold text-amber-400" id="tone-anxiety">75%</p>
-                            <p class="text-xs text-slate-400">Anxiety</p>
+                            <p class="text-xs text-slate-400" data-i18n="tone_anxiety">Anxiety</p>
                         </div>
                         <div class="sentient-card p-3 text-center">
                             <p class="text-2xl font-bold text-sky-400" id="tone-sadness">60%</p>
-                            <p class="text-xs text-slate-400">Sadness</p>
+                            <p class="text-xs text-slate-400" data-i18n="tone_sadness">Sadness</p>
                         </div>
                         <div class="sentient-card p-3 text-center">
                             <p class="text-2xl font-bold text-mint-400" id="tone-hope">30%</p>
-                            <p class="text-xs text-slate-400">Hope</p>
+                            <p class="text-xs text-slate-400" data-i18n="tone_hope">Hope</p>
                         </div>
                     </div>
                 </div>
 
-                <button onclick="openConsultDoctorModal(); closeStressReportModal();" class="btn btn-primary w-full">Consult Doctor</button>
+                <button onclick="openConsultDoctorModal(); closeStressReportModal();" class="btn btn-primary w-full" data-i18n="btn_consult_doctor">Consult Doctor</button>
             </div>
         </div>
     </div>
@@ -1718,8 +1722,8 @@
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-full bg-slate-800 border border-cyan-400/30 flex items-center justify-center text-xl">✨</div>
                     <div>
-                        <h4 class="font-bold text-white">NEX AI</h4>
-                        <p class="text-xs text-cyan-300">Safe & Confidential</p>
+                        <h4 class="font-bold text-white" data-i18n="nex_title">NEX AI</h4>
+                        <p class="text-xs text-cyan-300" data-i18n="nex_subtitle">Safe & Confidential</p>
                     </div>
                 </div>
                 <button onclick="toggleNexChat()" class="text-2xl text-slate-400 hover:text-white">&times;</button>
@@ -1731,12 +1735,12 @@
 
             <div class="p-3 border-t border-white/5 space-y-2">
                 <div class="flex flex-wrap gap-1.5">
-                    <button onclick="sendQuickPrompt('safe')" class="btn btn-xs bg-slate-800 text-slate-300">🛡️ Unsafe</button>
-                    <button onclick="sendQuickPrompt('court')" class="btn btn-xs bg-slate-800 text-slate-300">⚖️ Court</button>
-                    <button onclick="sendQuickPrompt('breathe')" class="btn btn-xs bg-slate-800 text-slate-300">🌿 Breathe</button>
+                    <button onclick="sendQuickPrompt('safe')" class="btn btn-xs bg-slate-800 text-slate-300" data-i18n="nex_prompt_unsafe">🛡️ Unsafe</button>
+                    <button onclick="sendQuickPrompt('court')" class="btn btn-xs bg-slate-800 text-slate-300" data-i18n="nex_prompt_court">⚖️ Court</button>
+                    <button onclick="sendQuickPrompt('breathe')" class="btn btn-xs bg-slate-800 text-slate-300" data-i18n="nex_prompt_breathe">🌿 Breathe</button>
                 </div>
                 <form onsubmit="handleNexUserSend(event)" class="flex gap-2">
-                    <input type="text" id="nex-user-input" placeholder="Type to NEX..." class="sentient-input flex-1 text-sm">
+                    <input type="text" id="nex-user-input" placeholder="Type to NEX..." class="sentient-input flex-1 text-sm" data-i18n-placeholder="nex_placeholder">
                     <button type="submit" class="btn btn-primary px-4">↑</button>
                 </form>
             </div>
