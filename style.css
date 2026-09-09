@@ -216,13 +216,9 @@ h1, h2, h3, h4, h5, h6 {
    3. GLOBAL VISUAL ENVIRONMENT (Sentient Atmosphere)
    ============================================================================ */
 
-/* Main Environment Container */
+/* Main Environment Container (Deprecated in favor of Nexora Ambient Controller) */
 .sentient-environment {
-  position: fixed;
-  inset: 0;
-  background: var(--bg-void);
-  overflow: hidden;
-  z-index: 0;
+  display: none !important;
 }
 
 /* Layered Atmosphere */
@@ -2110,9 +2106,10 @@ section, div[id$="-view"] {
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: -1;
+  z-index: 0;
   pointer-events: none;
   background: #010308;
+  transition: filter 0.4s ease;
 }
 
 /* ============================================================================
@@ -2159,11 +2156,12 @@ section, div[id$="-view"] {
   transform: translateY(-1px);
 }
 
-.engine-btn.active {
-  background: linear-gradient(135deg, rgba(6, 182, 212, 0.2) 0%, rgba(99, 102, 241, 0.2) 100%);
-  border-color: rgba(6, 182, 212, 0.5);
+.engine-btn.active,
+.engine-btn.ring-cyan-400 {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.25) 0%, rgba(99, 102, 241, 0.25) 100%);
+  border-color: rgba(6, 182, 212, 0.8);
   color: #67e8f9;
-  box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.35);
 }
 
 /* Theme Selector Swatches */
@@ -2181,10 +2179,11 @@ section, div[id$="-view"] {
   border-color: rgba(255, 255, 255, 0.3);
 }
 
-.theme-btn.active {
-  border-color: rgba(255, 255, 255, 0.6);
-  transform: scale(1.1);
-  box-shadow: 0 0 15px var(--swatch-color, rgba(6, 182, 212, 0.5));
+.theme-btn.active,
+.theme-btn.ring-white {
+  border-color: rgba(255, 255, 255, 0.9);
+  transform: scale(1.15);
+  box-shadow: 0 0 16px var(--accent-glow, rgba(6, 182, 212, 0.6));
 }
 
 /* Range Input Styling */

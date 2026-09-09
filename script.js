@@ -8959,632 +8959,654 @@ window.addEventListener('hashchange', () => {
 })();
 
 // ============================================================================
-// NEXORA UNIVERSAL AMBIENT BACKGROUND ENGINE
-// Global persistent canvas with 6 switchable engines and theme synchronization
+// NEXORA UNIVERSAL AMBIENT BACKGROUND ENGINE & CONTROLLER
+// Singleton controller managing switchable canvas engines, chromatic themes,
+// and route-persistent ambient visuals.
 // ============================================================================
 
-(function initNexoraAmbientEngine() {
-    const canvas = document.getElementById('nexora-ambient-canvas');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+window.AmbientController = {
+  activeEngine: localStorage.getItem('nexora_bg_engine') || 'sentient-aura',
+  activeTheme: localStorage.getItem('nexora_bg_theme') || 'cyber-cyan',
+  activeOpacity: parseFloat(localStorage.getItem('nexora_bg_opacity') || '0.75'),
+  animationFrameId: null,
+  canvas: null,
+  ctx: null,
+  mouse: { x: window.innerWidth / 2, y: window.innerHeight / 2 },
+  _uiBound: false,
+  noisePattern: null,
 
-    // State
-    let width, height;
-    let animationFrameId = null;
-    let currentEngine = localStorage.getItem('nexora_bg_engine') || 'sentient-aura';
-    let currentTheme = localStorage.getItem('nexora_bg_theme') || 'cyber-cyan';
-    let currentOpacity = parseFloat(localStorage.getItem('nexora_bg_opacity') || '0.75');
-
-    // Mouse tracking
-    let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-    let mouseSpeed = 0;
-
-    // Theme color definitions
-    const themes = {
-        'cyber-cyan': {
-            primary: '#06b6d4',
-            glow: 'rgba(6, 182, 212, 0.45)',
-            gradient: ['rgba(6, 182, 212, 0.6)', 'rgba(8, 145, 178, 0.4)', 'rgba(14, 116, 144, 0.3)'],
-            orbColors: [
-                'rgba(6, 182, 212, 0.45)',
-                'rgba(99, 102, 241, 0.4)',
-                'rgba(168, 85, 247, 0.35)',
-                'rgba(14, 165, 233, 0.35)'
-            ]
-        },
-        'neural-violet': {
-            primary: '#a855f7',
-            glow: 'rgba(168, 85, 247, 0.45)',
-            gradient: ['rgba(168, 85, 247, 0.6)', 'rgba(147, 51, 234, 0.4)', 'rgba(126, 34, 206, 0.3)'],
-            orbColors: [
-                'rgba(168, 85, 247, 0.45)',
-                'rgba(139, 92, 246, 0.4)',
-                'rgba(192, 132, 252, 0.35)',
-                'rgba(217, 70, 239, 0.35)'
-            ]
-        },
-        'obsidian-emerald': {
-            primary: '#10b981',
-            glow: 'rgba(16, 185, 129, 0.45)',
-            gradient: ['rgba(16, 185, 129, 0.6)', 'rgba(5, 150, 105, 0.4)', 'rgba(4, 120, 87, 0.3)'],
-            orbColors: [
-                'rgba(16, 185, 129, 0.45)',
-                'rgba(52, 211, 153, 0.4)',
-                'rgba(34, 197, 94, 0.35)',
-                'rgba(6, 182, 212, 0.35)'
-            ]
-        },
-        'solar-amber': {
-            primary: '#f59e0b',
-            glow: 'rgba(245, 158, 11, 0.45)',
-            gradient: ['rgba(245, 158, 11, 0.6)', 'rgba(217, 119, 6, 0.4)', 'rgba(180, 83, 9, 0.3)'],
-            orbColors: [
-                'rgba(245, 158, 11, 0.45)',
-                'rgba(251, 146, 60, 0.4)',
-                'rgba(249, 115, 22, 0.35)',
-                'rgba(234, 179, 8, 0.35)'
-            ]
-        },
-        'deep-crimson': {
-            primary: '#f43f5e',
-            glow: 'rgba(244, 63, 94, 0.45)',
-            gradient: ['rgba(244, 63, 94, 0.6)', 'rgba(225, 29, 72, 0.4)', 'rgba(190, 24, 93, 0.3)'],
-            orbColors: [
-                'rgba(244, 63, 94, 0.45)',
-                'rgba(251, 113, 133, 0.4)',
-                'rgba(248, 113, 113, 0.35)',
-                'rgba(155, 44, 44, 0.35)'
-            ]
-        }
-    };
-
-    // Resize handler
-    function resize() {
-        width = canvas.width = window.innerWidth;
-        height = canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resize);
-    resize();
-
-    // Mouse tracking
-    let lastMouseX = mouse.x, lastMouseY = mouse.y;
+  init() {
+    this.canvas = document.getElementById('nexora-ambient-canvas');
+    if (!this.canvas) return;
+    this.ctx = this.canvas.getContext('2d');
+    this.resize();
+    window.addEventListener('resize', () => this.resize());
     window.addEventListener('mousemove', (e) => {
-        mouseSpeed = Math.sqrt(Math.pow(e.clientX - lastMouseX, 2) + Math.pow(e.clientY - lastMouseY, 2));
-        mouse.x = e.clientX;
-        mouse.y = e.clientY;
-        lastMouseX = e.clientX;
-        lastMouseY = e.clientY;
+      this.mouse.x = e.clientX;
+      this.mouse.y = e.clientY;
     });
 
-    // =========================================================================
-    // ENGINE 1: SENTIENT AURA (Organic Chromatic Drift)
-    // =========================================================================
-    let auraOrbs = [];
-    let auraFrame = 0;
+    this.applyTheme(this.activeTheme, false);
+    this.setOpacity(this.activeOpacity);
+    this.switchEngine(this.activeEngine);
+    this.bindUI();
+  },
 
-    function initAuraOrbs() {
-        auraOrbs = [
-            { x: width * 0.3, y: height * 0.4, vx: 0.4, vy: 0.3, r: 240, color: 0 },
-            { x: width * 0.7, y: height * 0.6, vx: -0.3, vy: -0.4, r: 280, color: 1 },
-            { x: width * 0.5, y: height * 0.5, vx: 0.2, vy: -0.3, r: 200, color: 2 },
-            { x: width * 0.2, y: height * 0.7, vx: -0.2, vy: 0.2, r: 220, color: 3 }
-        ];
+  resize() {
+    if (!this.canvas) return;
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
+  },
+
+  stopCurrentEngine() {
+    if (this.animationFrameId) {
+      cancelAnimationFrame(this.animationFrameId);
+      this.animationFrameId = null;
     }
-    initAuraOrbs();
-
-    function animateSentientAura() {
-        auraFrame += 0.01;
-        ctx.clearRect(0, 0, width, height);
-        ctx.globalAlpha = currentOpacity;
-
-        auraOrbs.forEach((orb, i) => {
-            orb.x += orb.vx + Math.sin(auraFrame + i) * 0.4;
-            orb.y += orb.vy + Math.cos(auraFrame + i) * 0.4;
-
-            // Mouse influence
-            const dx = mouse.x - orb.x;
-            const dy = mouse.y - orb.y;
-            orb.x += dx * 0.003;
-            orb.y += dy * 0.003;
-
-            // Boundary bounce
-            if (orb.x < -100 || orb.x > width + 100) orb.vx *= -1;
-            if (orb.y < -100 || orb.y > height + 100) orb.vy *= -1;
-
-            // Render radial glow
-            const colors = themes[currentTheme].orbColors;
-            const grad = ctx.createRadialGradient(orb.x, orb.y, 10, orb.x, orb.y, orb.r);
-            grad.addColorStop(0, colors[orb.color]);
-            grad.addColorStop(1, 'rgba(1, 3, 8, 0)');
-
-            ctx.fillStyle = grad;
-            ctx.beginPath();
-            ctx.arc(orb.x, orb.y, orb.r, 0, Math.PI * 2);
-            ctx.fill();
-        });
-
-        ctx.globalAlpha = 1;
+    if (this.ctx && this.canvas) {
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
+    // Reset any engine-specific canvas filters
+    if (this.canvas) {
+      this.canvas.style.filter = 'none';
+    }
+  },
 
-    // =========================================================================
-    // ENGINE 2: NEURAL SYNAPSE MESH (Plexus Effect)
-    // =========================================================================
-    let synapseNodes = [];
-    let synapseFrame = 0;
+  getTheme() {
+    const themes = {
+      'cyber-cyan': {
+        primary: '#06b6d4',
+        glow: 'rgba(6, 182, 212, 0.45)',
+        rgb: '6, 182, 212',
+        palette: ['rgba(6, 182, 212, 0.7)', 'rgba(14, 165, 233, 0.6)', 'rgba(59, 130, 246, 0.5)', 'rgba(99, 102, 241, 0.45)']
+      },
+      'neural-violet': {
+        primary: '#a855f7',
+        glow: 'rgba(168, 85, 247, 0.45)',
+        rgb: '168, 85, 247',
+        palette: ['rgba(168, 85, 247, 0.7)', 'rgba(147, 51, 234, 0.6)', 'rgba(126, 34, 206, 0.5)', 'rgba(192, 132, 252, 0.45)']
+      },
+      'obsidian-emerald': {
+        primary: '#10b981',
+        glow: 'rgba(16, 185, 129, 0.45)',
+        rgb: '16, 185, 129',
+        palette: ['rgba(16, 185, 129, 0.7)', 'rgba(5, 150, 105, 0.6)', 'rgba(4, 120, 87, 0.5)', 'rgba(52, 211, 153, 0.45)']
+      },
+      'solar-amber': {
+        primary: '#f59e0b',
+        glow: 'rgba(245, 158, 11, 0.45)',
+        rgb: '245, 158, 11',
+        palette: ['rgba(245, 158, 11, 0.7)', 'rgba(217, 119, 6, 0.6)', 'rgba(180, 83, 9, 0.5)', 'rgba(251, 146, 60, 0.45)']
+      },
+      'deep-crimson': {
+        primary: '#f43f5e',
+        glow: 'rgba(244, 63, 94, 0.45)',
+        rgb: '244, 63, 94',
+        palette: ['rgba(244, 63, 94, 0.7)', 'rgba(225, 29, 72, 0.6)', 'rgba(190, 24, 93, 0.5)', 'rgba(251, 113, 133, 0.45)']
+      }
+    };
+    return themes[this.activeTheme] || themes['cyber-cyan'];
+  },
 
-    function initSynapseNodes() {
-        synapseNodes = [];
-        const nodeCount = Math.floor((width * height) / 25000);
-        for (let i = 0; i < nodeCount; i++) {
-            synapseNodes.push({
-                x: Math.random() * width,
-                y: Math.random() * height,
-                vx: (Math.random() - 0.5) * 0.5,
-                vy: (Math.random() - 0.5) * 0.5,
-                r: 2 + Math.random() * 2,
-                pulse: Math.random() * Math.PI * 2
-            });
+  switchEngine(engineKey) {
+    this.stopCurrentEngine();
+    this.activeEngine = engineKey;
+    localStorage.setItem('nexora_bg_engine', engineKey);
+
+    // Update active UI state on buttons
+    document.querySelectorAll('[data-bg-engine]').forEach(btn => {
+      const isMatch = btn.getAttribute('data-bg-engine') === engineKey;
+      btn.classList.toggle('ring-2', isMatch);
+      btn.classList.toggle('ring-cyan-400', isMatch);
+      btn.classList.toggle('active', isMatch);
+    });
+
+    switch (engineKey) {
+      case 'sentient-aura':
+        this.runSentientAura();
+        break;
+      case 'neural-synapse':
+        this.runNeuralSynapse();
+        break;
+      case 'fluid-smoke':
+        this.runFluidSmoke();
+        break;
+      case 'aurora-borealis':
+        this.runAuroraBorealis();
+        break;
+      case 'dot-matrix':
+        this.runDotMatrix();
+        break;
+      case 'noise-gradient':
+        this.runNoiseGradient();
+        break;
+      default:
+        this.runSentientAura();
+    }
+  },
+
+  applyTheme(themeKey, triggerRerender = true) {
+    this.activeTheme = themeKey;
+    localStorage.setItem('nexora_bg_theme', themeKey);
+    const theme = this.getTheme();
+
+    document.documentElement.style.setProperty('--accent-primary', theme.primary);
+    document.documentElement.style.setProperty('--accent-glow', theme.glow);
+
+    // Update active UI state on theme buttons
+    document.querySelectorAll('[data-theme]').forEach(btn => {
+      const isMatch = btn.getAttribute('data-theme') === themeKey;
+      btn.classList.toggle('active', isMatch);
+      btn.classList.toggle('ring-2', isMatch);
+      btn.classList.toggle('ring-white', isMatch);
+    });
+
+    // Re-trigger current engine frame to inherit new colors immediately
+    if (triggerRerender && this.activeEngine) {
+      this.switchEngine(this.activeEngine);
+    }
+  },
+
+  setOpacity(val) {
+    const num = parseFloat(val);
+    this.activeOpacity = isNaN(num) ? 0.75 : Math.max(0.1, Math.min(1, num));
+    localStorage.setItem('nexora_bg_opacity', this.activeOpacity.toString());
+    if (this.canvas) {
+      this.canvas.style.opacity = this.activeOpacity.toString();
+    }
+    const percent = Math.round(this.activeOpacity * 100);
+    const slider = document.getElementById('ambient-opacity');
+    if (slider) slider.value = percent;
+    const display = document.getElementById('opacity-display');
+    if (display) display.textContent = `${percent}%`;
+  },
+
+  applyPreset(presetKey) {
+    const presets = {
+      calm: { engine: 'aurora-borealis', theme: 'obsidian-emerald', opacity: 0.65 },
+      focus: { engine: 'neural-synapse', theme: 'cyber-cyan', opacity: 0.75 },
+      energy: { engine: 'fluid-smoke', theme: 'solar-amber', opacity: 0.8 },
+      night: { engine: 'noise-gradient', theme: 'neural-violet', opacity: 0.7 }
+    };
+
+    const p = presets[presetKey];
+    if (p) {
+      if (p.opacity) this.setOpacity(p.opacity);
+      this.applyTheme(p.theme, false);
+      this.switchEngine(p.engine);
+    }
+  },
+
+  bindUI() {
+    if (this._uiBound) return;
+    this._uiBound = true;
+
+    // Use event delegation on document.body to survive DOM changes & view switches
+    document.body.addEventListener('click', (e) => {
+      // 1. Engine selector button
+      const engineBtn = e.target.closest('[data-bg-engine]');
+      if (engineBtn) {
+        const engine = engineBtn.getAttribute('data-bg-engine');
+        if (engine) {
+          this.switchEngine(engine);
         }
-    }
-    initSynapseNodes();
+        return;
+      }
 
-    function animateNeuralSynapse() {
-        synapseFrame += 0.005;
-        ctx.clearRect(0, 0, width, height);
-        ctx.globalAlpha = currentOpacity;
-
-        const colors = themes[currentTheme].gradient;
-
-        // Update and draw nodes
-        synapseNodes.forEach((node, i) => {
-            node.x += node.vx + (mouse.x - node.x) * 0.001;
-            node.y += node.vy + (mouse.y - node.y) * 0.001;
-            node.pulse += 0.05;
-
-            // Boundary wrap
-            if (node.x < 0) node.x = width;
-            if (node.x > width) node.x = 0;
-            if (node.y < 0) node.y = height;
-            if (node.y > height) node.y = 0;
-
-            // Draw connections
-            synapseNodes.forEach((other, j) => {
-                if (i >= j) return;
-                const dx = node.x - other.x;
-                const dy = node.y - other.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                const maxDist = 150;
-
-                if (dist < maxDist) {
-                    const opacity = (1 - dist / maxDist) * 0.5;
-                    ctx.strokeStyle = colors[0].replace(/[\d.]+\)$/, `${opacity})`);
-                    ctx.lineWidth = 1;
-                    ctx.beginPath();
-                    ctx.moveTo(node.x, node.y);
-                    ctx.lineTo(other.x, other.y);
-                    ctx.stroke();
-                }
-            });
-
-            // Draw node
-            const pulseR = node.r + Math.sin(node.pulse) * 0.5;
-            const grad = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, pulseR * 3);
-            grad.addColorStop(0, colors[0].replace(/[\d.]+\)$/, '0.8)'));
-            grad.addColorStop(1, 'rgba(1, 3, 8, 0)');
-            ctx.fillStyle = grad;
-            ctx.beginPath();
-            ctx.arc(node.x, node.y, pulseR * 3, 0, Math.PI * 2);
-            ctx.fill();
-        });
-
-        ctx.globalAlpha = 1;
-    }
-
-    // =========================================================================
-    // ENGINE 3: FLUID SMOKE SHADER
-    // =========================================================================
-    let smokeParticles = [];
-    let smokeTime = 0;
-
-    function initSmokeParticles() {
-        smokeParticles = [];
-        const count = Math.floor((width * height) / 20000);
-        for (let i = 0; i < count; i++) {
-            smokeParticles.push({
-                x: Math.random() * width,
-                y: height + Math.random() * 100,
-                vx: (Math.random() - 0.5) * 0.5,
-                vy: -0.5 - Math.random() * 1.5,
-                size: 50 + Math.random() * 150,
-                opacity: 0.1 + Math.random() * 0.3,
-                phase: Math.random() * Math.PI * 2
-            });
+      // 2. Theme color swatch button
+      const themeBtn = e.target.closest('[data-theme]');
+      if (themeBtn) {
+        const theme = themeBtn.getAttribute('data-theme');
+        if (theme) {
+          this.applyTheme(theme, true);
         }
-    }
-    initSmokeParticles();
+        return;
+      }
 
-    function animateFluidSmoke() {
-        smokeTime += 0.01;
-        ctx.clearRect(0, 0, width, height);
-        ctx.globalAlpha = currentOpacity;
-
-        const colors = themes[currentTheme].gradient;
-
-        smokeParticles.forEach((p, i) => {
-            p.x += p.vx + Math.sin(smokeTime + p.phase) * 0.3;
-            p.y += p.vy;
-            p.x += (mouse.x - width / 2) * 0.0005;
-
-            // Reset if off screen
-            if (p.y < -p.size) {
-                p.y = height + p.size;
-                p.x = Math.random() * width;
-            }
-
-            // Draw smoke blob
-            const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size);
-            grad.addColorStop(0, colors[0].replace(/[\d.]+\)$/, `${p.opacity})`));
-            grad.addColorStop(0.5, colors[1].replace(/[\d.]+\)$/, `${p.opacity * 0.5})`));
-            grad.addColorStop(1, 'rgba(1, 3, 8, 0)');
-
-            ctx.fillStyle = grad;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-            ctx.fill();
-        });
-
-        ctx.globalAlpha = 1;
-    }
-
-    // =========================================================================
-    // ENGINE 4: AURORA BOREALIS RIBBON WAVES
-    // =========================================================================
-    let auroraTime = 0;
-
-    function animateAuroraBorealis() {
-        auroraTime += 0.008;
-        ctx.clearRect(0, 0, width, height);
-        ctx.globalAlpha = currentOpacity;
-
-        const colors = themes[currentTheme].gradient;
-
-        // Draw multiple wave layers
-        for (let layer = 0; layer < 5; layer++) {
-            ctx.beginPath();
-            const layerOffset = layer * 0.5;
-            const layerAmplitude = 30 + layer * 15;
-            const layerSpeed = (layer + 1) * 0.3;
-
-            ctx.moveTo(0, height);
-
-            for (let x = 0; x <= width; x += 5) {
-                const y = height * (0.3 + layer * 0.1) +
-                    Math.sin(x * 0.003 + auroraTime + layerOffset) * layerAmplitude +
-                    Math.sin(x * 0.007 + auroraTime * 0.7 + layerOffset) * layerAmplitude * 0.5 +
-                    Math.sin(x * 0.001 + auroraTime * 0.5 + layerOffset) * layerAmplitude * 0.3;
-
-                if (x === 0) {
-                    ctx.lineTo(x, y);
-                } else {
-                    ctx.lineTo(x, y);
-                }
-            }
-
-            ctx.lineTo(width, height);
-            ctx.closePath();
-
-            const grad = ctx.createLinearGradient(0, height * 0.2, 0, height * 0.8);
-            grad.addColorStop(0, colors[0].replace(/[\d.]+\)$/, '0)'));
-            grad.addColorStop(0.5, colors[layer % 3].replace(/[\d.]+\)$/, `${0.15 + layer * 0.05})`));
-            grad.addColorStop(1, colors[2].replace(/[\d.]+\)$/, '0)'));
-
-            ctx.fillStyle = grad;
-            ctx.fill();
+      // 3. Quick preset button
+      const presetBtn = e.target.closest('[data-preset]');
+      if (presetBtn) {
+        const preset = presetBtn.getAttribute('data-preset');
+        if (preset) {
+          this.applyPreset(preset);
         }
+        return;
+      }
 
-        ctx.globalAlpha = 1;
+    });
+
+    // Opacity input delegation
+    document.body.addEventListener('input', (e) => {
+      if (e.target && e.target.id === 'ambient-opacity') {
+        this.setOpacity(e.target.value / 100);
+      }
+    });
+  },
+
+  // --------------------------------------------------------------------------
+  // ENGINE 1: SENTIENT AURA
+  // Drifts 4 radial gradient orbs using sine/cosine offsets with blur(60px)
+  // --------------------------------------------------------------------------
+  runSentientAura() {
+    if (!this.canvas || !this.ctx) return;
+    this.canvas.style.filter = 'blur(60px)';
+    const theme = this.getTheme();
+    const w = this.canvas.width;
+    const h = this.canvas.height;
+    const orbs = [
+      { x: w * 0.3, y: h * 0.35, vx: 0.5, vy: 0.4, r: Math.min(w, h) * 0.28, color: theme.palette[0] },
+      { x: w * 0.7, y: h * 0.65, vx: -0.4, vy: -0.5, r: Math.min(w, h) * 0.32, color: theme.palette[1] },
+      { x: w * 0.55, y: h * 0.4, vx: 0.3, vy: -0.4, r: Math.min(w, h) * 0.25, color: theme.palette[2] },
+      { x: w * 0.25, y: h * 0.75, vx: -0.3, vy: 0.3, r: Math.min(w, h) * 0.26, color: theme.palette[3] }
+    ];
+
+    let t = 0;
+    const loop = () => {
+      t += 0.015;
+      const ctx = this.ctx;
+      const width = this.canvas.width;
+      const height = this.canvas.height;
+      ctx.clearRect(0, 0, width, height);
+      ctx.globalAlpha = this.activeOpacity;
+
+      orbs.forEach((orb, i) => {
+        orb.x += orb.vx + Math.sin(t + i * 1.5) * 0.8;
+        orb.y += orb.vy + Math.cos(t + i * 1.2) * 0.8;
+
+        const dx = this.mouse.x - orb.x;
+        const dy = this.mouse.y - orb.y;
+        orb.x += dx * 0.002;
+        orb.y += dy * 0.002;
+
+        if (orb.x < -60 || orb.x > width + 60) orb.vx *= -1;
+        if (orb.y < -60 || orb.y > height + 60) orb.vy *= -1;
+
+        const grad = ctx.createRadialGradient(orb.x, orb.y, 10, orb.x, orb.y, orb.r);
+        grad.addColorStop(0, orb.color);
+        grad.addColorStop(1, 'rgba(1, 3, 8, 0)');
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(orb.x, orb.y, orb.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      ctx.globalAlpha = 1;
+      this.animationFrameId = requestAnimationFrame(loop);
+    };
+    this.animationFrameId = requestAnimationFrame(loop);
+  },
+
+  // --------------------------------------------------------------------------
+  // ENGINE 2: NEURAL SYNAPSE
+  // 75 particles with velocity vectors, connecting lines < 120px, mouse link < 140px
+  // --------------------------------------------------------------------------
+  runNeuralSynapse() {
+    if (!this.canvas || !this.ctx) return;
+    this.canvas.style.filter = 'none';
+    const theme = this.getTheme();
+    const w = this.canvas.width;
+    const h = this.canvas.height;
+    const count = 75;
+    const particles = [];
+
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 1.1,
+        vy: (Math.random() - 0.5) * 1.1,
+        r: 1.5 + Math.random() * 2
+      });
     }
 
-    // =========================================================================
-    // ENGINE 5: INTERACTIVE PERSPECTIVE DOT MATRIX (3D Grid)
-    // =========================================================================
-    let dotMatrixTime = 0;
-    const gridSpacing = 40;
-    const gridDepth = 20;
+    const loop = () => {
+      const ctx = this.ctx;
+      const width = this.canvas.width;
+      const height = this.canvas.height;
+      ctx.clearRect(0, 0, width, height);
+      ctx.globalAlpha = this.activeOpacity;
 
-    function animateDotMatrix() {
-        dotMatrixTime += 0.02;
-        ctx.clearRect(0, 0, width, height);
-        ctx.globalAlpha = currentOpacity;
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
 
-        const horizonY = height * 0.4;
-        const vanishX = width / 2;
-        const colors = themes[currentTheme].gradient;
+        if (p.x < 0) p.x = width;
+        else if (p.x > width) p.x = 0;
+        if (p.y < 0) p.y = height;
+        else if (p.y > height) p.y = 0;
 
-        // Draw grid
-        for (let z = 0; z < gridDepth; z++) {
-            const scale = z / gridDepth;
-            const y = horizonY + (height - horizonY) * Math.pow(scale, 1.5);
-            const alpha = scale * 0.6;
+        ctx.fillStyle = theme.primary;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
 
-            // Horizontal line
-            ctx.strokeStyle = colors[0].replace(/[\d.]+\)$/, `${alpha})`);
+        // Node-to-node links within 120px
+        for (let j = i + 1; j < particles.length; j++) {
+          const p2 = particles[j];
+          const dx = p.x - p2.x;
+          const dy = p.y - p2.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 120) {
+            const alpha = (1 - dist / 120) * 0.45;
+            ctx.strokeStyle = `rgba(${theme.rgb}, ${alpha})`;
             ctx.lineWidth = 1;
             ctx.beginPath();
-            ctx.moveTo(0, y);
-            ctx.lineTo(width, y);
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
             ctx.stroke();
-
-            // Vertical lines with perspective
-            const spacing = gridSpacing * scale;
-            const offsetX = Math.sin(dotMatrixTime + z * 0.5) * 20 * scale;
-            for (let x = -gridSpacing; x <= width + gridSpacing; x += gridSpacing) {
-                const perspectiveX = vanishX + (x - vanishX) * scale + offsetX;
-                ctx.beginPath();
-                ctx.moveTo(vanishX + (x - vanishX) * 0.1, horizonY);
-                ctx.lineTo(perspectiveX, y);
-                ctx.stroke();
-            }
+          }
         }
 
-        // Draw dots at intersections
-        for (let z = 0; z < gridDepth; z++) {
-            const scale = z / gridDepth;
-            const y = horizonY + (height - horizonY) * Math.pow(scale, 1.5);
-            const spacing = gridSpacing * scale;
-            const offsetX = Math.sin(dotMatrixTime + z * 0.5) * 20 * scale;
-            const dotSize = 1 + scale * 2;
-
-            // Mouse influence
-            const mouseInfluence = Math.max(0, 1 - (mouseSpeed / 50));
-
-            for (let x = 0; x <= width; x += gridSpacing) {
-                const perspectiveX = vanishX + (x - vanishX) * scale + offsetX;
-                const distToMouse = Math.sqrt(Math.pow(perspectiveX - mouse.x, 2) + Math.pow(y - mouse.y, 2));
-                const glow = Math.max(0, 1 - distToMouse / 200) * mouseInfluence;
-
-                const alpha = (0.3 + scale * 0.4 + glow * 0.5);
-                const grad = ctx.createRadialGradient(perspectiveX, y, 0, perspectiveX, y, dotSize * 4);
-                grad.addColorStop(0, colors[0].replace(/[\d.]+\)$/, `${alpha})`));
-                grad.addColorStop(1, 'rgba(1, 3, 8, 0)');
-
-                ctx.fillStyle = grad;
-                ctx.beginPath();
-                ctx.arc(perspectiveX, y, dotSize * 4, 0, Math.PI * 2);
-                ctx.fill();
-            }
+        // Node-to-mouse links within 140px
+        const mdx = p.x - this.mouse.x;
+        const mdy = p.y - this.mouse.y;
+        const mdist = Math.sqrt(mdx * mdx + mdy * mdy);
+        if (mdist < 140) {
+          const malpha = (1 - mdist / 140) * 0.8;
+          ctx.strokeStyle = `rgba(${theme.rgb}, ${malpha})`;
+          ctx.lineWidth = 1.3;
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(this.mouse.x, this.mouse.y);
+          ctx.stroke();
         }
+      }
 
-        ctx.globalAlpha = 1;
-    }
-
-    // =========================================================================
-    // ENGINE 6: NOISE-GRAINED FLUID GRADIENT
-    // =========================================================================
-    let noiseTime = 0;
-    let noisePoints = [];
-
-    function initNoisePoints() {
-        noisePoints = [];
-        const count = 6;
-        for (let i = 0; i < count; i++) {
-            noisePoints.push({
-                x: Math.random() * width,
-                y: Math.random() * height,
-                vx: (Math.random() - 0.5) * 0.8,
-                vy: (Math.random() - 0.5) * 0.8,
-                r: 200 + Math.random() * 300,
-                phase: Math.random() * Math.PI * 2
-            });
-        }
-    }
-    initNoisePoints();
-
-    function animateNoiseGradient() {
-        noiseTime += 0.005;
-        ctx.clearRect(0, 0, width, height);
-        ctx.globalAlpha = currentOpacity;
-
-        const colors = themes[currentTheme].gradient;
-
-        // Draw radial gradients
-        noisePoints.forEach((p, i) => {
-            p.x += p.vx + Math.sin(noiseTime + p.phase) * 0.3;
-            p.y += p.vy + Math.cos(noiseTime + p.phase) * 0.3;
-            p.x += (mouse.x - p.x) * 0.001;
-            p.y += (mouse.y - p.y) * 0.001;
-
-            // Wrap around
-            if (p.x < -p.r) p.x = width + p.r;
-            if (p.x > width + p.r) p.x = -p.r;
-            if (p.y < -p.r) p.y = height + p.r;
-            if (p.y > height + p.r) p.y = -p.r;
-
-            const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
-            grad.addColorStop(0, colors[i % 3]);
-            grad.addColorStop(0.5, colors[(i + 1) % 3].replace(/[\d.]+\)$/, '0.3)'));
-            grad.addColorStop(1, 'rgba(1, 3, 8, 0)');
-
-            ctx.fillStyle = grad;
-            ctx.fillRect(p.x - p.r, p.y - p.r, p.r * 2, p.r * 2);
-        });
-
-        // Add noise grain overlay
-        const imageData = ctx.getImageData(0, 0, width, height);
-        const data = imageData.data;
-        const noiseIntensity = 15;
-
-        for (let i = 0; i < data.length; i += 16) { // Sample every 4th pixel for performance
-            const noise = (Math.random() - 0.5) * noiseIntensity;
-            data[i] = Math.max(0, Math.min(255, data[i] + noise));     // R
-            data[i + 1] = Math.max(0, Math.min(255, data[i + 1] + noise)); // G
-            data[i + 2] = Math.max(0, Math.min(255, data[i + 2] + noise)); // B
-        }
-
-        ctx.putImageData(imageData, 0, 0);
-        ctx.globalAlpha = 1;
-    }
-
-    // =========================================================================
-    // ENGINE ROUTER
-    // =========================================================================
-    function renderCurrentEngine() {
-        switch (currentEngine) {
-            case 'sentient-aura': animateSentientAura(); break;
-            case 'neural-synapse': animateNeuralSynapse(); break;
-            case 'fluid-smoke': animateFluidSmoke(); break;
-            case 'aurora-borealis': animateAuroraBorealis(); break;
-            case 'dot-matrix': animateDotMatrix(); break;
-            case 'noise-gradient': animateNoiseGradient(); break;
-            default: animateSentientAura();
-        }
-    }
-
-    function animationLoop() {
-        renderCurrentEngine();
-        animationFrameId = requestAnimationFrame(animationLoop);
-    }
-
-    // =========================================================================
-    // THEME SYNCHRONIZATION
-    // =========================================================================
-    function applyTheme() {
-        const theme = themes[currentTheme];
-        if (!theme) return;
-
-        // Update CSS variables on :root
-        document.documentElement.style.setProperty('--accent-primary', theme.primary);
-        document.documentElement.style.setProperty('--accent-glow', theme.glow);
-
-        // Update any elements that need direct color changes
-        document.querySelectorAll('[data-theme-aware]').forEach(el => {
-            el.style.color = theme.primary;
-        });
-    }
-
-    // =========================================================================
-    // PUBLIC API
-    // =========================================================================
-    window.setAmbientEngine = function(engine) {
-        // Hard teardown: cancel current animation frame
-        if (animationFrameId) {
-            cancelAnimationFrame(animationFrameId);
-            animationFrameId = null;
-        }
-
-        // Clear canvas completely
-        if (ctx) {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.globalAlpha = 1;
-        }
-
-        // Reset all frame counters to prevent visual glitches
-        auraFrame = 0;
-        synapseFrame = 0;
-        smokeTime = 0;
-        auroraTime = 0;
-        dotMatrixTime = 0;
-        noiseTime = 0;
-
-        // Update engine
-        currentEngine = engine;
-        localStorage.setItem('nexora_bg_engine', engine);
-
-        // Reinitialize engine-specific state
-        if (engine === 'sentient-aura') initAuraOrbs();
-        else if (engine === 'neural-synapse') initSynapseNodes();
-        else if (engine === 'fluid-smoke') initSmokeParticles();
-        else if (engine === 'noise-gradient') initNoisePoints();
-
-        // Update UI
-        document.querySelectorAll('.engine-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.engine === engine);
-        });
-
-        // Restart animation loop immediately
-        animationLoop();
+      ctx.globalAlpha = 1;
+      this.animationFrameId = requestAnimationFrame(loop);
     };
+    this.animationFrameId = requestAnimationFrame(loop);
+  },
 
-    window.setAmbientTheme = function(theme) {
-        currentTheme = theme;
-        localStorage.setItem('nexora_bg_theme', theme);
-        applyTheme();
+  // --------------------------------------------------------------------------
+  // ENGINE 3: FLUID SMOKE
+  // 4 overlapping cubic bezier waves oscillating vertically with mouse disturbance
+  // --------------------------------------------------------------------------
+  runFluidSmoke() {
+    if (!this.canvas || !this.ctx) return;
+    this.canvas.style.filter = 'blur(40px)';
+    const theme = this.getTheme();
+    let time = 0;
 
-        // Update UI
-        document.querySelectorAll('.theme-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.theme === theme);
-        });
+    const loop = () => {
+      time += 0.015;
+      const ctx = this.ctx;
+      const w = this.canvas.width;
+      const h = this.canvas.height;
+      ctx.clearRect(0, 0, w, h);
+      ctx.globalAlpha = this.activeOpacity;
 
-        // Update CSS variable for theme colors
-        const themeData = themes[theme];
-        if (themeData) {
-            document.documentElement.style.setProperty('--accent-primary', themeData.primary);
-            document.documentElement.style.setProperty('--accent-glow', themeData.glow);
-        }
+      const mouseFactorX = (this.mouse.x / (w || 1) - 0.5) * 1.5;
+      const mouseFactorY = (this.mouse.y / (h || 1) - 0.5) * 45;
+
+      for (let i = 0; i < 4; i++) {
+        ctx.beginPath();
+        const baseH = h * (0.35 + i * 0.12) + mouseFactorY * (i * 0.3);
+        const amp = 40 + i * 20;
+        const phase = time * (0.6 + i * 0.25) + i * 1.4 + mouseFactorX;
+
+        const cp1x = w * 0.25;
+        const cp1y = baseH + Math.sin(phase) * amp;
+        const cp2x = w * 0.75;
+        const cp2y = baseH + Math.cos(phase * 1.3) * (amp * 1.2);
+        const endY = baseH + Math.sin(phase * 0.8) * amp;
+
+        ctx.moveTo(0, baseH);
+        ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, w, endY);
+        ctx.lineTo(w, h);
+        ctx.lineTo(0, h);
+        ctx.closePath();
+
+        const grad = ctx.createLinearGradient(0, baseH - amp, 0, h);
+        grad.addColorStop(0, `rgba(${theme.rgb}, ${0.35 - i * 0.05})`);
+        grad.addColorStop(0.6, `rgba(${theme.rgb}, ${0.15 - i * 0.02})`);
+        grad.addColorStop(1, 'rgba(1, 3, 8, 0)');
+
+        ctx.fillStyle = grad;
+        ctx.fill();
+      }
+
+      ctx.globalAlpha = 1;
+      this.animationFrameId = requestAnimationFrame(loop);
     };
+    this.animationFrameId = requestAnimationFrame(loop);
+  },
 
-    window.setAmbientOpacity = function(opacity) {
-        currentOpacity = opacity / 100;
-        localStorage.setItem('nexora_bg_opacity', currentOpacity.toString());
+  // --------------------------------------------------------------------------
+  // ENGINE 4: AURORA BOREALIS
+  // 4 stacked horizontal sinusoidal gradient ribbon bands undulating slowly
+  // --------------------------------------------------------------------------
+  runAuroraBorealis() {
+    if (!this.canvas || !this.ctx) return;
+    this.canvas.style.filter = 'blur(25px)';
+    const theme = this.getTheme();
+    let time = 0;
 
-        // Update canvas opacity in real-time
-        if (canvas) {
-            canvas.style.opacity = currentOpacity;
+    const loop = () => {
+      time += 0.012;
+      const ctx = this.ctx;
+      const w = this.canvas.width;
+      const h = this.canvas.height;
+      ctx.clearRect(0, 0, w, h);
+      ctx.globalAlpha = this.activeOpacity;
+
+      const mouseShift = (this.mouse.x / (w || 1) - 0.5) * 40;
+
+      for (let layer = 0; layer < 4; layer++) {
+        ctx.beginPath();
+        const baseLevel = h * (0.22 + layer * 0.14);
+        const amp = 35 + layer * 18;
+        const speed = time * (0.5 + layer * 0.2);
+        const offset = layer * 1.2;
+
+        ctx.moveTo(0, h);
+        for (let x = 0; x <= w; x += 14) {
+          const y = baseLevel +
+            Math.sin(x * 0.003 + speed + offset) * amp +
+            Math.sin(x * 0.007 - speed * 0.6 + offset) * (amp * 0.5) +
+            Math.cos(x * 0.0015 + speed * 0.8) * 15 +
+            mouseShift;
+          ctx.lineTo(x, y);
         }
+        ctx.lineTo(w, h);
+        ctx.closePath();
 
-        // Update display
-        const display = document.getElementById('opacity-display');
-        if (display) {
-            display.textContent = `${opacity}%`;
-        }
+        const grad = ctx.createLinearGradient(0, baseLevel - amp, 0, baseLevel + amp * 3);
+        const col = theme.palette[layer % theme.palette.length];
+        grad.addColorStop(0, `rgba(${theme.rgb}, 0)`);
+        grad.addColorStop(0.3, col);
+        grad.addColorStop(0.7, `rgba(${theme.rgb}, ${0.25 - layer * 0.04})`);
+        grad.addColorStop(1, 'rgba(1, 3, 8, 0)');
+
+        ctx.fillStyle = grad;
+        ctx.fill();
+      }
+
+      ctx.globalAlpha = 1;
+      this.animationFrameId = requestAnimationFrame(loop);
     };
+    this.animationFrameId = requestAnimationFrame(loop);
+  },
 
-    window.toggleAmbientSwitcher = function() {
-        const drawer = document.getElementById('ambient-switcher-drawer');
-        if (drawer) {
-            drawer.classList.toggle('hidden');
+  // --------------------------------------------------------------------------
+  // ENGINE 5: DOT MATRIX
+  // 2D grid of dots (32px spacing) with outward ripple wave displacement
+  // --------------------------------------------------------------------------
+  runDotMatrix() {
+    if (!this.canvas || !this.ctx) return;
+    this.canvas.style.filter = 'none';
+    const theme = this.getTheme();
+    const spacing = 32;
+    let time = 0;
+
+    const loop = () => {
+      time += 0.03;
+      const ctx = this.ctx;
+      const w = this.canvas.width;
+      const h = this.canvas.height;
+      ctx.clearRect(0, 0, w, h);
+      ctx.globalAlpha = this.activeOpacity;
+
+      const cols = Math.ceil(w / spacing) + 2;
+      const rows = Math.ceil(h / spacing) + 2;
+
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const baseX = c * spacing;
+          const baseY = r * spacing;
+
+          const dx = baseX - this.mouse.x;
+          const dy = baseY - this.mouse.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          const maxDist = 180;
+
+          let finalX = baseX;
+          let finalY = baseY;
+          let dotRadius = 1.5;
+          let alpha = 0.22;
+
+          if (dist < maxDist && dist > 0) {
+            const wave = Math.sin(dist * 0.08 - time * 4);
+            const force = (1 - dist / maxDist) * wave * 14;
+            finalX += (dx / dist) * force;
+            finalY += (dy / dist) * force;
+            dotRadius = 1.5 + (1 - dist / maxDist) * 3;
+            alpha = 0.3 + (1 - dist / maxDist) * 0.7;
+          } else {
+            const ambientPulse = Math.sin(time + (c + r) * 0.3) * 0.06;
+            alpha += ambientPulse;
+          }
+
+          ctx.fillStyle = `rgba(${theme.rgb}, ${Math.max(0.08, alpha)})`;
+          ctx.beginPath();
+          ctx.arc(finalX, finalY, Math.max(0.5, dotRadius), 0, Math.PI * 2);
+          ctx.fill();
         }
+      }
+
+      ctx.globalAlpha = 1;
+      this.animationFrameId = requestAnimationFrame(loop);
     };
+    this.animationFrameId = requestAnimationFrame(loop);
+  },
 
-    window.applyPreset = function(preset) {
-        const presets = {
-            calm: { engine: 'fluid-smoke', theme: 'obsidian-emerald', opacity: 60 },
-            focus: { engine: 'dot-matrix', theme: 'cyber-cyan', opacity: 50 },
-            energy: { engine: 'aurora-borealis', theme: 'solar-amber', opacity: 75 },
-            night: { engine: 'neural-synapse', theme: 'neural-violet', opacity: 85 }
-        };
+  // --------------------------------------------------------------------------
+  // ENGINE 6: NOISE GRADIENT
+  // Multi-radial gradient background covered by procedural SVG/grain noise
+  // --------------------------------------------------------------------------
+  runNoiseGradient() {
+    if (!this.canvas || !this.ctx) return;
+    this.canvas.style.filter = 'none';
+    const theme = this.getTheme();
+    const w = this.canvas.width;
+    const h = this.canvas.height;
+    let time = 0;
 
-        const p = presets[preset];
-        if (p) {
-            document.getElementById('ambient-opacity').value = p.opacity;
-            window.setAmbientEngine(p.engine);
-            window.setAmbientTheme(p.theme);
-            window.setAmbientOpacity(p.opacity);
-        }
+    if (!this.noisePattern) {
+      const noiseCanvas = document.createElement('canvas');
+      noiseCanvas.width = 128;
+      noiseCanvas.height = 128;
+      const nCtx = noiseCanvas.getContext('2d');
+      const imgData = nCtx.createImageData(128, 128);
+      for (let i = 0; i < imgData.data.length; i += 4) {
+        const val = Math.floor(Math.random() * 255);
+        imgData.data[i] = val;
+        imgData.data[i + 1] = val;
+        imgData.data[i + 2] = val;
+        imgData.data[i + 3] = 26;
+      }
+      nCtx.putImageData(imgData, 0, 0);
+      this.noisePattern = this.ctx.createPattern(noiseCanvas, 'repeat');
+    }
+
+    const blobs = [
+      { x: w * 0.25, y: h * 0.3, vx: 0.4, vy: 0.3, r: Math.min(w, h) * 0.45 },
+      { x: w * 0.75, y: h * 0.4, vx: -0.3, vy: 0.4, r: Math.min(w, h) * 0.5 },
+      { x: w * 0.5, y: h * 0.75, vx: 0.3, vy: -0.3, r: Math.min(w, h) * 0.48 }
+    ];
+
+    const loop = () => {
+      time += 0.01;
+      const ctx = this.ctx;
+      const width = this.canvas.width;
+      const height = this.canvas.height;
+      ctx.clearRect(0, 0, width, height);
+      ctx.globalAlpha = this.activeOpacity;
+
+      // Dark base
+      ctx.fillStyle = '#010308';
+      ctx.fillRect(0, 0, width, height);
+
+      blobs.forEach((blob, i) => {
+        blob.x += blob.vx + Math.sin(time + i) * 0.5;
+        blob.y += blob.vy + Math.cos(time + i) * 0.5;
+
+        if (blob.x < -100 || blob.x > width + 100) blob.vx *= -1;
+        if (blob.y < -100 || blob.y > height + 100) blob.vy *= -1;
+
+        const radGrad = ctx.createRadialGradient(blob.x, blob.y, 0, blob.x, blob.y, blob.r);
+        const col = theme.palette[i % theme.palette.length];
+        radGrad.addColorStop(0, col);
+        radGrad.addColorStop(0.6, `rgba(${theme.rgb}, 0.15)`);
+        radGrad.addColorStop(1, 'rgba(1, 3, 8, 0)');
+
+        ctx.fillStyle = radGrad;
+        ctx.beginPath();
+        ctx.arc(blob.x, blob.y, blob.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      if (this.noisePattern) {
+        ctx.fillStyle = this.noisePattern;
+        ctx.fillRect(0, 0, width, height);
+      }
+
+      ctx.globalAlpha = 1;
+      this.animationFrameId = requestAnimationFrame(loop);
     };
+    this.animationFrameId = requestAnimationFrame(loop);
+  }
+};
 
-    // Initialize
-    applyTheme();
-    document.getElementById('ambient-opacity').value = Math.round(currentOpacity * 100);
-    document.getElementById('opacity-display').textContent = `${Math.round(currentOpacity * 100)}%`;
+// Global Bridge Functions for Backward Compatibility & Inline Handlers
+window.setAmbientEngine = function(engine) {
+  if (window.AmbientController) {
+    window.AmbientController.switchEngine(engine);
+  }
+};
 
-    // Set initial UI state
-    document.querySelectorAll('.engine-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.engine === currentEngine);
-    });
-    document.querySelectorAll('.theme-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.theme === currentTheme);
-    });
+window.setAmbientTheme = function(theme) {
+  if (window.AmbientController) {
+    window.AmbientController.applyTheme(theme, true);
+  }
+};
 
-    // Start animation loop
-    animationLoop();
+window.setAmbientOpacity = function(val) {
+  if (window.AmbientController) {
+    window.AmbientController.setOpacity(val / 100);
+  }
+};
 
-    // Reinitialize on resize
-    window.addEventListener('resize', () => {
-        resize();
-        initAuraOrbs();
-        initSynapseNodes();
-        initSmokeParticles();
-        initNoisePoints();
-    });
-})();
+window.toggleAmbientSwitcher = function() {
+  const drawer = document.getElementById('ambient-switcher-drawer');
+  if (drawer) {
+    drawer.classList.toggle('hidden');
+  }
+};
+
+window.applyPreset = function(preset) {
+  if (window.AmbientController) {
+    window.AmbientController.applyPreset(preset);
+  }
+};
+
+// Auto-initialize AmbientController on page boot
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    window.AmbientController.init();
+  });
+} else {
+  window.AmbientController.init();
+}
