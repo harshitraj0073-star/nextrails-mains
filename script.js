@@ -21,6 +21,112 @@ const criticalThreatKeywords = [
     "धमकी", "हमला", "जान से मारने", "খুন", "হুমকি", "கொலை", "धमकावले"
 ];
 
+// ============================================================================
+// CRISIS-AWARE CHAT ENGINE (English) — keyword banks, topics & response bank
+// ============================================================================
+
+// High-signal self-harm / suicide phrases. The chat must never auto-dial a
+// helpline: on any hit it redirects to the in-app helpline page instead.
+const nexCrisisKeywords = [
+    "suicide", "self-harm", "self harm",
+    "kill myself", "end my life", "end it all", "end everything", "want to die",
+    "wish i was dead", "better off dead", "not worth living", "no reason to live",
+    "no point living", "can't go on", "cannot go on", "don't want to live",
+    "dont want to live", "hurt myself", "harm myself", "overdose",
+    "hang myself", "cut myself", "final goodbye", "die tonight"
+];
+
+// Immediate external danger phrases (police / threat / attack). These also
+// escalate to the helpline page, but with a "danger" flavoured message.
+const nexDangerKeywords = [
+    "unsafe", "threat", "threatened", "attacked", "attacking", "in danger",
+    "scared for my life", "afraid for my life", "hurt me", "harmed", "police refused"
+];
+
+// Empathetic topics: each maps the user's words to a caring, non-diagnosing reply.
+const nexTopicKeywords = {
+    panic: ['panic', 'panicking', "can't breathe", 'cant breathe', 'heart racing', 'hyperventilat', 'closing in', 'breathe', 'breathing', 'calm', 'relax'],
+    anxiety: ['anxious', 'anxiety', 'worried', 'worry', 'nervous', 'overthinking', 'restless', 'on edge', 'dread'],
+    sadness: ['sad', 'depressed', 'depression', 'hopeless', 'cry', 'crying', 'upset', 'empty', 'low today'],
+    stress: ['stress', 'stressed', 'overwhelmed', 'pressure', 'burnout', 'burnt out', 'drained', 'too much'],
+    sleep: ['sleep', 'insomnia', 'nightmare', "can't sleep", 'cant sleep', 'sleepless', 'tired', 'exhausted'],
+    anger: ['angry', 'anger', 'furious', 'rage', 'irritated', 'frustrated', 'so mad', 'hate this'],
+    loneliness: ['lonely', 'alone', 'isolated', 'nobody', 'no one', 'no friends', 'left out', 'ignored'],
+    grief: ['grief', 'mourning', 'passed away', 'lost someone', 'my mother died', 'my father died'],
+    money: ['money', 'debt', 'financial', "i'm broke", 'im broke', 'no income', 'bankrupt', 'bills', "can't afford"],
+    relationship: ['relationship', 'breakup', 'broke up', 'broken up', 'divorce', 'partner', 'boyfriend', 'girlfriend', 'husband', 'wife', 'family', 'my mom', 'my dad'],
+    court: ['court', 'trial', 'hearing', 'judge', 'lawyer', 'case', 'accused', 'witness', 'testify']
+};
+
+// Crisis response: empathetic acknowledgment, safety message, and a redirect
+// to the in-app helpline page. Deliberately no phone number to call here
+// (the helpline page carries the tel: links the user taps).
+const nexCrisisResponse = {
+    acknowledge: "I hear you, and what you are feeling is real and valid. You are incredibly brave for telling me this.",
+    safetyFirst: "Please hold on — your life matters, and you do not have to go through this alone. I am going to take you to a page with people who can help you right now.",
+    breathing: "Before we go there, try this with me: breathe in slowly for 4, hold softly for 4, and let it out for 4. You are safe in this moment.",
+    helplineActionLabel: "💙 Open Full Helpline Page",
+    dangerMessage: "You mentioned something that could be dangerous for you. Your safety comes first — let's get you to people who can protect you."
+};
+
+// Topic reply bank. Each entry is { text, action? } where action is an optional
+// suggestion the user can tap. Replies reflect, validate and offer one small step.
+const nexTopicResponses = {
+    panic: [
+        { text: "I can sense how overwhelming this feels right now. Panic is your body's alarm system — it is loud, but it will pass. Let's ground you: name 5 things you can see around you right now.", action: { label: "🌿 Try Breathing Exercise", onClick: "toggleBreathingModal()" } },
+        { text: "Your heart racing is terrifying, but you are safe. Press your feet firmly into the floor and feel the ground beneath you. You are here, and you are okay." }
+    ],
+    anxiety: [
+        { text: "It sounds like worry is taking up a lot of space in your mind right now. That is exhausting, and it makes sense that you feel drained. One small step: write down just one worry on paper — seeing it outside your head can shrink it." },
+        { text: "Anxiety often whispers worst-case scenarios as if they are certain. But most of the time, the worst thing we imagine does not happen. You have survived every hard day so far — that is proof of your strength." }
+    ],
+    sadness: [
+        { text: "Thank you for trusting me with this. Sadness is not weakness — it is your heart processing something important. You don't have to fix it right now. Letting yourself feel it is enough." },
+        { text: "I hear the heaviness in your words. It is okay to not be okay. Sometimes the bravest thing is simply to keep going one small step at a time.", action: { label: "🤲 Try Grounding Steps", onClick: "openHelplinePage()" } }
+    ],
+    stress: [
+        { text: "It sounds like you are carrying a lot right now. When everything demands your attention at once, feeling overwhelmed is natural. Let's break it down: what is the ONE thing that feels most urgent today?" },
+        { text: "Stress can make even small tasks feel impossible — that is not failure, that is being human. Try setting a timer for 10 minutes and doing just one small thing. That is a victory.", action: { label: "🌿 Try Breathing Exercise", onClick: "toggleBreathingModal()" } }
+    ],
+    sleep: [
+        { text: "Poor sleep affects everything — your mood, your energy, your ability to cope. You are not lazy for struggling with this. Tonight, try putting your phone away 30 minutes before bed and dimming the lights." },
+        { text: "When sleep eludes us, anxiety often fills the gap. Your body knows how to rest — it sometimes just needs a calmer signal.", action: { label: "🌿 Try Breathing Exercise", onClick: "toggleBreathingModal()" } }
+    ],
+    anger: [
+        { text: "Anger is a valid emotion — it often signals that a boundary was crossed or something unfair happened. You have every right to feel this way. The key is not to suppress it, but to express it safely." },
+        { text: "I can feel the intensity in what you are saying. Anger at injustice is important. When you are ready, let's talk about one constructive next step you could take." }
+    ],
+    loneliness: [
+        { text: "Feeling alone can be one of the most painful experiences. But you reached out here, which means part of you is fighting for connection — that takes real courage. You are not as alone as this feeling suggests." },
+        { text: "Loneliness often lies to us, telling us nobody cares. But the truth is you matter deeply. Even this conversation proves someone is listening." }
+    ],
+    grief: [
+        { text: "Loss leaves a space that nothing else can fill, and there is no timeline for grief. You are allowed to feel this for as long as you need. I am here to listen whenever you want to talk about them." },
+        { text: "Grief is love with nowhere to go. It means you cared deeply, and that is beautiful even though it hurts right now. Take all the time you need." }
+    ],
+    money: [
+        { text: "Financial stress is one of the most crushing pressures because it touches everything else. You are not alone in this. Let's think: is there one tiny financial step you could take today, even something small?" },
+        { text: "Money worries can make us feel trapped, but free help exists — legal aid services can support victims of financial pressure or exploitation. Would you like to explore your options?" }
+    ],
+    relationship: [
+        { text: "Relationships are complex, especially during hard times. Whatever you are going through, your feelings are valid. You deserve to be treated with respect and care." },
+        { text: "I hear that a relationship is causing you pain right now. Sometimes the most loving thing we can do for ourselves is set a boundary. You are allowed to protect your peace." }
+    ],
+    court: [
+        { text: "Court proceedings can feel overwhelming, but delays are normal and never your fault. You have the right to in-camera testimony (behind a screen), a free legal-aid lawyer, and to bring a support person. You will not face this alone." },
+        { text: "The waiting before a court date can be the hardest part, and your anxiety is understandable. You have already shown incredible courage getting this far. Your legal team is working for you." }
+    ],
+    distress: [
+        { text: "What you described sounds genuinely hard, and your fear is real. Please know you are not alone, and there are people whose whole job is to keep you safe.", action: { label: "💙 Open Helpline Page", onClick: "openHelplinePage()" } },
+        { text: "I'm glad you told me. Feeling unsafe is one of the heaviest feelings there is. Let's get you to a place with people who can help protect you.", action: { label: "💙 Open Helpline Page", onClick: "openHelplinePage()" } }
+    ],
+    general: [
+        { text: "Thank you for sharing that with me. I'm here to listen without judgement — and sometimes just putting our thoughts into words already lightens the weight. How are you feeling right now, in this moment?" },
+        { text: "I appreciate you reaching out. Every conversation is a step toward feeling better. Would you like to try a calming exercise, or talk about something specific?", action: { label: "🌿 Try Breathing Exercise", onClick: "toggleBreathingModal()" } },
+        { text: "I'm here for you, whatever is on your mind — there is no wrong thing to say here. Would you like to check in on how you've been sleeping or feeling this week?" }
+    ]
+};
+
 // Current Active Survivor Profile (Captured during Intake)
 let currentVictimProfile = {
     name: "",
@@ -2811,6 +2917,7 @@ function updateRoleBadge() {
     const navAnalytics = document.getElementById('mon-nav-analytics');
     const navReports = document.getElementById('mon-nav-reports');
     const navSettings = document.getElementById('mon-nav-settings');
+    const navCommand = document.getElementById('mon-nav-command');
 
     if (currentRole === 'victim') {
         if (textEl) textEl.innerText = `Survivor: ${selectedCaseId || 'CASE-2026-9041'}`;
@@ -2850,6 +2957,7 @@ function updateRoleBadge() {
         if (navDashboard) navDashboard.classList.remove('hidden');
         if (navAnalytics) navAnalytics.classList.add('hidden');
         if (navSettings) navSettings.classList.add('hidden');
+        if (navCommand) navCommand.classList.add('hidden');
 
         if (bannerTitle) bannerTitle.innerText = "Doctor & Counsellor Clinical Command";
         if (bannerBadge) {
@@ -2879,6 +2987,7 @@ function updateRoleBadge() {
         if (navDashboard) navDashboard.classList.remove('hidden');
         if (navAnalytics) navAnalytics.classList.remove('hidden');
         if (navSettings) navSettings.classList.remove('hidden');
+        if (navCommand) navCommand.classList.remove('hidden');
 
         if (bannerTitle) bannerTitle.innerText = "MoSJE District Administration Oversight";
         if (bannerBadge) {
@@ -2903,6 +3012,7 @@ function updateRoleBadge() {
         if (navCases) navCases.classList.remove('hidden');
         if (navAnalytics) navAnalytics.classList.remove('hidden');
         if (navSettings) navSettings.classList.remove('hidden');
+        if (navCommand) navCommand.classList.add('hidden');
     }
 }
 
@@ -2916,7 +3026,13 @@ function switchView(viewName) {
 
     updateBodyBackground(viewName);
 
-    const views = ['intro', 'role-select', 'victim', 'counselor'];
+    // Restore the NEX chat FAB when leaving the helpline page
+    if (viewName !== 'helpline') {
+        const nexContainer = document.getElementById('nex-bot-container');
+        if (nexContainer) nexContainer.classList.remove('hidden');
+    }
+
+    const views = ['intro', 'role-select', 'victim', 'counselor', 'helpline'];
     views.forEach(v => {
         const el = document.getElementById(`${v}-view`);
         if (v === viewName) {
@@ -2938,7 +3054,7 @@ function switchView(viewName) {
     // Update sentient-nav visibility (hide in counselor dashboard to prevent overlapping)
     const sentientNav = document.getElementById('sentient-nav');
     if (sentientNav) {
-        if (viewName === 'counselor') {
+        if (viewName === 'counselor' || viewName === 'helpline') {
             sentientNav.classList.add('hidden');
         } else {
             sentientNav.classList.remove('hidden');
@@ -2947,7 +3063,7 @@ function switchView(viewName) {
 
     const sentientNavBottom = document.getElementById('sentient-nav-bottom');
     if (sentientNavBottom) {
-        if (viewName === 'counselor') {
+        if (viewName === 'counselor' || viewName === 'helpline') {
             sentientNavBottom.classList.add('hidden');
         } else {
             sentientNavBottom.classList.remove('hidden');
@@ -2967,7 +3083,9 @@ function switchView(viewName) {
     // Show/hide global back button in nav
     const navBackBtn = document.getElementById('nav-back-btn');
     if (navBackBtn) {
-        if (viewName === 'intro') {
+        // Helmpline page has its own in-page back button (goBackFromHelpline),
+        // so hide the global one whose handler always returns to the intro.
+        if (viewName === 'intro' || viewName === 'helpline') {
             navBackBtn.classList.add('hidden');
         } else {
             navBackBtn.classList.remove('hidden');
@@ -2983,6 +3101,9 @@ function switchView(viewName) {
         document.getElementById('victim-profile-intake')?.classList.remove('hidden');
         document.getElementById('victim-chat-container')?.classList.add('hidden');
         document.getElementById('victim-success')?.classList.add('hidden');
+
+        // Refresh Multi-Channel / NHAA panel with latest readings
+        if (typeof refreshChannelPanel === 'function') refreshChannelPanel();
     } else if (viewName === 'counselor') {
         renderDashboard();
         if (currentMonitorTab === 'analytics') {
@@ -2997,6 +3118,10 @@ function switchView(viewName) {
         }
         switchMonitorTab(currentMonitorTab || 'cases');
         setTimeout(initWaveformCanvas, 80);
+    } else if (viewName === 'helpline') {
+        // Hide the floating chat FAB over the helpline page
+        const nexContainer = document.getElementById('nex-bot-container');
+        if (nexContainer) nexContainer.classList.add('hidden');
     }
 }
 
@@ -3026,6 +3151,44 @@ function goBackToIntro() {
     switchView('intro');
     updateRoleBadge();
     try { history.replaceState(null, null, ' '); } catch (e) {}
+}
+
+// ============================================================================
+// HELPLINE PAGE NAVIGATION
+// ============================================================================
+// View to return to after leaving the helpline page.
+let helplineReturnView = 'role-select';
+
+// Opens the in-app helpline page. The chat never dials a helpline itself --
+// it always redirects here, where the user taps the tel: links themselves.
+function openHelplinePage() {
+    playHapticBeep(640, 'sine', 0.08);
+    if (currentRole === 'counselor' || currentRole === 'admin') {
+        helplineReturnView = 'counselor';
+    } else if (currentRole === 'victim') {
+        helplineReturnView = 'victim';
+    } else {
+        helplineReturnView = 'role-select';
+    }
+
+    // Close the chat window if it is open
+    if (isNexChatOpen) {
+        toggleNexChat();
+    }
+
+    switchView('helpline');
+}
+
+function goBackFromHelpline() {
+    playHapticBeep(420, 'sine', 0.08);
+
+    if (helplineReturnView === 'counselor') {
+        switchView('counselor');
+        switchMonitorTab(currentMonitorTab || 'cases');
+        setTimeout(initWaveformCanvas, 80);
+    } else {
+        switchView(helplineReturnView);
+    }
 }
 
 function loginAsRole(role) {
@@ -3606,6 +3769,9 @@ function handleVictimProfileSubmit(e) {
     const professionInput = document.getElementById('victim-intake-profession');
     const workInput = document.getElementById('victim-intake-work');
     const stressInput = document.getElementById('victim-intake-stress');
+    const nhaaInput = document.getElementById('victim-intake-nhaa');
+
+    const nhaaCaseId = (nhaaInput && nhaaInput.value.trim()) || currentVictimProfile.nhaaCaseId || "";
 
     const name = (nameInput && nameInput.value.trim()) || currentVictimProfile.name || "Priya Sharma";
     const phone = (phoneInput && phoneInput.value.trim()) || currentVictimProfile.phone || "98765 43210";
@@ -3619,6 +3785,7 @@ function handleVictimProfileSubmit(e) {
         profession,
         work,
         stress,
+        nhaaCaseId,
         token: currentVictimProfile.token || `CASE-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`
     };
 
@@ -3629,6 +3796,7 @@ function handleVictimProfileSubmit(e) {
     profile.profession = profession;
     profile.work = work;
     profile.stress = stress;
+    profile.nhaaCaseId = nhaaCaseId;
     saveUserProfile(profile);
 
     // Transition from Profile Intake to Chat Container
@@ -3636,8 +3804,493 @@ function handleVictimProfileSubmit(e) {
     document.getElementById('victim-chat-container')?.classList.remove('hidden');
     document.getElementById('victim-success')?.classList.add('hidden');
 
+    // Refresh NHAA / channel panel with the freshly linked case
+    if (typeof refreshChannelPanel === 'function') refreshChannelPanel();
+
     // Initialize check-in with profession-adaptive questions
     initConversationalCheckIn();
+}
+
+// ============================================================================
+// SIH-26094 — NHAA 14566 INTEGRATION + MULTI-CHANNEL PERIODIC INTERACTIONS
+// Web Portal · Chatbot · SMS · IVRS · Mobile App (PWA) · Helpline follow-up
+// ============================================================================
+
+// Lightweight self-contained toast (the pre-existing showToast() call was never
+// defined in this codebase; providing a safe implementation also fixes it).
+function showToast(message, type) {
+    type = type || 'info';
+    const styles = {
+        info: { border: 'border-cyan-400/40', bg: 'bg-slate-900/95', icon: 'ℹ️' },
+        success: { border: 'border-mint-400/40', bg: 'bg-slate-900/95', icon: '✅' },
+        warning: { border: 'border-amber-400/40', bg: 'bg-slate-900/95', icon: '⚠️' },
+        error: { border: 'border-coral-400/40', bg: 'bg-slate-900/95', icon: '⛔' }
+    };
+    const s = styles[type] || styles.info;
+    const existing = document.getElementById('nexora-toast');
+    if (existing) existing.remove();
+    const toast = document.createElement('div');
+    toast.id = 'nexora-toast';
+    toast.className = `fixed bottom-6 right-6 z-[10000] ${s.bg} border ${s.border} text-slate-100 text-xs px-4 py-3 rounded-xl shadow-2xl shadow-black/60 flex items-start gap-2 max-w-sm`;
+    toast.innerHTML = `<span>${s.icon}</span><span>${escapeHtml(message)}</span>`;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+        toast.style.transition = 'opacity 0.5s ease';
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 500);
+    }, 3500);
+}
+
+const NHAA_HELPLINE = "14566";
+const CHANNEL_LOG_KEY = "nexora_channel_log";
+
+// ----- Channel log persistence -----------------------------------------------
+function loadChannelLog() {
+    try {
+        const raw = localStorage.getItem(CHANNEL_LOG_KEY);
+        return raw ? JSON.parse(raw) : [];
+    } catch (e) {
+        console.warn("Failed to load channel log:", e);
+        return [];
+    }
+}
+
+function appendChannelLog(entry) {
+    const log = loadChannelLog();
+    const profile = loadUserProfile();
+    log.unshift({
+        channel: entry.channel,
+        score: entry.score,
+        risk: entry.risk,
+        crisis: !!entry.crisis,
+        note: entry.note || "",
+        when: new Date().toLocaleString('en-IN'),
+        caseId: profile.token || "",
+        nhaa: getNhaaCaseId() || ""
+    });
+    try {
+        localStorage.setItem(CHANNEL_LOG_KEY, JSON.stringify(log.slice(0, 60)));
+    } catch (e) {
+        console.warn("Failed to persist channel log:", e);
+    }
+}
+
+function getNhaaCaseId() {
+    return (loadUserProfile().nhaaCaseId || "").trim();
+}
+
+// ----- NHAA chip + channel activity panel renderers --------------------------
+function renderNhaaLinkChip() {
+    const chip = document.getElementById('nhaa-link-chip');
+    if (!chip) return;
+    const cid = getNhaaCaseId();
+    if (cid) {
+        chip.classList.remove('hidden');
+        chip.textContent = '🏛 NHAA ' + cid;
+    } else {
+        chip.classList.add('hidden');
+    }
+}
+
+function renderChannelActivity() {
+    const list = document.getElementById('channel-activity-list');
+    if (!list) return;
+    const log = loadChannelLog();
+    list.innerHTML = "";
+    if (log.length === 0) {
+        list.innerHTML = '<li class="text-slate-600">No channel activity yet — run an SMS or IVRS check-in to start your longitudinal distress timeline.</li>';
+        return;
+    }
+    log.slice(0, 8).forEach(entry => {
+        const dot = entry.risk === 'CRITICAL' || entry.risk === 'HIGH'
+            ? 'bg-rose-400'
+            : entry.risk === 'MODERATE' ? 'bg-amber-400' : 'bg-teal-400';
+        const icon = entry.channel === 'IVRS' ? '📞' : entry.channel === 'SMS' ? '📱' : entry.channel === 'Chatbot' ? '💬' : '🌐';
+        const li = document.createElement('li');
+        li.className = 'flex items-center gap-2';
+        li.innerHTML = `<span class="text-[10px]">${icon}</span>
+            <span class="w-1.5 h-1.5 rounded-full ${dot}"></span>
+            <span class="font-semibold text-slate-200">${escapeHtml(entry.channel)}</span>
+            <span class="text-slate-500">•</span>
+            <span class="text-slate-400">Distress ${entry.score}/100</span>
+            <span class="text-slate-600 ml-auto font-mono text-[10px]">${escapeHtml(entry.when)}</span>`;
+        list.appendChild(li);
+    });
+}
+
+function showChannelResult(channelLabel, readout) {
+    const el = document.getElementById('channel-last-result');
+    if (!el) return;
+    const tone = readout.crisis || readout.risk === 'HIGH'
+        ? { accent: 'border-rose-400/40 bg-rose-950/40', label: 'text-rose-300' }
+        : readout.risk === 'MODERATE'
+            ? { accent: 'border-amber-400/40 bg-amber-950/30', label: 'text-amber-300' }
+            : { accent: 'border-mint-400/30 bg-mint-dim/30', label: 'text-mint-300' };
+    el.classList.remove('hidden');
+    el.className = `mt-4 rounded-xl border ${tone.accent} p-4`;
+    el.innerHTML = `
+        <div class="flex flex-wrap items-start justify-between gap-3">
+            <div>
+                <p class="text-sm font-bold ${tone.label}">${channelLabel} check-in recorded ✓</p>
+                <p class="text-xs text-slate-300 mt-1">Distress <strong class="font-mono">${readout.score}/100</strong> • ${readout.crisis ? '⚠ CRISIS LANGUAGE DETECTED' : readout.risk} ${readout.note ? '• ' + escapeHtml(readout.note) : ''}</p>
+                <p class="text-[11px] text-slate-500 mt-1">Longitudinal timeline updated — your counselor can see this reading instantly.</p>
+            </div>
+            <button onclick="openHelplinePage()" class="btn btn-sm btn-secondary shrink-0 cursor-pointer">🛟 Open helpline</button>
+        </div>`;
+}
+
+function refreshChannelPanel() {
+    renderNhaaLinkChip();
+    renderChannelActivity();
+}
+
+function summarizeChannels() {
+    const log = loadChannelLog();
+    if (log.length === 0) return "Web · Chatbot";
+    const used = [];
+    [['SMS', '📱'], ['IVRS', '📞'], ['Chatbot', '💬'], ['Web', '🌐']].forEach(([name, icon]) => {
+        if (log.some(e => e.channel === name)) used.push(icon + ' ' + name);
+    });
+    return used.length ? used.join(' · ') : "Web · Chatbot";
+}
+
+// ----- Mobile App channel (installable PWA) ----------------------------------
+function installNexoraApp() {
+    playHapticBeep(600, 'sine', 0.08);
+    if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) {
+        showToast('You are already running NEXORA as an installed app.', 'success');
+        return;
+    }
+    if (window.deferredInstallPrompt) {
+        try {
+            window.deferredInstallPrompt.prompt();
+            window.deferredInstallPrompt.userChoice.finally(() => {
+                window.deferredInstallPrompt = null;
+            });
+            return;
+        } catch (e) {
+            console.warn("Install prompt failed:", e);
+        }
+    }
+    showToast('Mobile App: in Chrome open the ☰ menu → "Install app", or tap the install icon in the address bar.', 'info');
+}
+
+// ----- Linguistic scoring shared by SMS + IVRS ------------------------------
+// Returns a 0-100 distress reading using the same crisis lexicon as the NEX
+// chat engine, so every channel speaks one consistent language.
+function scoreReplyText(text, scaleType) {
+    const t = String(text || "").toLowerCase().trim();
+    const crisis = (typeof detectCrisisLevel === 'function') ? detectCrisisLevel(t) : null;
+    if (crisis === 'critical') return { score: 95, risk: 'CRITICAL', crisis: true };
+    if (crisis === 'danger') return { score: 82, risk: 'HIGH', crisis: true };
+
+    let score = 25;
+    const num = t.match(/\d+/);
+    if (num) {
+        const n = parseInt(num[0], 10);
+        if (scaleType === 'wellbeing-5') {
+            // Question scale: 1 = very low ... 5 = very good
+            score = Math.max(0, Math.min(100, (6 - n) * 20));
+        } else if (scaleType === 'distress-10') {
+            // Question scale: 1 = low distress ... 10 = extreme distress
+            score = Math.max(0, Math.min(100, n * 9));
+        } else {
+            score = 50;
+        }
+    }
+    if (/die|suicid|kill|end it all|end my life|hurt myself|harm myself|overdose|g\w+ away|can'?t go on|never wake/i.test(t)) score += 40;
+    if (/threat|unsafe|danger|attack(ed)?|fear|afraid|scared|intimidat|someone hurt me|they will /i.test(t)) score += 30;
+    if (/no|not|never|difficult|bad|worse|terrible|can'?t sleep|can'?t eat|payback|boycott/i.test(t)) score += 18;
+    if (/yes|ok|okay|fine|good|safe|sleep(ing|t)?|eat(ing)?|managed/i.test(t)) score -= 18;
+
+    score = Math.max(0, Math.min(100, score));
+    const risk = score >= 70 ? 'HIGH' : score >= 40 ? 'MODERATE' : 'LOW';
+    return { score, risk, crisis: false };
+}
+
+// ----- SMS channel simulation --------------------------------------------------
+const SMS_QUESTIONS = [
+    "NEXORA care check-in ☀️ How have you been feeling emotionally over the past 24 hours?\nReply 1 to 5 (1 = very low, 5 = very good).",
+    "Are you receiving any threats or unsafe contact right now?\nReply YES or NO.",
+    "Have you been able to sleep and eat regularly?\nReply OK or DIFFICULT."
+];
+const SMS_SCALES = ["wellbeing-5", "yesno", "okdifficult"];
+let smsState = { step: 0, replies: [] };
+
+function openSmsCheckIn() {
+    playHapticBeep(620, 'sine', 0.08);
+    smsState = { step: 0, replies: [] };
+    const modal = document.getElementById('sms-checkin-modal');
+    if (!modal) return;
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    const thread = document.getElementById('sms-thread');
+    if (thread) {
+        thread.innerHTML = '';
+        pushSmsBubble('in', "🔒 Secure SMS from NEXORA CARE (NHAA 14566). You are connected to your care team — replies are confidential.");
+    }
+    setTimeout(machineSmsQuestion, 600);
+}
+
+function closeSmsCheckIn() {
+    playHapticBeep(400, 'sine', 0.06);
+    const modal = document.getElementById('sms-checkin-modal');
+    if (modal) { modal.classList.add('hidden'); modal.classList.remove('flex'); }
+}
+
+function pushSmsBubble(dir, text) {
+    const thread = document.getElementById('sms-thread');
+    if (!thread) return;
+    const bubble = document.createElement('div');
+    bubble.className = dir === 'out'
+        ? 'self-end bg-cyan-600 text-white text-xs px-3.5 py-2 rounded-2xl rounded-br-md max-w-[78%] whitespace-pre-line'
+        : 'self-start bg-slate-800 text-slate-200 text-xs px-3.5 py-2 rounded-2xl rounded-bl-md max-w-[82%] whitespace-pre-line';
+    bubble.textContent = text;
+    thread.appendChild(bubble);
+    thread.scrollTop = thread.scrollHeight;
+}
+
+function machineSmsQuestion() {
+    if (smsState.step >= SMS_QUESTIONS.length) {
+        finishSmsCheckIn();
+        return;
+    }
+    pushSmsBubble('in', SMS_QUESTIONS[smsState.step]);
+    const input = document.getElementById('sms-reply-input');
+    if (input) input.focus();
+}
+
+function submitSmsReply() {
+    const input = document.getElementById('sms-reply-input');
+    if (!input) return;
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = "";
+    pushSmsBubble('out', text);
+    smsState.replies.push(text);
+    smsState.step++;
+    setTimeout(machineSmsQuestion, 650);
+}
+
+function finishSmsCheckIn() {
+    const scored = smsState.replies.map((r, i) => scoreReplyText(r, SMS_SCALES[i] || "yesno"));
+    const avg = Math.round(scored.reduce((a, s) => a + s.score, 0) / Math.max(1, scored.length));
+    const anyCrisis = scored.some(s => s.crisis);
+    const overallRisk = anyCrisis ? 'CRITICAL' : avg >= 70 ? 'HIGH' : avg >= 40 ? 'MODERATE' : 'LOW';
+    const readout = { score: anyCrisis ? 95 : avg, risk: overallRisk, crisis: anyCrisis };
+
+    appendChannelLog({ channel: 'SMS', score: readout.score, risk: readout.risk, crisis: readout.crisis, note: readout.score >= 70 ? 'Elevated reading — follow-up advised' : '' });
+    pushSmsBubble('in', "Thank you. Your check-in is recorded and shared with your care team.\nTriage: " + readout.risk + " • Distress " + readout.score + "/100");
+    refreshChannelPanel();
+    showChannelResult('📱 SMS', readout);
+}
+
+// ----- IVRS channel simulation --------------------------------------------------
+const IVRS_QUESTIONS = [
+    "Please rate your current level of distress from one to ten. Say the number aloud, or press it now.",
+    "Press 1 if you are safe right now, or press 2 if you are in an unsafe situation.",
+    "Press 3 if you need help with police or court matters today, or press 4 if you are okay."
+];
+const IVRS_SCALES = ["distress-10", "safe", "help"];
+let ivrsState = null;
+let ivrsRecognition = null;
+let ivrsMicOn = false;
+
+function startIvrsCall() {
+    playHapticBeep(520, 'sine', 0.08);
+    ivrsState = { step: 0, answers: [] };
+    const modal = document.getElementById('ivrs-call-modal');
+    if (!modal) return;
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    ['ivrs-connecting', 'ivrs-live', 'ivrs-result'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
+    });
+    const c = document.getElementById('ivrs-connecting');
+    if (c) c.classList.remove('hidden');
+    buildIvrsKeypad();
+    setTimeout(ivrsConnect, 1500);
+}
+
+function closeIvrsCall() {
+    playHapticBeep(400, 'sine', 0.06);
+    stopIvrsMic();
+    const modal = document.getElementById('ivrs-call-modal');
+    if (modal) { modal.classList.add('hidden'); modal.classList.remove('flex'); }
+    ivrsState = null;
+}
+
+function buildIvrsKeypad() {
+    const pad = document.getElementById('ivrs-pad');
+    if (!pad) return;
+    pad.innerHTML = "";
+    ['1', '2', '3', '4', '5', '6', '7', '8', '9'].forEach(k => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.textContent = k;
+        b.className = 'h-11 rounded-xl bg-slate-800 hover:bg-sky-900/60 border border-white/10 text-white text-sm font-bold transition cursor-pointer';
+        b.onclick = () => ivrsKeypadPress(k);
+        pad.appendChild(b);
+    });
+}
+
+function ivrsConnect() {
+    const c = document.getElementById('ivrs-connecting');
+    const live = document.getElementById('ivrs-live');
+    if (c) c.classList.add('hidden');
+    if (live) live.classList.remove('hidden');
+    speakIvrsQuestion();
+}
+
+function ivrsQuestionText() {
+    return IVRS_QUESTIONS[ivrsState.step];
+}
+
+function speakIvrsQuestion() {
+    const qEl = document.getElementById('ivrs-question');
+    if (qEl) qEl.textContent = "🗣 " + ivrsQuestionText();
+    const sEl = document.getElementById('ivrs-spoken');
+    if (sEl) sEl.textContent = "";
+    ivrsState.listening = false;
+    ivrsMicOn = false;
+    const micLabel = document.getElementById('ivrs-mic-label');
+    if (micLabel) micLabel.textContent = "🎙 Say answer";
+    if (typeof speakText === 'function') {
+        try { speakText(ivrsQuestionText(), 'en-IN'); } catch (e) { /* voice unavailable */ }
+    }
+}
+
+function ivrsAnswer(text) {
+    if (!ivrsState || ivrsState.done) return;
+    ivrsState.answers.push(String(text).trim());
+    const sEl = document.getElementById('ivrs-spoken');
+    if (sEl) sEl.textContent = "You replied: " + String(text).trim();
+    stopIvrsMic();
+    advanceIvrs();
+}
+
+function ivrsKeypadPress(key) {
+    if (!ivrsState || ivrsState.done) return;
+    ivrsAnswer(key);
+}
+
+function advanceIvrs() {
+    ivrsState.step++;
+    if (ivrsState.step >= IVRS_QUESTIONS.length) {
+        finishIvrsCall();
+        return;
+    }
+    setTimeout(speakIvrsQuestion, 550);
+}
+
+function toggleIvrsMic() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+        showToast("Speech recognition is not supported in this browser — use the keypad instead.", 'warning');
+        return;
+    }
+    if (ivrsMicOn && ivrsRecognition) {
+        ivrsRecognition.stop();
+        return;
+    }
+    if (!ivrsState || ivrsState.done) return;
+    try {
+        ivrsMicOn = true;
+        const micLabel = document.getElementById('ivrs-mic-label');
+        if (micLabel) micLabel.textContent = "🔴 Listening… tap to stop";
+        ivrsRecognition = new SpeechRecognition();
+        ivrsRecognition.lang = 'en-IN';
+        ivrsRecognition.continuous = false;
+        ivrsRecognition.interimResults = true;
+        let holding = "";
+        ivrsRecognition.onresult = (event) => {
+            let interim = "";
+            for (let i = event.resultIndex; i < event.results.length; ++i) {
+                if (event.results[i].isFinal) holding = event.results[i][0].transcript;
+                else interim += event.results[i][0].transcript;
+            }
+            const sEl = document.getElementById('ivrs-spoken');
+            if (sEl) sEl.textContent = "Heard: " + (holding || interim);
+        };
+        ivrsRecognition.onerror = (event) => {
+            console.warn("IVRS mic error:", event.error);
+            ivrsMicOn = false;
+            const micLabel = document.getElementById('ivrs-mic-label');
+            if (micLabel) micLabel.textContent = "🎙 Say answer";
+        };
+        ivrsRecognition.onend = () => {
+            ivrsMicOn = false;
+            const micLabel = document.getElementById('ivrs-mic-label');
+            if (micLabel) micLabel.textContent = "🎙 Say answer";
+            if (holding && !ivrsState.done) {
+                ivrsAnswer(holding);
+                holding = "";
+            }
+        };
+        ivrsRecognition.start();
+    } catch (err) {
+        ivrsMicOn = false;
+        console.error("Failed to start IVRS mic:", err);
+        showToast("Unable to start microphone: " + err.message, 'error');
+    }
+}
+
+function stopIvrsMic() {
+    if (ivrsRecognition) {
+        try { ivrsRecognition.stop(); } catch (e) { /* noop */ }
+        ivrsRecognition = null;
+    }
+    ivrsMicOn = false;
+}
+
+function finishIvrsCall() {
+    ivrsState.done = true;
+    const scored = ivrsState.answers.map((a, i) => scoreReplyText(a, IVRS_SCALES[i] || "yesno"));
+    const avg = Math.round(scored.reduce((a, s) => a + s.score, 0) / Math.max(1, scored.length));
+    const anyCrisis = scored.some(s => s.crisis);
+    const overallRisk = anyCrisis ? 'CRITICAL' : avg >= 70 ? 'HIGH' : avg >= 40 ? 'MODERATE' : 'LOW';
+    const readout = { score: anyCrisis ? 95 : avg, risk: overallRisk, crisis: anyCrisis };
+
+    appendChannelLog({ channel: 'IVRS', score: readout.score, risk: readout.risk, crisis: readout.crisis, note: 'Voice channel' });
+    refreshChannelPanel();
+    showChannelResult('📞 IVRS', readout);
+
+    const dtmf = document.getElementById('ivrs-dtmf');
+    if (dtmf) dtmf.classList.add('hidden');
+    const mic = document.getElementById('ivrs-pulse');
+    if (mic) mic.className = "w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-mint-400 to-teal-500 flex items-center justify-center text-3xl shadow-lg shadow-mint-500/30";
+    const result = document.getElementById('ivrs-result');
+    if (result) {
+        result.classList.remove('hidden');
+        result.innerHTML = `
+            <p class="text-sm font-bold text-mint-300">IVRS check-in complete ✓</p>
+            <p class="text-xs text-slate-300 mt-2">Distress <strong class="font-mono">${readout.score}/100</strong> • ${readout.crisis ? '⚠ CRISIS LANGUAGE DETECTED' : readout.risk}</p>
+            <p class="text-[11px] text-slate-500 mt-1">Your reading is synced to your care team's channel dashboard.</p>
+            <button onclick="openHelplinePage()" class="btn btn-sm btn-secondary mt-4 w-full cursor-pointer">🛟 Open helpline page</button>
+        `;
+    }
+    stopIvrsMic();
+}
+
+// ----- Counselor dossier sharing ----------------------------------------------
+function updateDossierSharing(targetCase) {
+    const nhaaEl = document.getElementById('dossier-nhaa');
+    const chEl = document.getElementById('dossier-channels');
+    const cid = getNhaaCaseId() || (targetCase && targetCase.nhaaCaseId) || "";
+    if (nhaaEl) nhaaEl.textContent = cid || "—";
+    if (chEl) chEl.textContent = summarizeChannels();
+}
+
+// ----- PWA: capture install prompt + register service worker -----------------
+if (typeof window !== 'undefined') {
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        window.deferredInstallPrompt = e;
+    });
+    if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+        navigator.serviceWorker.register('service-worker.js').catch(() => { /* offline PWA is a progressive enhancement */ });
+    }
 }
 
 // ============================================================================
@@ -4126,6 +4779,9 @@ function openPatientDossier(caseId) {
 
     // Populate dossier with patient data
     populateDossier(targetCase);
+
+    // Share NHAA 14566 case link + multi-channel engagement summary into the dossier
+    if (typeof updateDossierSharing === 'function') updateDossierSharing(targetCase);
 
     // Render all visualizations
     setTimeout(() => {
@@ -5277,7 +5933,7 @@ function switchMonitorTab(tabName) {
     playHapticBeep(560, 'sine', 0.08);
     currentMonitorTab = tabName;
 
-    const tabs = ['dashboard', 'nexora-ai', 'cases', 'alerts', 'analytics', 'reports', 'settings'];
+    const tabs = ['dashboard', 'nexora-ai', 'cases', 'alerts', 'analytics', 'reports', 'command', 'settings'];
     tabs.forEach(t => {
         const navBtn = document.getElementById(`mon-nav-${t}`);
         const pane = document.getElementById(`tab-pane-${t}`);
@@ -5315,6 +5971,8 @@ function switchMonitorTab(tabName) {
         }, 60);
     } else if (tabName === 'settings') {
         initSettingsTab();
+    } else if (tabName === 'command') {
+        setTimeout(() => switchCommandModule(currentCommandModule || 'mlc'), 60);
     }
 }
 
@@ -7621,6 +8279,521 @@ function renderDashboardIntelligence(tab = 'swimlane') {
 }
 
 // ============================================================================
+// GOVERNANCE COMMAND — ADMIN OPERATIONS (8 MODULES / 23 SUB-DASHBOARDS)
+// ============================================================================
+let currentCommandModule = 'mlc';
+let commandChartInstances = [];
+
+function destroyCommandCharts() {
+    commandChartInstances.forEach(c => { try { c.destroy(); } catch(e) {} });
+    commandChartInstances = [];
+}
+
+function commandChart(canvasId, config) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas || typeof Chart === 'undefined') return null;
+    const chart = new Chart(canvas.getContext('2d'), config);
+    commandChartInstances.push(chart);
+    return chart;
+}
+
+const COMMAND_MODULES = ['mlc', 'boycott', 'court', 'relief', 'bail', 'dvmc', 'rehab', 'transit'];
+const CMD_TONES = {
+    critical: { pill: 'bg-rose-500/20 text-rose-300 border border-rose-500/40', bar: 'bg-rose-400', stat: 'text-rose-400', border: 'border border-rose-400/20' },
+    warn:     { pill: 'bg-amber-500/20 text-amber-300 border border-amber-500/40', bar: 'bg-amber-400', stat: 'text-amber-400', border: 'border border-amber-400/20' },
+    info:     { pill: 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40',    bar: 'bg-cyan-400',  stat: 'text-cyan-400',  border: 'border border-cyan-400/20' },
+    stable:   { pill: 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40', bar: 'bg-emerald-400', stat: 'text-emerald-400', border: 'border border-emerald-400/20' }
+};
+
+function switchCommandModule(moduleId) {
+    playHapticBeep(580, 'sine', 0.06);
+    if (!COMMAND_MODULES.includes(moduleId)) moduleId = 'mlc';
+    currentCommandModule = moduleId;
+    destroyCommandCharts();
+    COMMAND_MODULES.forEach(m => {
+        const btn = document.getElementById('command-mod-btn-' + m);
+        const pane = document.getElementById('command-module-' + m);
+        if (btn) btn.classList.toggle('active', m === moduleId);
+        if (pane) pane.classList.toggle('hidden', m !== moduleId);
+    });
+    renderCommandModule(moduleId);
+}
+
+function renderCommandModule(moduleId) {
+    switch (moduleId) {
+        case 'mlc':     renderMlcTracker(); break;
+        case 'boycott': renderBoycottRadar(); break;
+        case 'court':   renderCourtTelemetry(); break;
+        case 'relief':  renderReliefTreasury(); break;
+        case 'bail':    renderBailGrid(); break;
+        case 'dvmc':    renderDvmcAutomation(); break;
+        case 'rehab':   renderRehabRestoration(); break;
+        case 'transit': renderTransitFugitive(); break;
+    }
+}
+
+/* ---- DRY shared HTML builders ---- */
+function cmdBadge(text, tone) {
+    const t = CMD_TONES[tone] || CMD_TONES.info;
+    return '<span class="inline-block text-xs font-mono px-2 py-0.5 rounded-full ' + t.pill + '">' + text + '</span>';
+}
+function cmdKpi(label, value, footnote, tone) {
+    const t = CMD_TONES[tone] || CMD_TONES.info;
+    return '<div class="sentient-card p-4 ' + t.border + '">' +
+        '<p class="text-micro text-slate-400 mb-1">' + label + '</p>' +
+        '<p class="font-black text-2xl ' + t.stat + '">' + value + '</p>' +
+        '<p class="text-xs text-slate-400 mt-1">' + (footnote || '') + '</p></div>';
+}
+function cmdProgress(label, pct, tone) {
+    const t = CMD_TONES[tone] || CMD_TONES.info;
+    return '<div class="mb-3"><div class="flex justify-between text-xs mb-1">' +
+        '<span class="text-slate-300">' + label + '</span>' +
+        '<span class="font-mono text-slate-400">' + pct + '%</span></div>' +
+        '<div class="confidence-bar"><div class="confidence-fill ' + t.bar + '" style="width:' + Math.min(100, pct) + '%"></div></div></div>';
+}
+function cmdDataTable(headers, rows) {
+    return '<div class="sentient-card p-4 overflow-x-auto"><table class="w-full text-sm">' +
+        '<thead><tr class="text-micro text-slate-500 text-left">' +
+        headers.map(function(h) { return '<th class="pb-2 pr-3">' + h + '</th>'; }).join('') +
+        '</tr></thead><tbody>' + rows.join('') + '</tbody></table></div>';
+}
+function cmdSubCard(title, badgeHtml, bodyHtml) {
+    return '<div class="sentient-card p-6">' +
+        '<div class="flex items-center justify-between mb-4">' +
+        '<h5 class="font-bold text-white text-sm tracking-wide">' + title + '</h5>' +
+        (badgeHtml || '') + '</div>' + bodyHtml + '</div>';
+}
+function cmdRow(cells, tone) {
+    return '<tr class="border-t border-white/5">' + cells.map(function(c) { return '<td class="py-2 pr-3 text-slate-300">' + c + '</td>'; }).join('') + '</tr>';
+}
+
+/* =========================================================================
+   MODULE 1: FORENSIC MEDICAL EXAMINATION & MLC VELOCITY TRACKER
+   ========================================================================= */
+function renderMlcTracker() {
+    var c = document.getElementById('command-module-mlc');
+    if (!c) return;
+    var h = '';
+    // Sub 1: MLC Turnaround Timeline
+    h += cmdSubCard('MLC Turnaround Timeline', cmdBadge('3 AT-RISK', 'warn'),
+        '<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">' +
+            cmdKpi('Median Incident → Med Cert', '21h 04m', 'statutory ceiling 48h', 'warn') +
+            cmdKpi('Median Incident → Psych Cert', '31h 29m', 'statutory ceiling 72h', 'critical') +
+            cmdKpi('Certificates Uploaded (7d)', '142', '+9 vs prior week', 'stable') +
+            cmdKpi('Open Backlogs', '18', '12 at district hospitals', 'warn') +
+        '</div>' +
+        cmdDataTable(['MLC ID','District','To Med Cert','To Psych Cert','Status'], [
+            cmdRow(['<span class="font-mono text-cyan-300">MLC-2026-118</span>','Pune','<span class="font-mono text-slate-300">12h 40m</span>','<span class="font-mono text-slate-300">28h 05m</span>', cmdBadge('DELAYED','critical')]),
+            cmdRow(['<span class="font-mono text-cyan-300">MLC-2026-121</span>','Nagpur','<span class="font-mono text-slate-300">09h 10m</span>','<span class="font-mono text-slate-300">19h 50m</span>', cmdBadge('IN TRANSIT','warn')]),
+            cmdRow(['<span class="font-mono text-cyan-300">MLC-2026-127</span>','Thane','<span class="font-mono text-slate-300">07h 30m</span>','<span class="font-mono text-slate-300">14h 12m</span>', cmdBadge('ON TRACK','info')]),
+            cmdRow(['<span class="font-mono text-cyan-300">MLC-2026-131</span>','Nashik','<span class="font-mono text-slate-300">05h 55m</span>','<span class="font-mono text-slate-300">11h 48m</span>', cmdBadge('COMPLIANT','stable')])
+        ]) +
+        '<div class="mt-5 h-56 bg-slate-900/50 rounded-xl relative"><canvas id="cmd-chart-mlc"></canvas></div>'
+    );
+    // Sub 2: Evidence Chain-of-Custody Log
+    h += cmdSubCard('Evidence Chain-of-Custody Log', cmdBadge('3 VERIFIED', 'stable'),
+        '<div class="space-y-0">' +
+            '<div class="relative pl-6 pb-5 border-l-2 border-emerald-400/40">' +
+                '<div class="absolute -left-[7px] top-1 w-3 h-3 rounded-full bg-emerald-400"></div>' +
+                '<p class="text-xs text-emerald-400 font-mono">2026-09-08 14:22 · SHA-256:a1f3…4c9e</p>' +
+                '<p class="text-sm text-slate-300 mt-1">Forensic interview note hashed → SCEV-07 · verifier: OIC Cyber Pune</p></div>' +
+            '<div class="relative pl-6 pb-5 border-l-2 border-emerald-400/40">' +
+                '<div class="absolute -left-[7px] top-1 w-3 h-3 rounded-full bg-emerald-400"></div>' +
+                '<p class="text-xs text-emerald-400 font-mono">2026-09-08 16:40 · SHA-256:b7e2…91d4</p>' +
+                '<p class="text-sm text-slate-300 mt-1">Acoustic trauma recording sealed &amp; signed · custody: Dr. K. Patil (DHO Pune)</p></div>' +
+            '<div class="relative pl-6">' +
+                '<div class="absolute -left-[7px] top-1 w-3 h-3 rounded-full bg-emerald-400"></div>' +
+                '<p class="text-xs text-emerald-400 font-mono">2026-09-09 09:15 · VAULT-HANDSHAKE-OK</p>' +
+                '<p class="text-sm text-slate-300 mt-1">Vault handshake confirmed — 3/3 artifacts verified, zero tamper events</p></div>' +
+        '</div>'
+    );
+    // Sub 3: Hospital Compliance Scorecard
+    h += cmdSubCard('Hospital Compliance Scorecard', cmdBadge('2 FLAGGED', 'warn'),
+        cmdProgress('Pune Civil Hospital — release backlog', 64, 'warn') +
+        cmdProgress('Sambhajinagar Govt. Medical College — report queue', 78, 'critical') +
+        cmdProgress('Thane Civil Hospital', 41, 'info') +
+        cmdProgress('Nashik Civil Hospital', 22, 'stable')
+    );
+    c.innerHTML = h;
+    commandChart('cmd-chart-mlc', {
+        type: 'bar',
+        data: {
+            labels: ['Pune', 'Nagpur', 'Thane', 'Nashik', 'Sambhajinagar'],
+            datasets: [
+                { type: 'bar', label: 'Psych Cert Turnaround (h)', data: [31, 29, 26, 22, 38], backgroundColor: 'rgba(251,113,133,0.6)', borderColor: '#fb7185', borderRadius: 6, yAxisID: 'y' },
+                { type: 'line', label: 'Statutory Ceiling (72h)', data: [72,72,72,72,72], borderColor: '#f97316', borderDash: [6,4], pointRadius: 0, yAxisID: 'y' }
+            ]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#cbd5e1', font: { size: 11 } } } },
+            scales: { x: { ticks: { color: '#cbd5e1' }, grid: { display: false } }, y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' }, suggestedMax: 80 } }
+        }
+    });
+}
+
+/* =========================================================================
+   MODULE 2: SOCIAL & ECONOMIC BOYCOTT EARLY-WARNING RADAR
+   ========================================================================= */
+function renderBoycottRadar() {
+    var c = document.getElementById('command-module-boycott');
+    if (!c) return;
+    var h = '';
+    h += cmdSubCard('Essential Resource Access Index', cmdBadge('WATER: DENIED', 'critical'),
+        '<div class="grid grid-cols-2 lg:grid-cols-4 gap-4">' +
+            cmdKpi('Water Access', '14', 'villages blocked', 'critical') +
+            cmdKpi('Grazing Land', '9', 'tehsils restricted', 'warn') +
+            cmdKpi('Ration / PDS', '6', 'PDS stalls denied', 'warn') +
+            cmdKpi('Transport', '11', 'routes diverted', 'info') +
+        '</div>'
+    );
+    h += cmdSubCard('Wage & Employment Denial Detector', cmdBadge('3 COORDINATED', 'critical'),
+        cmdDataTable(['Family / Worker', 'District', 'Employer / Sector', 'Duration', 'Status'], [
+            cmdRow(['<span class="text-white">R. Gavhane family</span>','Beed','Agricultural labour','38 days', cmdBadge('WAGE DENIED','critical')]),
+            cmdRow(['<span class="text-white">S. Band family</span>','Nanded','Construction masonry','22 days', cmdBadge('BOYCOTT ACTIVE','critical')]),
+            cmdRow(['<span class="text-white">P. Maske cooperative</span>','Parbhani','Textile mill','15 days', cmdBadge('UNDER REVIEW','warn')]),
+            cmdRow(['<span class="text-white">D. Pawar family</span>','Hingoli','Autorickshaw fleet','9 days', cmdBadge('INTERVENED','info')])
+        ])
+    );
+    h += cmdSubCard('Tehsil Friction Risk Score', cmdBadge('OBSERVER REQUIRED', 'critical'),
+        '<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">' +
+            cmdKpi('Nanded', '84 / 100', 'top friction · observer pending', 'critical') +
+            cmdKpi('Parbhani', '67 / 100', 'escalating 3 weeks', 'warn') +
+            cmdKpi('Hingoli', '48 / 100', 'watchlist', 'info') +
+            cmdKpi('Beed', '29 / 100', 'stable', 'stable') +
+        '</div>' +
+        '<button onclick="dispatchObserver(\'Nanded\')" class="btn btn-violet mb-3">🚨 Dispatch Preventive Observer</button>' +
+        '<p id="dispatch-log" class="text-xs text-slate-400 font-mono">Last dispatch: 2026-09-04 · Tehsil Beed (2 observers)</p>' +
+        '<div class="mt-5 h-64 bg-slate-900/50 rounded-xl relative"><canvas id="cmd-chart-boycott"></canvas></div>'
+    );
+    c.innerHTML = h;
+    commandChart('cmd-chart-boycott', {
+        type: 'radar',
+        data: {
+            labels: ['Water', 'Grazing', 'Ration', 'Transport', 'Wage Withhold'],
+            datasets: [{ label: 'Tehsil Friction Score', data: [84, 72, 65, 78, 88], backgroundColor: 'rgba(251,113,133,0.25)', borderColor: '#fb7185', pointBackgroundColor: '#fecaca', borderWidth: 2 }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#cbd5e1' } } },
+            scales: { r: { angleLines: { color: 'rgba(255,255,255,0.08)' }, grid: { color: 'rgba(255,255,255,0.08)' }, ticks: { color: '#94a3b8', backdropColor: 'transparent' }, pointLabels: { color: '#cbd5e1' } } }
+        }
+    });
+}
+
+/* =========================================================================
+   MODULE 3: SPECIAL COURT HEARING VELOCITY & BENCH TELEMETRY
+   ========================================================================= */
+function renderCourtTelemetry() {
+    var c = document.getElementById('command-module-court');
+    if (!c) return;
+    var h = '';
+    h += cmdSubCard('Special Court Docket Density', cmdBadge('428 ACTIVE CASES', 'warn'),
+        '<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">' +
+            cmdKpi('Active Cases', '428', 'across 4 designated judges', 'warn') +
+            cmdKpi('Pending Chargesheets', '87', 'avg 62 days old', 'critical') +
+            cmdKpi('Avg Trial Duration', '11.4 months', 'statutory target 6 mo', 'critical') +
+            cmdKpi('Conviction Rate (12mo)', '34%', '+3% vs prior period', 'info') +
+        '</div>' +
+        '<div class="h-56 bg-slate-900/50 rounded-xl relative"><canvas id="cmd-chart-court"></canvas></div>'
+    );
+    h += cmdSubCard('Witness Hostility Vulnerability Index', cmdBadge('2 CASES AT RISK', 'critical'),
+        cmdDataTable(['Case ID','District','Continuances','Retraction Rate','Vulnerability'], [
+            cmdRow(['<span class="font-mono text-cyan-300">SCR-2026-041</span>','Beed','7','42%', cmdBadge('VERY HIGH','critical')]),
+            cmdRow(['<span class="font-mono text-cyan-300">SCR-2026-028</span>','Nanded','5','33%', cmdBadge('HIGH','warn')]),
+            cmdRow(['<span class="font-mono text-cyan-300">SCR-2026-055</span>','Pune','2','8%', cmdBadge('LOW','stable')]),
+            cmdRow(['<span class="font-mono text-cyan-300">SCR-2026-063</span>','Thane','3','14%', cmdBadge('MODERATE','info')])
+        ]) +
+        '<div class="mt-4">' + cmdProgress('Overall witness cooperation index', 61, 'info') + '</div>'
+    );
+    h += cmdSubCard('Summons Execution Rate', cmdBadge('84% OVERALL', 'info'),
+        cmdProgress('Pune City Police', 92, 'stable') +
+        cmdProgress('Nagpur Rural Police', 78, 'warn') +
+        cmdProgress('Beed District Police', 65, 'critical') +
+        cmdProgress('Nanded City Police', 81, 'info')
+    );
+    c.innerHTML = h;
+    commandChart('cmd-chart-court', {
+        type: 'bar',
+        data: {
+            labels: ['Judge A — Pune', 'Judge B — Nagpur', 'Judge C — Beed', 'Judge D — Nanded'],
+            datasets: [
+                { label: 'Active Docket', data: [128, 112, 98, 90], backgroundColor: 'rgba(250,204,21,0.6)', borderColor: '#facc15', borderRadius: 6 },
+                { label: 'Pending Chargesheets', data: [18, 24, 28, 17], backgroundColor: 'rgba(239,68,68,0.6)', borderColor: '#ef4444', borderRadius: 6 }
+            ]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#cbd5e1' } } },
+            scales: { x: { stacked: false, ticks: { color: '#cbd5e1' }, grid: { display: false } }, y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } } }
+        }
+    });
+}
+
+/* =========================================================================
+   MODULE 4: RELIEF FUND LIQUIDITY & TREASURY DRAWDOWN MONITOR
+   ========================================================================= */
+function renderReliefTreasury() {
+    var c = document.getElementById('command-module-relief');
+    if (!c) return;
+    var h = '';
+    h += cmdSubCard('Central & State Share Treasury Tracker', cmdBadge('₹14.2 Cr AVAILABLE', 'stable'),
+        '<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">' +
+            cmdKpi('Central Share', '₹8.4 Cr', 'MoSJE grant, 78% disbursed', 'info') +
+            cmdKpi('State Share', '₹5.8 Cr', 'SW dept escrow, 61% disbursed', 'warn') +
+            cmdKpi('Total Disbursed (FY)', '₹12.8 Cr', 'of ₹14.2 Cr total', 'stable') +
+            cmdKpi('Avg Transfer Delay', '4.2 days', 'within 7-day mandate', 'info') +
+        '</div>' +
+        '<div class="h-56 bg-slate-900/50 rounded-xl relative"><canvas id="cmd-chart-relief"></canvas></div>'
+    );
+    h += cmdSubCard('DBT Failure Queue', cmdBadge('23 REJECTED', 'warn'),
+        cmdDataTable(['DBT ID','Beneficiary','Failure Reason','Amount','Status'], [
+            cmdRow(['<span class="font-mono text-cyan-300">DBT-2026-441</span>','R. Gavhane','Aadhaar mismatch','₹45,000', cmdBadge('REROUTE','info')]),
+            cmdRow(['<span class="font-mono text-cyan-300">DBT-2026-439</span>','S. Band','Dormant bank acct','₹32,000', cmdBadge('RETRY QUEUE','warn')]),
+            cmdRow(['<span class="font-mono text-cyan-300">DBT-2026-437</span>','P. Maske','IFSC code invalid','₹28,500', cmdBadge('PENDING','warn')]),
+            cmdRow(['<span class="font-mono text-cyan-300">DBT-2026-435</span>','D. Pawar','Account frozen (court)','₹50,000', cmdBadge('ESCALATE','critical')])
+        ]) +
+        '<button onclick="rerouteDbt(\'DBT-2026-441\')" class="btn btn-violet mt-3">🔄 Auto-Reroute Selected</button>'
+    );
+    h += cmdSubCard('Emergency Discretionary Fund Drawdown', cmdBadge('₹1.2 Cr REMAINING', 'warn'),
+        cmdDataTable(['Drawdown ID','District Magistrate','Purpose','Amount','Date'], [
+            cmdRow(['<span class="font-mono text-cyan-300">EDF-2026-09</span>','Pune DM','Emergency shelter (4 families)','₹2.4L','2026-09-06']),
+            cmdRow(['<span class="font-mono text-cyan-300">EDF-2026-10</span>','Beed DM','Transit food supply (12 families)','₹1.8L','2026-09-07']),
+            cmdRow(['<span class="font-mono text-cyan-300">EDF-2026-11</span>','Nanded DM','Medical transport','₹0.9L','2026-09-08']),
+            cmdRow(['<span class="font-mono text-cyan-300">—</span>','—','<span class="text-slate-500 italic">Reserve: ₹1.2 Cr</span>','—','—'])
+        ])
+    );
+    c.innerHTML = h;
+    commandChart('cmd-chart-relief', {
+        type: 'line',
+        data: {
+            labels: ['Apr','May','Jun','Jul','Aug','Sep'],
+            datasets: [
+                { label: 'Central Disbursed (₹L)', data: [120,135,150,145,160,168], backgroundColor: 'rgba(56,189,248,0.2)', borderColor: '#38bdf8', fill: true, tension: 0.35, pointRadius: 4 },
+                { label: 'State Disbursed (₹L)', data: [65,80,70,95,110,116], backgroundColor: 'rgba(167,139,250,0.2)', borderColor: '#a78bfa', fill: true, tension: 0.35, pointRadius: 4 }
+            ]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#cbd5e1' } } },
+            scales: { x: { ticks: { color: '#cbd5e1' }, grid: { display: false } }, y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } } }
+        }
+    });
+}
+
+/* =========================================================================
+   MODULE 5: PERPETRATOR BAIL & RESTRAINING ORDER ENFORCEMENT GRID
+   ========================================================================= */
+function renderBailGrid() {
+    var c = document.getElementById('command-module-bail');
+    if (!c) return;
+    var h = '';
+    h += cmdSubCard('Proximity Violation Beacon', cmdBadge('1 ACTIVE VIOLATION', 'critical'),
+        '<div class="space-y-3">' +
+            '<div class="p-4 rounded-xl bg-rose-950/40 border border-rose-500/30">' +
+                '<div class="flex justify-between items-start mb-2">' +
+                    '<div><span class="font-bold text-white text-sm">SCR-2026-028-Accused-A</span> <span class="text-xs text-rose-300 ml-2">Geo-fence BREACH</span></div>' +
+                    '<span class="text-xs font-mono text-rose-300">2026-09-09 03:14 IST</span></div>' +
+                '<p class="text-xs text-slate-400">GPS ping at 18.5074°N 73.8077°E — 140m from victim residence (exclusion radius: 500m)</p>' +
+                '<button onclick="escalateBreach(\'SCR-2026-028-A\')" class="btn btn-violet btn-sm mt-3">🚨 Escalate to Station House Officer</button>' +
+            '</div>' +
+            '<div class="p-4 rounded-xl bg-slate-900/40 border border-white/5">' +
+                '<p class="text-sm text-slate-300">Next scheduled geo-fence check: 2026-09-09 18:00 IST</p>' +
+                '<p class="text-xs text-slate-500 mt-1">All other 11 accused on conditional bail: within compliance</p></div>' +
+        '</div>'
+    );
+    h += cmdSubCard('Bail Revocation Workflow', cmdBadge('1 DOSSIER READY', 'warn'),
+        '<div class="grid grid-cols-2 gap-4 mb-4">' +
+            cmdKpi('Revocation Petitions Filed', '4', 'this quarter', 'info') +
+            cmdKpi('Dossiers Ready for Filing', '1', 'SCR-2026-028', 'warn') +
+        '</div>' +
+        '<div class="p-4 rounded-xl bg-slate-900/50 border border-amber-400/20 mb-4">' +
+            '<p class="text-sm text-white font-bold mb-2">SCR-2026-028 — Bail Revocation Dossier</p>' +
+            '<div class="space-y-1 text-xs text-slate-400">' +
+                '<div class="flex justify-between"><span>Proximity violations logged</span><span class="text-rose-400 font-mono">3 (last 30 days)</span></div>' +
+                '<div class="flex justify-between"><span>Threat intimidation reports</span><span class="text-amber-400 font-mono">2</span></div>' +
+                '<div class="flex justify-between"><span>Witness retraction linked</span><span class="text-rose-400 font-mono">Yes</span></div></div>' +
+            '<button onclick="buildBailDossier(\'SCR-2026-028\')" class="btn btn-violet btn-sm mt-3">📄 Generate & File Petition</button>' +
+            '<p id="dossier-status" class="text-xs text-slate-400 mt-2 font-mono"></p>' +
+        '</div>'
+    );
+    h += cmdSubCard('Surety Verification Audit', cmdBadge('1 FRAUDULENT', 'critical'),
+        cmdDataTable(['Surety ID','Accused Case','Guarantor','Document Score','Status'], [
+            cmdRow(['<span class="font-mono text-cyan-300">STR-101</span>','SCR-2026-041','K. Thakur', cmdBadge('92 / 100','stable'), cmdBadge('VERIFIED','stable')]),
+            cmdRow(['<span class="font-mono text-cyan-300">STR-102</span>','SCR-2026-028','M. Devkar', cmdBadge('18 / 100','critical'), cmdBadge('FRAUDULENT','critical')]),
+            cmdRow(['<span class="font-mono text-cyan-300">STR-103</span>','SCR-2026-055','R. Jadhav', cmdBadge('87 / 100','stable'), cmdBadge('VERIFIED','stable')]),
+            cmdRow(['<span class="font-mono text-cyan-300">STR-104</span>','SCR-2026-063','V. Kumbhar', cmdBadge('64 / 100','warn'), cmdBadge('REVIEW','warn')])
+        ])
+    );
+    c.innerHTML = h;
+}
+
+/* =========================================================================
+   MODULE 6: DISTRICT VIGILANCE & MONITORING COMMITTEE (DVMC) AUTOMATION
+   ========================================================================= */
+function renderDvmcAutomation() {
+    var c = document.getElementById('command-module-dvmc');
+    if (!c) return;
+    var h = '';
+    h += cmdSubCard('Mandatory Meeting Compliance Clock', cmdBadge('42 DAYS REMAINING', 'info'),
+        '<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">' +
+            cmdKpi('Days to Q3 Deadline', '42', 'statutory quarterly review', 'info') +
+            cmdKpi('District Committees (14)', '11', 'compliant', 'stable') +
+            cmdKpi('District Committees', '3', 'not yet scheduled', 'warn') +
+            cmdKpi('State-Level Review', 'On Track', 'scheduled 2026-10-01', 'info') +
+        '</div>' +
+        '<div class="flex flex-wrap gap-3">' +
+            '<div class="sentient-card p-3 border border-emerald-400/20 text-center"><p class="text-xs text-slate-400">Pune</p><p class="text-sm font-bold text-emerald-400">✓ Scheduled</p></div>' +
+            '<div class="sentient-card p-3 border border-emerald-400/20 text-center"><p class="text-xs text-slate-400">Nagpur</p><p class="text-sm font-bold text-emerald-400">✓ Scheduled</p></div>' +
+            '<div class="sentient-card p-3 border border-amber-400/20 text-center"><p class="text-xs text-slate-400">Beed</p><p class="text-sm font-bold text-amber-400">⚠ Pending</p></div>' +
+            '<div class="sentient-card p-3 border border-rose-400/20 text-center"><p class="text-xs text-slate-400">Nanded</p><p class="text-sm font-bold text-rose-400">✗ Not Scheduled</p></div>' +
+            '<div class="sentient-card p-3 border border-rose-400/20 text-center"><p class="text-xs text-slate-400">Parbhani</p><p class="text-sm font-bold text-rose-400">✗ Not Scheduled</p></div>' +
+            '<div class="sentient-card p-3 border border-amber-400/20 text-center"><p class="text-xs text-slate-400">Hingoli</p><p class="text-sm font-bold text-amber-400">⚠ Pending</p></div>' +
+        '</div>'
+    );
+    h += cmdSubCard('Automated Agenda Synthesizer', cmdBadge('8 ITEMS', 'info'),
+        '<div class="space-y-3">' +
+            '<div class="p-3 rounded-xl bg-slate-900/50 border border-white/5">' +
+                '<div class="flex justify-between items-center"><span class="text-sm text-white font-medium">Unresolved helpline tickets (42 open)</span>' +
+                '<span class="text-xs font-mono px-2 py-0.5 rounded bg-rose-500/20 text-rose-300">PRIORITY</span></div></div>' +
+            '<div class="p-3 rounded-xl bg-slate-900/50 border border-white/5">' +
+                '<div class="flex justify-between items-center"><span class="text-sm text-white font-medium">Stalled relief dockets (8 families, avg 23 days)</span>' +
+                '<span class="text-xs font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-300">URGENT</span></div></div>' +
+            '<div class="p-3 rounded-xl bg-slate-900/50 border border-white/5">' +
+                '<div class="flex justify-between items-center"><span class="text-sm text-white font-medium">Active intimidation alerts (3 this week)</span>' +
+                '<span class="text-xs font-mono px-2 py-0.5 rounded bg-rose-500/20 text-rose-300">CRITICAL</span></div></div>' +
+            '<div class="p-3 rounded-xl bg-slate-900/50 border border-white/5">' +
+                '<div class="flex justify-between items-center"><span class="text-sm text-white font-medium">DBT failure backlog (23 pending reroutes)</span>' +
+                '<span class="text-xs font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-300">ACTION REQ</span></div></div>' +
+            '<button onclick="generateAgenda()" class="btn btn-violet btn-sm mt-2">📄 Generate Official PDF Agenda</button>' +
+            '<p id="agenda-status" class="text-xs text-slate-400 font-mono mt-1"></p>' +
+        '</div>'
+    );
+    h += cmdSubCard('Action Taken Report (ATR) Tracker', cmdBadge('5 OPEN ITEMS', 'warn'),
+        cmdDataTable(['ATR Item','Department','Assigned To','Deadline','Status'], [
+            cmdRow(['Release psychological trauma report','Health Dept','Dr. S. Mane','2026-09-12', cmdBadge('OPEN','warn')]),
+            cmdRow(['Re-route 23 failed DBT transfers','Social Welfare','Mr. A. Deshmukh','2026-09-10', cmdBadge('OVERDUE','critical')]),
+            cmdRow(['Dispatch observers to Nanded','Revenue / Police','Collector Nanded','2026-09-08', cmdBadge('OVERDUE','critical')]),
+            cmdRow(['Compile quarterly DVMC minutes','Legal Affairs','DLSA Coordinator','2026-09-20', cmdBadge('ON TRACK','info')]),
+            cmdRow(['Investigate witness intimidation report','Police','SP Beed','2026-09-15', cmdBadge('IN PROGRESS','warn')])
+        ])
+    );
+    c.innerHTML = h;
+}
+
+/* =========================================================================
+   MODULE 7: POST-TRIAL REHABILITATION & ECONOMIC RESTORATION MATRIX
+   ========================================================================= */
+function renderRehabRestoration() {
+    var c = document.getElementById('command-module-rehab');
+    if (!c) return;
+    var h = '';
+    h += cmdSubCard('Land Allotment & Housing Verification', cmdBadge('12 / 30 FAMILIES', 'warn'),
+        '<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">' +
+            cmdKpi('Eligible Families', '30', 'displaced by violence', 'info') +
+            cmdKpi('Land Allotted', '8', '27% execution rate', 'critical') +
+            cmdKpi('Housing Assigned', '12', 'govt quarters / rehab', 'warn') +
+            cmdKpi('Avg Execution Time', '8.4 months', 'statutory 3-month target', 'critical') +
+        '</div>' +
+        '<div class="h-56 bg-slate-900/50 rounded-xl relative"><canvas id="cmd-chart-rehab"></canvas></div>'
+    );
+    h += cmdSubCard('Educational Continuity Audit', cmdBadge('6 CHILDREN UNENROLLED', 'warn'),
+        cmdDataTable(['Child ID','Age','Relocated To','School Type','Status'], [
+            cmdRow(['<span class="font-mono text-cyan-300">ECH-2026-01</span>','11','Pune foster','Private school', cmdBadge('ENROLLED','stable')]),
+            cmdRow(['<span class="font-mono text-cyan-300">ECH-2026-02</span>','14','Nagpur shelter','Government school', cmdBadge('ENROLLED','stable')]),
+            cmdRow(['<span class="font-mono text-cyan-300">ECH-2026-03</span>','8','Beed host family','—', cmdBadge('UNENROLLED','critical')]),
+            cmdRow(['<span class="font-mono text-cyan-300">ECH-2026-04</span>','16','Thane relative','Private college (gap year)', cmdBadge('PENDING','warn')])
+        ])
+    );
+    h += cmdSubCard('Vocational Reskilling & Livelihood Grants', cmdBadge('₹3.2L DISBURSED', 'info'),
+        cmdProgress('Seed Capital Disbursement', 43, 'warn') +
+        cmdProgress('Job Placement Pipeline', 28, 'critical') +
+        '<div class="mt-3 grid grid-cols-2 gap-4">' +
+            cmdKpi('Total Grants Given', '7', 'of 20 eligible', 'warn') +
+            cmdKpi('Job Placements', '3', 'avg salary ₹12,400/mo', 'info') +
+        '</div>'
+    );
+    c.innerHTML = h;
+    commandChart('cmd-chart-rehab', {
+        type: 'bar',
+        data: {
+            labels: ['Land Allotted', 'Land Pending', 'Housing Assigned', 'Housing Pending'],
+            datasets: [
+                { label: 'Completed', data: [8, 0, 12, 0], backgroundColor: 'rgba(52,211,153,0.6)', borderColor: '#34d399', borderRadius: 6 },
+                { label: 'Pending', data: [0, 22, 0, 18], backgroundColor: 'rgba(250,204,21,0.6)', borderColor: '#facc15', borderRadius: 6 }
+            ]
+        },
+        options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+            plugins: { legend: { labels: { color: '#cbd5e1' } } },
+            scales: { x: { stacked: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } }, y: { stacked: true, ticks: { color: '#cbd5e1' }, grid: { display: false } } }
+        }
+    });
+}
+
+/* =========================================================================
+   MODULE 8: INTER-STATE TRANSIT & CROSS-JURISDICTION FUGITIVE TRACKER
+   ========================================================================= */
+function renderTransitFugitive() {
+    var c = document.getElementById('command-module-transit');
+    if (!c) return;
+    var h = '';
+    h += cmdSubCard('Cross-Border Incident Handshake', cmdBadge('2 ACTIVE TRANSFERS', 'info'),
+        '<div class="space-y-0">' +
+            '<div class="relative pl-6 pb-5 border-l-2 border-cyan-400/40">' +
+                '<div class="absolute -left-[7px] top-1 w-3 h-3 rounded-full bg-cyan-400"></div>' +
+                '<p class="text-xs text-cyan-400 font-mono">2026-09-07 · Maharashtra → Karnataka</p>' +
+                '<p class="text-sm text-slate-300 mt-1">Witness relocation transfer initiated: M. Pawar family, Pune → Bengaluru safehouse</p>' +
+                '<p class="text-xs text-slate-500 mt-1">Status: <span class="text-emerald-400">Receiving state confirmed · ETA 6h</span></p></div>' +
+            '<div class="relative pl-6 pb-5 border-l-2 border-amber-400/40">' +
+                '<div class="absolute -left-[7px] top-1 w-3 h-3 rounded-full bg-amber-400"></div>' +
+                '<p class="text-xs text-amber-400 font-mono">2026-09-08 · Maharashtra → Madhya Pradesh</p>' +
+                '<p class="text-sm text-slate-300 mt-1">Survivor family transit: S. Band family, Nanded → Indore cross-examination</p>' +
+                '<p class="text-xs text-slate-500 mt-1">Status: <span class="text-amber-400">Awaiting MP police escort confirmation</span></p></div>' +
+            '<div class="relative pl-6">' +
+                '<div class="absolute -left-[7px] top-1 w-3 h-3 rounded-full bg-emerald-400"></div>' +
+                '<p class="text-xs text-emerald-400 font-mono">2026-09-05 · Maharashtra → Goa (completed)</p>' +
+                '<p class="text-sm text-slate-300 mt-1">Cross-examination transit: D. Pawar, Hingoli → Goa bench</p>' +
+                '<p class="text-xs text-slate-500 mt-1">Status: <span class="text-emerald-400">COMPLETED · hearing concluded</span></p></div>' +
+        '</div>'
+    );
+    h += cmdSubCard('Transit Escort Verification', cmdBadge('4 ACTIVE ESCORTS', 'info'),
+        cmdDataTable(['Transit ID','Survivor','Route','Escort Unit','GPS Verified'], [
+            cmdRow(['<span class="font-mono text-cyan-300">TRN-2026-04</span>','M. Pawar family','Pune → Bengaluru','Maharashtra PS escorts', cmdBadge('YES','stable')]),
+            cmdRow(['<span class="font-mono text-cyan-300">TRN-2026-05</span>','S. Band family','Nanded → Indore','MP Police pending', cmdBadge('PENDING','warn')]),
+            cmdRow(['<span class="font-mono text-cyan-300">TRN-2026-06</span>','R. Gavhane','Beed → Mumbai court','State constable convoy', cmdBadge('YES','stable')]),
+            cmdRow(['<span class="font-mono text-cyan-300">TRN-2026-07</span>','P. Maske','Parbhani → Hyderabad','NIA assisted transfer', cmdBadge('YES','stable')])
+        ])
+    );
+    c.innerHTML = h;
+}
+
+/* ---- Interactive stubs ---- */
+function dispatchObserver(tehsil) {
+    var el = document.getElementById('dispatch-log');
+    if (el) el.innerHTML = '<span class="text-emerald-400">✓ Observer dispatched to ' + tehsil + ' at ' + new Date().toLocaleTimeString() + '</span> — ' + el.innerHTML;
+    playHapticBeep(660, 'sine', 0.1);
+}
+
+function escalateBreach(caseId) {
+    playHapticBeep(700, 'sine', 0.12);
+    alert('🚨 Breach escalated to Station House Officer for ' + caseId + '. Incident logged and FIR reference updated.');
+}
+
+function buildBailDossier(caseId) {
+    var el = document.getElementById('dossier-status');
+    if (el) el.innerHTML = '<span class="text-emerald-400">✓ Dossier generated for ' + caseId + ' — ready for filing</span>';
+    playHapticBeep(600, 'sine', 0.08);
+}
+
+function rerouteDbt(dbtId) {
+    playHapticBeep(620, 'sine', 0.08);
+    alert('🔄 DBT ' + dbtId + ' auto-rerouted to alternate bank account. Beneficiary notified via SMS.');
+}
+
+function generateAgenda() {
+    var el = document.getElementById('agenda-status');
+    if (el) el.innerHTML = '<span class="text-emerald-400">✓ PDF agenda generated — 8 items, ready for District Collector</span>';
+    playHapticBeep(640, 'sine', 0.08);
+}
+
+function exportGovernanceSnapshot() {
+    playHapticBeep(560, 'sine', 0.08);
+    alert('📥 Governance Command Snapshot exported. Module: ' + (currentCommandModule || 'all').toUpperCase() + '\nGenerated: ' + new Date().toLocaleString());
+}
+
+// ============================================================================
 // LIVE AI TELEMETRY WAVEFORM CANVAS ANIMATION
 // ============================================================================
 let waveCanvas = null;
@@ -7753,6 +8926,11 @@ function stopBreathingCycle() {
 let isNexChatOpen = false;
 let nexMessages = [];
 
+// Per-session message guardrail: after a gentle turn limit the chat wraps up
+// warmly and points back to the helpline page instead of looping forever.
+let nexSessionMsgCount = 0;
+const NEX_MAX_SESSION_MSGS = 20;
+
 const nexGreetings = {
     en: "Hello! I am NEX, your caring AI companion. I'm here 24/7 to listen, provide safety advice, or guide you through your court trial. How are you feeling right now?",
     hi: "नमस्ते! मैं NEX हूँ, आपका सुरक्षित AI साथी। मैं यहाँ आपकी बात सुनने, सुरक्षा में मदद करने और कोर्ट ट्रायल के बारे में बताने के लिए हूँ। आज आप कैसा महसूस कर रहे हैं?",
@@ -7767,6 +8945,7 @@ const nexGreetings = {
 };
 
 function initNexChat() {
+    nexSessionMsgCount = 0;
     const greeting = nexGreetings[currentLang] || nexGreetings.en;
     nexMessages = [
         { sender: 'bot', text: greeting, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }
@@ -7783,6 +8962,7 @@ function toggleNexChat() {
     if (!isNexChatOpen) {
         // OPENING: smoothly expand from the small translucent circle
         isNexChatOpen = true;
+        nexSessionMsgCount = 0;
         if (toggleBtn) {
             toggleBtn.classList.add('nex-btn-pop-out');
             toggleBtn.classList.remove('nex-btn-pop-in');
@@ -7831,16 +9011,23 @@ function renderNexMessages() {
 
     container.innerHTML = nexMessages.map((msg, idx) => {
         if (msg.sender === 'bot') {
+            const buttonsHtml = (msg.buttons || []).map(btn => `
+                <button type="button" onclick="${escapeHtml(btn.onClick)}" class="w-full text-left rounded-lg bg-sky-900/40 hover:bg-sky-800/60 border border-sky-400/20 text-sky-300 font-semibold py-2 px-3 text-[11px] transition-colors cursor-pointer">
+                    ${escapeHtml(btn.label)}
+                </button>
+            `).join('');
+
             return `
                 <div class="flex items-start gap-2.5 chat-bubble-anim">
                     <div class="w-7 h-7 rounded-full overflow-hidden shrink-0 border border-sky-400/60 shadow-xs">
                         <img src="assets/nex_avatar.jpg" alt="NEX" class="w-full h-full object-cover">
                     </div>
-                    <div class="max-w-[82%] bg-slate-900/85 border border-sky-400/25 backdrop-blur-md rounded-2xl rounded-tl-none p-3 shadow-md text-slate-100 space-y-1">
-                        <p class="leading-relaxed text-[12px]">${msg.text}</p>
+                    <div class="max-w-[82%] bg-slate-900/85 border border-sky-400/25 backdrop-blur-md rounded-2xl rounded-tl-none p-3 shadow-md text-slate-100 space-y-2">
+                        <p class="leading-relaxed text-[12px]">${escapeHtml(msg.text)}</p>
+                        ${buttonsHtml}
                         <div class="flex items-center justify-between pt-1 text-[10px] text-sky-300/70">
                             <span>${msg.time}</span>
-                            <button type="button" onclick="speakText('${msg.text.replace(/'/g, "\\'")}')" class="text-sky-400 hover:text-sky-200 font-bold ml-2 transition-transform hover:scale-110 active:scale-90 cursor-pointer" title="Listen">🔊 Listen</button>
+                            <button type="button" data-speak="${escapeHtml(msg.text)}" onclick="speakText(this.getAttribute('data-speak'))" class="text-sky-400 hover:text-sky-200 font-bold ml-2 transition-transform hover:scale-110 active:scale-90 cursor-pointer" title="Listen">🔊 Listen</button>
                         </div>
                     </div>
                 </div>
@@ -7849,7 +9036,7 @@ function renderNexMessages() {
             return `
                 <div class="flex items-end justify-end gap-2 chat-bubble-anim">
                     <div class="max-w-[82%] bg-gradient-to-r from-sky-600/90 to-indigo-600/90 backdrop-blur-md text-white border border-sky-400/40 rounded-2xl rounded-tr-none p-3 shadow-lg space-y-1">
-                        <p class="leading-relaxed text-[12px]">${msg.text}</p>
+                        <p class="leading-relaxed text-[12px]">${escapeHtml(msg.text)}</p>
                         <div class="text-right text-[10px] text-sky-200/80">${msg.time}</div>
                     </div>
                 </div>
@@ -7885,58 +9072,109 @@ function handleNexMessageSend(text) {
     playHapticBeep(720, 'sine', 0.08);
     const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     nexMessages.push({ sender: 'user', text, time });
+    nexSessionMsgCount++;
     renderNexMessages();
 
-    // Generate smart empathetic response
+    // Session cap (gentle guardrail): wrap up and point to the helpline page.
+    if (nexSessionMsgCount >= NEX_MAX_SESSION_MSGS) {
+        setTimeout(() => {
+            playHapticBeep(840, 'triangle', 0.1);
+            const replyTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            nexMessages.push({
+                sender: 'bot',
+                text: "Thank you for talking with me today. Please remember you can always come back — and you never have to carry this alone.",
+                time: replyTime,
+                buttons: [
+                    { label: "💙 Open Helpline Page", onClick: "openHelplinePage()" },
+                    { label: "🌿 Slow Breathing", onClick: "toggleBreathingModal()" }
+                ]
+            });
+            renderNexMessages();
+        }, 600);
+        return;
+    }
+
+    // Generate smart empathetic response (crisis-aware)
     setTimeout(() => {
         playHapticBeep(840, 'triangle', 0.1);
-        const replyText = generateEmpatheticNexReply(text);
+        const reply = generateEmpatheticNexReply(text);
         const replyTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        nexMessages.push({ sender: 'bot', text: replyText, time: replyTime });
+        nexMessages.push({ sender: 'bot', text: reply.text, time: replyTime, buttons: reply.buttons || [] });
         renderNexMessages();
     }, 600);
 }
 
+// ============================================================================
+// CRISIS-AWARE EMPATHETIC REPLY ENGINE (English)
+// ============================================================================
+
 function generateEmpatheticNexReply(userText) {
+    // 1) Immediate crisis / danger → redirect to the helpline page (never dial).
+    if (detectCrisisLevel(userText) === 'critical') {
+        return buildCrisisReply();
+    }
+
+    // 2) Topic-matched empathetic reply.
+    const topic = detectTopic(userText);
+    if (topic) {
+        return buildTopicReply(topic);
+    }
+
+    // 3) Softer distress signals with no specific topic → offer the helpline page.
+    if (isDistressedText(userText)) {
+        return buildTopicReply('distress');
+    }
+
+    // 4) General supportive reply.
+    return buildTopicReply('general');
+}
+
+function detectCrisisLevel(userText) {
     const lower = userText.toLowerCase();
+    if (nexCrisisKeywords.some(kw => lower.includes(kw))) return 'critical';
+    if (nexDangerKeywords.some(kw => lower.includes(kw))) return 'critical';
+    return 'none';
+}
 
-    // Immediate danger / fear
-    if (lower.includes('unsafe') || lower.includes('threat') || lower.includes('scared') || lower.includes('danger') || lower.includes('डर') || lower.includes('धमकी') || lower.includes('ভয়')) {
-        if (currentLang === 'hi') {
-            return "🚨 आप अकेले नहीं हैं। यदि आप तुरंत किसी खतरे में हैं, तो कृपया अभी 112 पर कॉल करें। मैंने आपके विधिक सेवा सहायक (DLSA) को भी सूचित कर दिया है ताकि आपको पुलिस सुरक्षा मिल सके।";
+function isDistressedText(userText) {
+    const lower = userText.toLowerCase();
+    return distressKeywords.some(kw => typeof kw === 'string' && lower.includes(kw.toLowerCase()));
+}
+
+function detectTopic(userText) {
+    const lower = userText.toLowerCase();
+    const order = ['panic', 'anxiety', 'sadness', 'stress', 'sleep', 'anger', 'loneliness', 'grief', 'money', 'relationship', 'court'];
+    for (const topic of order) {
+        const keywords = nexTopicKeywords[topic];
+        if (keywords.some(kw => lower.includes(kw))) {
+            return topic;
         }
-        return "🚨 You are not alone. If you are in immediate physical danger, please call 112 right away. I have also noted this so your DLSA caseworker can arrange emergency witness police protection for you.";
     }
+    return null;
+}
 
-    // Court trial anxiety
-    if (lower.includes('court') || lower.includes('trial') || lower.includes('hearing') || lower.includes('judge') || lower.includes('कोर्ट') || lower.includes('सुनावणी')) {
-        if (currentLang === 'hi') {
-            return "⚖️ कोर्ट की प्रक्रिया भारी लग सकती है, लेकिन तारीखों में देरी बहुत आम बात है। आपको आरोपी का अकेले सामना नहीं करना पड़ेगा — आपको पर्दे के पीछे गवाही देने (In-Camera Hearing) और मुफ्त सरकारी वकील का पूरा कानूनी अधिकार है।";
-        }
-        return "⚖️ Court proceedings can feel intimidating, but delays are very normal and not your fault. You do not have to face the accused directly — you have the full legal right to in-camera testimony (behind a screen) and a free legal aid lawyer.";
+function buildTopicReply(topic) {
+    const list = nexTopicResponses[topic] || nexTopicResponses.general;
+    const chosen = list[Math.floor(Math.random() * list.length)];
+    const reply = { text: chosen.text };
+    if (chosen.action) {
+        reply.buttons = [chosen.action];
     }
+    return reply;
+}
 
-    // Panic / Breathing
-    if (lower.includes('breathe') || lower.includes('calm') || lower.includes('panic') || lower.includes('anxious') || lower.includes('सांस') || lower.includes('घबराहट')) {
-        if (currentLang === 'hi') {
-            return "🌿 चलिए मिलकर गहरी सांस लेते हैं। 4 सेकंड तक नाक से सांस अंदर लें... 4 सेकंड रोकें... और धीरे-धीरे मुंह से छोड़ें। इस पल में आप सुरक्षित हैं। आप हमारे 'Calm & Breathe' बटन पर भी क्लिक कर सकते हैं।";
-        }
-        return "🌿 Let's take a slow breath together. Inhale gently for 4 seconds... hold softly for 4 seconds... and release slowly. You are safe right now in this moment. You can also click our 'Calm & Breathe Corner' on the dashboard.";
-    }
-
-    // Caseworker / Help
-    if (lower.includes('worker') || lower.includes('who') || lower.includes('help') || lower.includes('सहायक') || lower.includes('मदद')) {
-        if (currentLang === 'hi') {
-            return "📞 आपकी सहायता के लिए जिला विधिक सेवा प्राधिकरण (DLSA) से डॉ. सारा जेनकिंस तैनात हैं। आप किसी भी समय 14416 (मानसिक स्वास्थ्य) या 14566 (पीड़ित सहायता) पर भी मुफ्त बात कर सकते हैं।";
-        }
-        return "📞 Your assigned DLSA legal aid caseworker is Dr. Sarah Jenkins. You can also call free national victim support at 14566 or Tele-MANAS at 14416 anytime without fees.";
-    }
-
-    // Default comforting response
-    if (currentLang === 'hi') {
-        return "मैं आपकी बात समझ रहा हूँ। इस कठिन समय में हम आपके साथ हैं। क्या आप अपनी नींद, सुरक्षा या कोर्ट केस के बारे में कुछ और बताना चाहते हैं?";
-    }
-    return "I hear you and understand how difficult this journey can be. We are walking beside you. Would you like to check in on your weekly sleep & safety, or learn more about your trial rights?";
+function buildCrisisReply() {
+    return {
+        text: [
+            nexCrisisResponse.acknowledge,
+            nexCrisisResponse.safetyFirst,
+            nexCrisisResponse.breathing
+        ].join(' '),
+        buttons: [
+            { label: nexCrisisResponse.helplineActionLabel, onClick: "openHelplinePage()" },
+            { label: "🌿 Slow Breathing", onClick: "toggleBreathingModal()" }
+        ]
+    };
 }
 
 function readAloudLastBotMessage() {
@@ -8759,6 +9997,7 @@ function getDefaultUserProfile() {
         phone: "",
         profession: "",
         stress: "Moderate",
+        nhaaCaseId: "",
         token: `CASE-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`,
         lastUpdated: new Date().toISOString()
     };
@@ -8793,6 +10032,7 @@ function syncVictimProfileFromStorage() {
     currentVictimProfile.phone = profile.phone || currentVictimProfile.phone;
     currentVictimProfile.profession = profile.profession || currentVictimProfile.profession;
     currentVictimProfile.stress = profile.stress || currentVictimProfile.stress;
+    currentVictimProfile.nhaaCaseId = profile.nhaaCaseId || "";
     if (profile.token) {
         currentVictimProfile.token = profile.token;
     }

@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NEXORA — Sentient Aware</title>
+    <meta name="theme-color" content="#03040a">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" href="icon-192.png" type="image/png">
+    <link rel="apple-touch-icon" href="icon-192.png">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -537,6 +541,68 @@
                 </div>
             </div>
 
+            <!-- Multi-Channel Engagement (SIH-26094: Web Portal, Chatbot, SMS, IVRS, Mobile App, Helpline) -->
+            <div id="channel-panel" class="sentient-card p-6 mb-8">
+                <div class="flex items-center justify-between gap-3 mb-5">
+                    <div>
+                        <h3 class="text-heading text-white flex items-center gap-2">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-mint-400">
+                                <path d="M4 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9l-5 4V5z"/>
+                            </svg>
+                            Multi-Channel Check-in
+                        </h3>
+                        <p class="text-body text-sm text-slate-400 mt-1">
+                            Periodic interactions through Web Portal, Chatbot, SMS, IVRS, Mobile App &amp; Helpline — every channel feeds your care team.
+                        </p>
+                    </div>
+                    <span id="nhaa-link-chip" class="hidden text-xs font-mono bg-cyan-dim text-cyan-300 border border-cyan-400/30 px-3 py-1 rounded-full whitespace-nowrap">
+                        🏛 NHAA 14566
+                    </span>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+                    <div class="rounded-xl border border-white/10 bg-slate-900/60 p-4 text-center">
+                        <span class="text-2xl">🌐</span>
+                        <p class="text-xs font-semibold text-white mt-2">Web Portal</p>
+                        <p class="text-[10px] text-slate-500 mt-0.5">Active now</p>
+                    </div>
+                    <button onclick="toggleNexChat()" class="rounded-xl border border-white/10 bg-slate-900/60 p-4 text-center hover:border-mint-400/40 transition cursor-pointer">
+                        <span class="text-2xl">💬</span>
+                        <p class="text-xs font-semibold text-white mt-2">Chatbot</p>
+                        <p class="text-[10px] text-mint-300 mt-0.5">Open NEX</p>
+                    </button>
+                    <button onclick="openSmsCheckIn()" class="rounded-xl border border-white/10 bg-slate-900/60 p-4 text-center hover:border-cyan-400/40 transition cursor-pointer">
+                        <span class="text-2xl">📱</span>
+                        <p class="text-xs font-semibold text-white mt-2">SMS</p>
+                        <p class="text-[10px] text-cyan-300 mt-0.5">Text check-in</p>
+                    </button>
+                    <button onclick="startIvrsCall()" class="rounded-xl border border-white/10 bg-slate-900/60 p-4 text-center hover:border-sky-400/40 transition cursor-pointer">
+                        <span class="text-2xl">📞</span>
+                        <p class="text-xs font-semibold text-white mt-2">IVRS</p>
+                        <p class="text-[10px] text-sky-300 mt-0.5">Voice call</p>
+                    </button>
+                    <button onclick="installNexoraApp()" class="rounded-xl border border-white/10 bg-slate-900/60 p-4 text-center hover:border-teal-400/40 transition cursor-pointer">
+                        <span class="text-2xl">⬇️</span>
+                        <p class="text-xs font-semibold text-white mt-2">Mobile App</p>
+                        <p class="text-[10px] text-teal-300 mt-0.5">Install as PWA</p>
+                    </button>
+                    <button onclick="openHelplinePage()" class="rounded-xl border border-white/10 bg-coral-dim/40 p-4 text-center hover:border-coral-400/50 transition cursor-pointer">
+                        <span class="text-2xl">🛟</span>
+                        <p class="text-xs font-semibold text-white mt-2">Helpline</p>
+                        <p class="text-[10px] text-coral-300 mt-0.5">14416 / 112</p>
+                    </button>
+                </div>
+
+                <div id="channel-last-result" class="hidden mt-4 rounded-xl border border-mint-400/20 bg-mint-dim/30 p-4"></div>
+
+                <div class="mt-5">
+                    <p class="text-xs font-mono uppercase tracking-wider text-slate-500 mb-2">Recent channel activity</p>
+                    <ul id="channel-activity-list" class="space-y-1.5 text-xs text-slate-400">
+                        <li class="text-slate-600">No channel activity yet — run an SMS or IVRS check-in to start your longitudinal distress timeline.</li>
+                    </ul>
+                </div>
+            </div>
+
             <!-- Profile Intake (First Time) -->
             <div id="victim-profile-intake" class="sentient-card p-6 mb-8">
                 <h3 class="text-heading text-white mb-6 flex items-center gap-2">
@@ -578,6 +644,18 @@
                                 <option value="Moderate" selected data-i18n="stress_moderate">Moderate</option>
                                 <option value="High / Severe" data-i18n="stress_high">High / Severe</option>
                             </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-micro text-slate-400 block mb-2">🏛 NHAA Case ID <span class="text-slate-600">(14566, optional)</span></label>
+                            <input type="text" id="victim-intake-nhaa" placeholder="e.g. NHAA-2025-000123" class="sentient-input" value="">
+                        </div>
+                        <div class="flex items-end">
+                            <p class="text-xs text-slate-500 pb-2 leading-relaxed">
+                                Link the complaint registered through the <strong class="text-cyan-300">NHAA helpline 14566</strong> so this profile is tracked consistently across chatbot, SMS, IVRS, app &amp; helpline follow-ups.
+                            </p>
                         </div>
                     </div>
 
@@ -715,6 +793,12 @@
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>
                     </svg>
                     <span data-i18n="mon_reports">Reports</span>
+                </button>
+                <button onclick="switchMonitorTab('command')" id="mon-nav-command" class="monitor-nav-btn w-full text-left">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 3v18h18"/><path d="M13 7l3 2-3 2"/><path d="M7 11l3 2-3 2"/><path d="M7 17h10"/>
+                    </svg>
+                    <span data-i18n="mon_command">Governance Command</span>
                 </button>
                 <button onclick="switchMonitorTab('settings')" id="mon-nav-settings" class="monitor-nav-btn w-full text-left">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1022,6 +1106,41 @@
                 </div>
             </div>
 
+            <!-- Governance Command Tab (Admin Only) -->
+            <div id="tab-pane-command" class="hidden flex-1 p-6 space-y-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-heading text-white" data-i18n="command_title">System Governance Command</h3>
+                        <p class="text-sm text-slate-400" data-i18n="command_sub">Statewide statutory oversight & intervention orchestration</p>
+                    </div>
+                    <button onclick="exportGovernanceSnapshot()" class="btn btn-violet">
+                        <span data-i18n="command_export_btn">📥 Export Command Snapshot</span>
+                    </button>
+                </div>
+
+                <!-- Module Sub-Navigation -->
+                <div class="flex flex-wrap gap-2" id="command-mod-nav">
+                    <button id="command-mod-btn-mlc" onclick="switchCommandModule('mlc')" class="command-mod-pill active">🔬 Forensic & MLC</button>
+                    <button id="command-mod-btn-boycott" onclick="switchCommandModule('boycott')" class="command-mod-pill">⚠️ Boycott Radar</button>
+                    <button id="command-mod-btn-court" onclick="switchCommandModule('court')" class="command-mod-pill">⚖️ Court Telemetry</button>
+                    <button id="command-mod-btn-relief" onclick="switchCommandModule('relief')" class="command-mod-pill">💰 Relief Treasury</button>
+                    <button id="command-mod-btn-bail" onclick="switchCommandModule('bail')" class="command-mod-pill">🔒 Bail & Restraint</button>
+                    <button id="command-mod-btn-dvmc" onclick="switchCommandModule('dvmc')" class="command-mod-pill">🏛️ DVMC Automation</button>
+                    <button id="command-mod-btn-rehab" onclick="switchCommandModule('rehab')" class="command-mod-pill">🌱 Rehab Matrix</button>
+                    <button id="command-mod-btn-transit" onclick="switchCommandModule('transit')" class="command-mod-pill">🚆 Inter-State Transit</button>
+                </div>
+
+                <!-- Module Containers (filled by JS render functions) -->
+                <div id="command-module-mlc" class="space-y-6"></div>
+                <div id="command-module-boycott" class="hidden space-y-6"></div>
+                <div id="command-module-court" class="hidden space-y-6"></div>
+                <div id="command-module-relief" class="hidden space-y-6"></div>
+                <div id="command-module-bail" class="hidden space-y-6"></div>
+                <div id="command-module-dvmc" class="hidden space-y-6"></div>
+                <div id="command-module-rehab" class="hidden space-y-6"></div>
+                <div id="command-module-transit" class="hidden space-y-6"></div>
+            </div>
+
             <!-- Settings Tab -->
             <div id="tab-pane-settings" class="hidden flex-1 p-6 space-y-6">
                 <h3 class="text-heading text-white" data-i18n="settings_title">System Settings</h3>
@@ -1153,6 +1272,14 @@
                                 <div class="flex justify-between">
                                     <span class="text-slate-400" data-i18n="dossier_total_checkins">Total Check-ins:</span>
                                     <span id="dossier-checkins" class="text-mint-300 font-bold">0</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-400">NHAA Case (14566):</span>
+                                    <span id="dossier-nhaa" class="text-cyan-300 font-mono font-bold">--</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-400">Channels:</span>
+                                    <span id="dossier-channels" class="text-mint-300 font-bold">--</span>
                                 </div>
                             </div>
                         </div>
@@ -1710,8 +1837,134 @@
     </div>
 
     <!-- ===================================================================== -->
+    <!-- HELPLINE & CRISIS SUPPORT PAGE -->
+    <!-- ===================================================================== -->
+    <section id="helpline-view" class="relative z-10 hidden min-h-screen flex-col flex-1 pt-20 pb-20">
+        <main class="max-w-3xl mx-auto w-full p-4 md:p-8 flex-1">
+            <button onclick="goBackFromHelpline()" class="btn btn-ghost mb-6 text-sm text-slate-300 hover:text-white cursor-pointer">
+                ← Back
+            </button>
+
+            <div class="sentient-card p-8 mb-8 text-center">
+                <span class="text-5xl mb-4 block">💙</span>
+                <h2 class="text-heading text-white mb-3 text-2xl font-bold">You Are Not Alone</h2>
+                <p class="text-body text-slate-400 max-w-xl mx-auto leading-relaxed">
+                    Help is available right now. Tap a helpline below to speak with someone who cares.
+                    You have taken a brave step being here, and support is close.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+                <div class="sentient-card p-6 flex flex-col items-center text-center">
+                    <div class="w-14 h-14 rounded-full bg-mint-dim border border-emerald-400/30 flex items-center justify-center text-3xl mb-4">📞</div>
+                    <h3 class="font-bold text-white text-lg mb-1">Tele-MANAS</h3>
+                    <p class="text-2xl font-bold text-emerald-300 font-mono mb-2">14416</p>
+                    <p class="text-xs text-slate-400 mb-4 leading-relaxed">24/7 free mental-health counselling and emotional support. Trained counsellors listen without judgement.</p>
+                    <a href="tel:14416" class="btn btn-mint w-full">
+                        📞 Call 14416
+                    </a>
+                </div>
+                <div class="sentient-card p-6 flex flex-col items-center text-center">
+                    <div class="w-14 h-14 rounded-full bg-coral-dim border border-rose-400/30 flex items-center justify-center text-3xl mb-4">🚨</div>
+                    <h3 class="font-bold text-white text-lg mb-1">Emergency Services</h3>
+                    <p class="text-2xl font-bold text-rose-300 font-mono mb-2">112</p>
+                    <p class="text-xs text-slate-400 mb-4 leading-relaxed">Immediate police, fire and ambulance response. Use only if you are in physical danger right now.</p>
+                    <a href="tel:112" class="btn btn-critical w-full">
+                        🚨 Call 112
+                    </a>
+                </div>
+            </div>
+
+            <div class="sentient-card p-6 mb-8">
+                <h3 class="font-bold text-white mb-1 flex items-center gap-2">
+                    <span class="text-xl">🤲</span> 5-4-3-2-1 Grounding Exercise
+                </h3>
+                <p class="text-xs text-slate-400 mb-4 leading-relaxed">
+                    Ground yourself in the present moment. Find: 5 things you can see, 4 you can touch, 3 you can hear, 2 you can smell, 1 you can taste.
+                </p>
+                <div class="grid grid-cols-5 gap-2 text-center">
+                    <div class="rounded-xl bg-slate-800/60 p-3 border border-white/5"><p class="text-xl font-bold text-cyan-300">5</p><p class="text-[10px] text-slate-400">See</p></div>
+                    <div class="rounded-xl bg-slate-800/60 p-3 border border-white/5"><p class="text-xl font-bold text-cyan-300">4</p><p class="text-[10px] text-slate-400">Touch</p></div>
+                    <div class="rounded-xl bg-slate-800/60 p-3 border border-white/5"><p class="text-xl font-bold text-cyan-300">3</p><p class="text-[10px] text-slate-400">Hear</p></div>
+                    <div class="rounded-xl bg-slate-800/60 p-3 border border-white/5"><p class="text-xl font-bold text-cyan-300">2</p><p class="text-[10px] text-slate-400">Smell</p></div>
+                    <div class="rounded-xl bg-slate-800/60 p-3 border border-white/5"><p class="text-xl font-bold text-cyan-300">1</p><p class="text-[10px] text-slate-400">Taste</p></div>
+                </div>
+            </div>
+
+            <div class="text-center mb-8">
+                <button onclick="toggleBreathingModal()" class="btn btn-secondary btn-lg cursor-pointer">
+                    🌿 Take a Slow Breath
+                </button>
+            </div>
+
+            <div class="sentient-card p-6 text-center">
+                <p class="text-sm text-slate-300 leading-relaxed">
+                    Whatever you are feeling right now is valid. You deserve support, and support is here for you.
+                    You do not have to go through this alone.
+                </p>
+            </div>
+        </main>
+    </section>
+
+    <!-- ===================================================================== -->
     <!-- NEX CHAT BOT -->
     <!-- ===================================================================== -->
+    <!-- ===================================================================== -->
+    <!-- SMS CHECK-IN SIMULATION (SIH-26094 Multi-Channel) -->
+    <!-- ===================================================================== -->
+    <div id="sms-checkin-modal" class="hidden fixed inset-0 z-50 items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+        <div class="w-full max-w-md rounded-3xl overflow-hidden border border-white/10 bg-[#0a0f1c] shadow-2xl shadow-black/60">
+            <div class="px-5 py-4 bg-slate-900/80 border-b border-white/5">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-cyan-600 flex items-center justify-center text-white text-lg">📱</div>
+                        <div>
+                            <p class="text-sm font-bold text-white">NEXORA CARE</p>
+                            <p class="text-[10px] text-slate-400 font-mono">SMS gateway • Telecom-MSG channel</p>
+                        </div>
+                    </div>
+                    <button onclick="closeSmsCheckIn()" class="text-slate-400 hover:text-white text-lg transition cursor-pointer" aria-label="Close">✕</button>
+                </div>
+            </div>
+            <div id="sms-thread" class="h-80 overflow-y-auto space-y-3 p-4 bg-[#0b1020] flex flex-col"></div>
+            <div class="p-3 bg-slate-900/80 border-t border-white/5 flex gap-2">
+                <input type="text" id="sms-reply-input" onkeydown="if(event.key==='Enter'){event.preventDefault();submitSmsReply();}" placeholder="Type SMS reply…" class="sentient-input flex-1">
+                <button onclick="submitSmsReply()" class="btn btn-mint px-5">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- IVRS VOICE CHECK-IN SIMULATION (SIH-26094 Multi-Channel) -->
+    <!-- ===================================================================== -->
+    <div id="ivrs-call-modal" class="hidden fixed inset-0 z-50 items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+        <div class="w-full max-w-sm rounded-3xl overflow-hidden border border-white/10 bg-[#0a0f1c] shadow-2xl shadow-black/60 text-center">
+            <div class="px-6 py-8">
+                <div id="ivrs-connecting" class="hidden">
+                    <div class="w-20 h-20 mx-auto rounded-full bg-sky-600/20 border border-sky-400/40 flex items-center justify-center animate-pulse text-3xl">📞</div>
+                    <p class="text-sm font-bold text-white mt-4">Connecting to NEXORA IVRS…</p>
+                    <p class="text-[10px] text-slate-400 font-mono mt-1">14566 • NHAA tele-support</p>
+                </div>
+                <div id="ivrs-live" class="hidden">
+                    <div id="ivrs-pulse" class="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-sky-500 to-cyan-500 flex items-center justify-center text-3xl shadow-lg shadow-sky-500/30">🎙</div>
+                    <p class="text-sm font-bold text-white mt-4">IVRS Voice Check-in</p>
+                    <p class="text-[11px] text-slate-300 leading-relaxed mt-3 min-h-[2.5em]" id="ivrs-question">Question loading…</p>
+                    <div id="ivrs-dtmf" class="mt-4">
+                        <div id="ivrs-pad" class="grid grid-cols-3 gap-2 w-44 mx-auto"></div>
+                        <p class="text-[10px] text-slate-500 mt-3">Speak your answer aloud during the tone, or tap the keypad.</p>
+                        <button onclick="toggleIvrsMic()" class="btn btn-sm btn-secondary mt-2"><span id="ivrs-mic-label">🎙 Say answer</span></button>
+                    </div>
+                    <p id="ivrs-spoken" class="text-xs text-cyan-300 mt-3 min-h-[1.25em]"></p>
+                </div>
+                <div id="ivrs-result" class="hidden"></div>
+            </div>
+            <div class="px-6 py-4 bg-slate-900/80 border-t border-white/5 flex items-center justify-between">
+                <button onclick="closeIvrsCall()" class="text-xs text-slate-400 hover:text-coral-300 transition cursor-pointer">✕ End Call</button>
+                <span class="text-[10px] text-slate-600 font-mono">Secured line</span>
+            </div>
+        </div>
+    </div>
+
     <div id="nex-bot-container" class="fixed bottom-6 right-6 z-40">
         <button id="nex-toggle-btn" onclick="toggleNexChat()" class="w-14 h-14 rounded-full bg-gradient-to-br from-cyan-500 to-violet-500 flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
             <span class="text-white text-2xl">✨</span>
@@ -1806,6 +2059,33 @@
         }
         .monitor-nav-btn svg {
             flex-shrink: 0;
+        }
+        /* Governance Command module pills */
+        .command-mod-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            color: #94a3b8;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            cursor: pointer;
+            transition: all 200ms ease;
+        }
+        .command-mod-pill:hover {
+            color: #e2e8f0;
+            border-color: rgba(167, 139, 250, 0.35);
+        }
+        .command-mod-pill.active {
+            color: #c4b5fd;
+            background: rgba(139, 92, 246, 0.15);
+            border-color: rgba(167, 139, 250, 0.45);
+            box-shadow: 0 0 24px rgba(139, 92, 246, 0.15);
         }
     </style>
 </body>
