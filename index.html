@@ -354,154 +354,154 @@
                 </p>
             </div>
 
-            <!-- Role Modes Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Role Modes — 3D Spatial Amphitheater -->
+            <div class="role-arena" id="role-arena">
 
-                <!-- PATIENT Mode -->
-                <div class="sentient-card sentient-card-interactive p-8 group animate-entrance" onclick="loginAsRole('victim')">
-                    <div class="flex flex-col h-full">
-                        <!-- Icon -->
-                        <div class="w-16 h-16 rounded-2xl bg-mint-dim border border-mint-400/20 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">
-                            🌿
-                        </div>
-
-                        <!-- Title -->
-                        <h3 class="text-heading text-white mb-2" data-i18n="role_patient_title">Patient</h3>
-                        <p class="text-violet-300 text-sm font-mono mb-4" data-i18n="role_patient_sub">Survivor Wellness Mode</p>
-
-                        <!-- Description -->
-                        <p class="text-body text-sm flex-1 mb-6" data-i18n="role_patient_desc">
-                            A calm, supportive space for survivors. Gentle conversations, emotional tracking, and breathing exercises in a safe environment.
-                        </p>
-
-                        <!-- Features -->
-                        <div class="space-y-2 mb-6">
-                            <div class="flex items-center gap-2 text-sm text-slate-400">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-mint-400">
-                                    <path d="M20 6L9 17l-5-5"/>
-                                </svg>
-                                <span data-i18n="feature_checkins">Daily emotional check-ins</span>
-                            </div>
-                            <div class="flex items-center gap-2 text-sm text-slate-400">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-mint-400">
-                                    <path d="M20 6L9 17l-5-5"/>
-                                </svg>
-                                <span data-i18n="feature_breathing">Guided breathing exercises</span>
-                            </div>
-                            <div class="flex items-center gap-2 text-sm text-slate-400">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-mint-400">
-                                    <path d="M20 6L9 17l-5-5"/>
-                                </svg>
-                                <span data-i18n="feature_journal">Private journal & insights</span>
-                            </div>
-                        </div>
-
-                        <!-- CTA -->
-                        <button class="btn btn-mint w-full">
-                            <span data-i18n="btn_patient_mode">Enter Patient Mode</span>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M5 12h14M12 5l7 7-7 7"/>
-                            </svg>
-                        </button>
+                <!-- SURVIVOR PILLAR — Patient Mode (Empathy & Safety) -->
+                <div class="sentient-card sentient-card-interactive role-pillar role-pillar-survivor group animate-entrance" data-arena-tilt onclick="loginAsRole('victim')">
+                    <!-- 3D floating icon layer -->
+                    <div class="role-layer-icon w-16 h-16 rounded-2xl bg-mint-dim border border-mint-400/20 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">
+                        🌿
                     </div>
+
+                    <!-- Title layer -->
+                    <h3 class="role-layer-title text-heading text-white mb-2" data-i18n="role_patient_title">Patient</h3>
+
+                    <!-- Badge layer -->
+                    <p class="role-badge role-layer-title inline-flex items-center gap-1 px-3 py-1 rounded-full text-[11px] font-mono tracking-wide mb-4" data-i18n="role_patient_sub">Survivor Wellness Mode</p>
+
+                    <!-- Text layer -->
+                    <p class="role-layer-text text-body text-sm flex-1 mb-6" data-i18n="role_patient_desc">
+                        A calm, supportive space for survivors. Gentle conversations, emotional tracking, and breathing exercises in a safe environment.
+                    </p>
+
+                    <!-- Text layer / features -->
+                    <div class="role-layer-text space-y-2 mb-6">
+                        <div class="flex items-center gap-2 text-sm text-slate-400">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-mint-400">
+                                <path d="M20 6L9 17l-5-5"/>
+                            </svg>
+                            <span data-i18n="feature_checkins">Daily emotional check-ins</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-sm text-slate-400">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-mint-400">
+                                <path d="M20 6L9 17l-5-5"/>
+                            </svg>
+                            <span data-i18n="feature_breathing">Guided breathing exercises</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-sm text-slate-400">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-mint-400">
+                                <path d="M20 6L9 17l-5-5"/>
+                            </svg>
+                            <span data-i18n="feature_journal">Private journal & insights</span>
+                        </div>
+                    </div>
+
+                    <!-- Tactile 3D action layer -->
+                    <button class="role-layer-btn role-btn btn btn-mint w-full">
+                        <span data-i18n="btn_patient_mode">Enter Patient Mode</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </button>
                 </div>
 
-                <!-- COUNSELOR Mode -->
-                <div class="sentient-card sentient-card-interactive p-8 group animate-entrance" onclick="loginAsRole('counselor')">
-                    <div class="flex flex-col h-full">
-                        <!-- Icon -->
-                        <div class="w-16 h-16 rounded-2xl bg-cyan-dim border border-cyan-400/20 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">
-                            🩺
-                        </div>
-
-                        <!-- Title -->
-                        <h3 class="text-heading text-white mb-2" data-i18n="role_counselor_title">Counselor</h3>
-                        <p class="text-cyan-300 text-sm font-mono mb-4" data-i18n="role_counselor_sub">Clinical Intelligence Mode</p>
-
-                        <!-- Description -->
-                        <p class="text-body text-sm flex-1 mb-6" data-i18n="role_counselor_desc">
-                            Advanced patient monitoring with AI-powered insights. Track distress trends, analyze patterns, and coordinate care interventions.
-                        </p>
-
-                        <!-- Features -->
-                        <div class="space-y-2 mb-6">
-                            <div class="flex items-center gap-2 text-sm text-slate-400">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-cyan-400">
-                                    <path d="M20 6L9 17l-5-5"/>
-                                </svg>
-                                <span data-i18n="feature_signal">Patient signal network</span>
-                            </div>
-                            <div class="flex items-center gap-2 text-sm text-slate-400">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-cyan-400">
-                                    <path d="M20 6L9 17l-5-5"/>
-                                </svg>
-                                <span data-i18n="feature_distress_analytics">6-week distress analytics</span>
-                            </div>
-                            <div class="flex items-center gap-2 text-sm text-slate-400">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-cyan-400">
-                                    <path d="M20 6L9 17l-5-5"/>
-                                </svg>
-                                <span data-i18n="feature_coordination">Intervention coordination</span>
-                            </div>
-                        </div>
-
-                        <!-- CTA -->
-                        <button class="btn btn-primary w-full">
-                            <span data-i18n="btn_counselor_mode">Enter Clinical Mode</span>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M5 12h14M12 5l7 7-7 7"/>
-                            </svg>
-                        </button>
+                <!-- CLINICAL PILLAR — Counselor Mode (Intelligence & Diagnostics) -->
+                <div class="sentient-card sentient-card-interactive role-pillar role-pillar-clinical group animate-entrance" data-arena-tilt onclick="loginAsRole('counselor')">
+                    <!-- 3D floating icon layer -->
+                    <div class="role-layer-icon w-16 h-16 rounded-2xl bg-cyan-dim border border-cyan-400/20 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">
+                        🩺
                     </div>
+
+                    <!-- Title layer -->
+                    <h3 class="role-layer-title text-heading text-white mb-2" data-i18n="role_counselor_title">Counselor</h3>
+
+                    <!-- Badge layer -->
+                    <p class="role-badge role-layer-title inline-flex items-center gap-1 px-3 py-1 rounded-full text-[11px] font-mono tracking-wide mb-4" data-i18n="role_counselor_sub">Clinical Intelligence Mode</p>
+
+                    <!-- Text layer -->
+                    <p class="role-layer-text text-body text-sm flex-1 mb-6" data-i18n="role_counselor_desc">
+                        Advanced patient monitoring with AI-powered insights. Track distress trends, analyze patterns, and coordinate care interventions.
+                    </p>
+
+                    <!-- Text layer / features -->
+                    <div class="role-layer-text space-y-2 mb-6">
+                        <div class="flex items-center gap-2 text-sm text-slate-400">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-cyan-400">
+                                <path d="M20 6L9 17l-5-5"/>
+                            </svg>
+                            <span data-i18n="feature_signal">Patient signal network</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-sm text-slate-400">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-cyan-400">
+                                <path d="M20 6L9 17l-5-5"/>
+                            </svg>
+                            <span data-i18n="feature_distress_analytics">6-week distress analytics</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-sm text-slate-400">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-cyan-400">
+                                <path d="M20 6L9 17l-5-5"/>
+                            </svg>
+                            <span data-i18n="feature_coordination">Intervention coordination</span>
+                        </div>
+                    </div>
+
+                    <!-- Tactile 3D action layer -->
+                    <button class="role-layer-btn role-btn btn btn-primary w-full">
+                        <span data-i18n="btn_counselor_mode">Enter Clinical Mode</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </button>
                 </div>
 
-                <!-- ADMIN Mode -->
-                <div class="sentient-card sentient-card-interactive p-8 group animate-entrance" onclick="loginAsRole('admin')">
-                    <div class="flex flex-col h-full">
-                        <!-- Icon -->
-                        <div class="w-16 h-16 rounded-2xl bg-violet-dim border border-violet-400/20 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">
-                            🏛️
-                        </div>
-
-                        <!-- Title -->
-                        <h3 class="text-heading text-white mb-2" data-i18n="role_admin_title">Administration</h3>
-                        <p class="text-violet-300 text-sm font-mono mb-4" data-i18n="role_admin_sub">System Awareness Mode</p>
-
-                        <!-- Description -->
-                        <p class="text-body text-sm flex-1 mb-6" data-i18n="role_admin_desc">
-                            Governance oversight across districts. Monitor platform health, track compensation flows, and analyze statewide vulnerability patterns.
-                        </p>
-
-                        <!-- Features -->
-                        <div class="space-y-2 mb-6">
-                            <div class="flex items-center gap-2 text-sm text-slate-400">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-violet-400">
-                                    <path d="M20 6L9 17l-5-5"/>
-                                </svg>
-                                <span data-i18n="feature_heatmap">District vulnerability heatmap</span>
-                            </div>
-                            <div class="flex items-center gap-2 text-sm text-slate-400">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-violet-400">
-                                    <path d="M20 6L9 17l-5-5"/>
-                                </svg>
-                                <span data-i18n="feature_comp">Compensation tracking</span>
-                            </div>
-                            <div class="flex items-center gap-2 text-sm text-slate-400">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-violet-400">
-                                    <path d="M20 6L9 17l-5-5"/>
-                                </svg>
-                                <span data-i18n="feature_policy">Policy compliance reports</span>
-                            </div>
-                        </div>
-
-                        <!-- CTA -->
-                        <button class="btn btn-violet w-full">
-                            <span data-i18n="btn_admin_mode">Enter Governance Mode</span>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M5 12h14M12 5l7 7-7 7"/>
-                            </svg>
-                        </button>
+                <!-- GOVERNANCE PILLAR — Admin Mode (Policy & Telemetry) -->
+                <div class="sentient-card sentient-card-interactive role-pillar role-pillar-governance group animate-entrance" data-arena-tilt onclick="loginAsRole('admin')">
+                    <!-- 3D floating icon layer -->
+                    <div class="role-layer-icon w-16 h-16 rounded-2xl bg-violet-dim border border-violet-400/20 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">
+                        🏛️
                     </div>
+
+                    <!-- Title layer -->
+                    <h3 class="role-layer-title text-heading text-white mb-2" data-i18n="role_admin_title">Administration</h3>
+
+                    <!-- Badge layer -->
+                    <p class="role-badge role-layer-title inline-flex items-center gap-1 px-3 py-1 rounded-full text-[11px] font-mono tracking-wide mb-4" data-i18n="role_admin_sub">System Awareness Mode</p>
+
+                    <!-- Text layer -->
+                    <p class="role-layer-text text-body text-sm flex-1 mb-6" data-i18n="role_admin_desc">
+                        Governance oversight across districts. Monitor platform health, track compensation flows, and analyze statewide vulnerability patterns.
+                    </p>
+
+                    <!-- Text layer / features -->
+                    <div class="role-layer-text space-y-2 mb-6">
+                        <div class="flex items-center gap-2 text-sm text-slate-400">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-violet-400">
+                                <path d="M20 6L9 17l-5-5"/>
+                            </svg>
+                            <span data-i18n="feature_heatmap">District vulnerability heatmap</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-sm text-slate-400">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-violet-400">
+                                <path d="M20 6L9 17l-5-5"/>
+                            </svg>
+                            <span data-i18n="feature_comp">Compensation tracking</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-sm text-slate-400">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-violet-400">
+                                <path d="M20 6L9 17l-5-5"/>
+                            </svg>
+                            <span data-i18n="feature_policy">Policy compliance reports</span>
+                        </div>
+                    </div>
+
+                    <!-- Tactile 3D action layer -->
+                    <button class="role-layer-btn role-btn btn btn-violet w-full">
+                        <span data-i18n="btn_admin_mode">Enter Governance Mode</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </button>
                 </div>
             </div>
 

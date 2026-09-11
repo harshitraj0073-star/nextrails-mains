@@ -11770,6 +11770,8 @@ const NexSpatial = {
   refreshTilt() {
     this._targets = [];
     document.querySelectorAll('.spatial-card, [data-tilt]').forEach(el => {
+      // role pillars are governed by their own gyroscopic arena tilt
+      if (el.classList.contains('role-pillar')) return;
       if (!el.closest('[hidden]') && el.offsetParent !== null) {
         this._targets.push(el);
       }
@@ -11780,9 +11782,9 @@ const NexSpatial = {
     if (!_motionAllowed()) return;
     this.refreshTilt();
 
-    // Auto-tag known spatial targets
+    // Auto-tag known spatial targets (role pillars excluded — NexArena owns them)
     document.querySelectorAll(
-      '#role-select-view .sentient-card, #tab-pane-dashboard .sentient-card, ' +
+      '#role-select-view .sentient-card:not(.role-pillar), #tab-pane-dashboard .sentient-card, ' +
       '#channel-panel .channel-tile, .monitor-nav-btn, .dossier-tab'
     ).forEach(el => {
       el.classList.add('spatial-card');
@@ -12122,11 +12124,90 @@ function stopDeepField() {
   };
 })();
 
+// ============================================================================
+// 3D ROLE AMPHITHEATER — gyroscopic tilt for the holographic role pillars
+// Independent of NexSpatial: pillars get the *14° stagger + 40px lift + their
+// own radial glare vars (--mouse-x/--mouse-y), while the CSS 0.5s cubic-bezier
+// transition lerps each pillar back to its amphitheater arc on pointerleave.
+// ============================================================================
+const NexArena = {
+  _cards: [],
+  _raf: null,
+  _pointerActive: false,
+  _mx: 0,
+  _my: 0,
+
+  init() {
+    if (!_motionAllowed()) return;
+    this._cards = Array.from(document.querySelectorAll('[data-arena-tilt]'));
+    if (!this._cards.length) return;
+    document.addEventListener('pointermove', this._onMove.bind(this), { passive: true });
+    document.addEventListener('pointerleave', this._onLeave.bind(this), { passive: true });
+  },
+
+  _onMove(e) {
+    this._mx = e.clientX;
+    this._my = e.clientY;
+    this._pointerActive = true;
+    if (!this._raf) this._raf = requestAnimationFrame(this._tick.bind(this));
+  },
+
+  _onLeave() {
+    this._pointerActive = false;
+    if (!this._raf) this._raf = requestAnimationFrame(this._tick.bind(this));
+  },
+
+  _tick() {
+    this._raf = null;
+    const w = window.innerWidth || 1;
+    const h = window.innerHeight || 1;
+
+    this._cards.forEach(card => {
+      const rect = card.getBoundingClientRect();
+      if (!rect.width || !rect.height) {
+        // Not visible — settle flat so the arc transform can reapply cleanly
+        card.classList.remove('graze-on');
+        card.style.transform = '';
+        return;
+      }
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = this._mx - cx;
+      const dy = this._my - cy;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+
+      if (!this._pointerActive || dist > Math.max(w, h) * 0.65) {
+        card.style.setProperty('--mouse-x', '50%');
+        card.style.setProperty('--mouse-y', '50%');
+        card.classList.remove('graze-on');
+        card.style.transform = '';
+        return;
+      }
+
+      const rotX = -(dy / h) * 14;
+      const rotY = (dx / w) * 14;
+      card.style.transform =
+        `perspective(1400px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateZ(40px)`;
+
+      const relX = ((this._mx - rect.left) / rect.width) * 100;
+      const relY = ((this._my - rect.top) / rect.height) * 100;
+      card.style.setProperty('--mouse-x', relX + '%');
+      card.style.setProperty('--mouse-y', relY + '%');
+      card.classList.add('graze-on');
+    });
+
+    if (this._pointerActive) this._raf = requestAnimationFrame(this._tick.bind(this));
+  }
+};
+window.NexArena = NexArena;
+
 // ---------- Boot init ----------
 (function _initSpatialUI() {
   function boot() {
     // Init tilt engine
     if (window.NexSpatial) window.NexSpatial.init();
+    // Init 3D role amphitheater gyroscopic tilt
+    if (window.NexArena) window.NexArena.init();
   }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', boot);

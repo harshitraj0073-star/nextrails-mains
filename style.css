@@ -2480,3 +2480,181 @@ body.lite-motion #lite-motion-toggle {
 body.lite-motion #lite-motion-toggle .text-[10px] {
   color: rgb(52, 211, 153);
 }
+
+/* ============================================================================
+   3D ROLE AMPHITHEATER — holographic role-selection pillars (Survivor, Clinical, Governance)
+   ============================================================================ */
+
+/* ---- PART 1: Spatial stage ------------------------------------------------- */
+.role-arena {
+  perspective: 1400px;
+  transform-style: preserve-3d;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  padding: 3rem 1.5rem;
+}
+@media (max-width: 767px) {
+  .role-arena {
+    flex-direction: column;
+    gap: 1.75rem;
+    padding: 2rem 0.5rem;
+  }
+}
+
+/* ---- PART 2: Holographic pillars ------------------------------------------ */
+.role-pillar {
+  position: relative;
+  width: 100%;
+  max-width: 360px;
+  transform-style: preserve-3d;
+  display: flex;
+  flex-direction: column;
+  padding: 1.75rem 1.75rem 1.5rem;
+  border-radius: 1.25rem;
+  cursor: pointer;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.5s ease,
+              border-color 0.5s ease;
+  will-change: transform;
+}
+
+/* Curved amphitheater arc on desktop: Survivor | Clinical (raised) | Governance */
+@media (min-width: 768px) {
+  .role-pillar:nth-child(1) { transform: rotateY(8deg) translateZ(0px); }
+  .role-pillar:nth-child(2) { transform: translateZ(28px) scale(1.02); }
+  .role-pillar:nth-child(3) { transform: rotateY(-8deg) translateZ(0px); }
+}
+
+/* --- Survivor Care / Citizen Portal — emerald ---------------------------------- */
+.role-pillar-survivor {
+  background: rgba(8, 20, 24, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-top: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 25px 50px -10px rgba(0, 0, 0, 0.85), 0 0 30px rgba(16, 185, 129, 0.2);
+}
+.role-pillar-survivor:hover {
+  border-color: rgba(16, 185, 129, 0.45);
+  box-shadow: 0 25px 50px -10px rgba(0, 0, 0, 0.85), 0 0 45px rgba(16, 185, 129, 0.32);
+}
+
+/* --- Clinical Command / Counselor Portal — cyan -------------------------------- */
+.role-pillar-clinical {
+  background: rgba(10, 18, 36, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  border-top: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 30px 60px -10px rgba(0, 0, 0, 0.9), 0 0 35px rgba(6, 182, 212, 0.25);
+}
+.role-pillar-clinical:hover {
+  border-color: rgba(6, 182, 212, 0.5);
+  box-shadow: 0 30px 60px -10px rgba(0, 0, 0, 0.9), 0 0 50px rgba(6, 182, 212, 0.4);
+}
+
+/* --- System Governance / Admin Oversight — amber ------------------------------ */
+.role-pillar-governance {
+  background: rgba(22, 16, 10, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-top: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 25px 50px -10px rgba(0, 0, 0, 0.85), 0 0 30px rgba(245, 158, 11, 0.2);
+}
+.role-pillar-governance:hover {
+  border-color: rgba(245, 158, 11, 0.45);
+  box-shadow: 0 25px 50px -10px rgba(0, 0, 0, 0.85), 0 0 45px rgba(245, 158, 11, 0.32);
+}
+
+/* Holographic specular sheen — cursor tracking radial glare (decorative, inert) */
+.role-pillar::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  background: radial-gradient(circle 260px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+              rgba(255, 255, 255, 0.22), transparent 70%);
+  mix-blend-mode: overlay;
+}
+.role-pillar.graze-on::after {
+  opacity: 1;
+}
+
+/* ---- PART 3: Staggered depth layers ---------------------------------------- */
+.role-layer-icon  { transform: translateZ(36px); }
+.role-layer-title { transform: translateZ(24px); }
+.role-layer-text  { transform: translateZ(10px); }
+.role-layer-btn   { transform: translateZ(20px); }
+
+/* Badge chips inherit their pillar's accent signature */
+.role-pillar-survivor .role-badge {
+  background: rgba(16, 185, 129, 0.12);
+  color: #6ee7b7;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+.role-pillar-clinical .role-badge {
+  background: rgba(6, 182, 212, 0.12);
+  color: #67e8f9;
+  border: 1px solid rgba(6, 182, 212, 0.3);
+}
+.role-pillar-governance .role-badge {
+  background: rgba(245, 158, 11, 0.12);
+  color: #fcd34d;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+/* ---- Tactile 3D action buttons ---------------------------------------------- */
+.role-btn {
+  transform: translateZ(20px);
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.5), 0 10px 20px rgba(0, 0, 0, 0.6);
+}
+.role-btn:hover {
+  transform: translateZ(26px) translateY(-2px);
+}
+.role-btn:active {
+  transform: translateZ(8px) translateY(4px);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.6), 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* ---- Accessibility & Lite Motion guards ------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .role-pillar {
+    transform: none !important;
+    transition: none !important;
+    will-change: auto;
+  }
+  .role-layer-icon,
+  .role-layer-title,
+  .role-layer-text,
+  .role-layer-btn,
+  .role-btn {
+    transform: none !important;
+  }
+  .role-pillar::after {
+    opacity: 0 !important;
+  }
+}
+body.lite-motion .role-pillar {
+  transform: none !important;
+  transition: none !important;
+  will-change: auto;
+}
+body.lite-motion .role-layer-icon,
+body.lite-motion .role-layer-title,
+body.lite-motion .role-layer-text,
+body.lite-motion .role-layer-btn,
+body.lite-motion .role-btn {
+  transform: none !important;
+}
+body.lite-motion .role-pillar::after {
+  opacity: 0 !important;
+}
