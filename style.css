@@ -2214,3 +2214,269 @@ section, div[id$="-view"] {
   color: var(--accent-primary, #06b6d4);
   text-shadow: 0 0 10px var(--accent-glow, rgba(6, 182, 212, 0.3));
 }
+
+/* ============================================================================
+   3D SPATIAL UI OVERHAUL — DEPTH LAYERS · TILT · GLARE · ORBITS · BREATHING
+   Calm-first: every effect is gated by prefers-reduced-motion and Lite Motion.
+   ============================================================================ */
+
+/* ---- PART 1: Global 3D viewport stage ------------------------------------- */
+#intro-view,
+#role-select-view,
+#victim-view,
+#counselor-view,
+#helpline-view {
+  perspective: 1600px;
+}
+
+/* ---- Volumetric depth: .spatial-card (opt-in via the spatial UI engine) -----
+   Elevation levels are expressed through layered shadows + translateZ, and the
+   card keeps flat typography (translateZ(1px) on inner text via children). */
+.spatial-card {
+  position: relative;
+  transform-style: preserve-3d;
+  /* Level 1/2 hybrid: base panel with soft vertical lift + cyan under-glow */
+  box-shadow:
+    0 12px 32px -12px rgba(0, 0, 0, 0.7),
+    0 0 22px rgba(var(--accent-primary-rgb, 6, 182, 212), 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.5s ease, border-color 0.5s ease;
+}
+
+/* Specular sheen — holographic glare that tracks the cursor via --mx/--my */
+.spatial-card::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  background: radial-gradient(circle 240px at var(--mx, 50%) var(--my, 50%),
+              rgba(255, 255, 255, 0.18), transparent 70%);
+  mix-blend-mode: overlay;
+}
+
+.spatial-card.glare-on::after {
+  opacity: 1;
+}
+
+/* Deeper elevation for interactive/hoverable spatial cards */
+.spatial-card.lift-3d {
+  transform: translateZ(24px);
+}
+.spatial-card.lift-3d:hover {
+  transform: translateZ(40px) translateY(-3px);
+  box-shadow:
+    0 24px 50px -14px rgba(0, 0, 0, 0.85),
+    0 0 32px rgba(var(--accent-primary-rgb, 6, 182, 212), 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+.spatial-card.tilting {
+  will-change: transform;
+}
+
+/* Keep inner text optically flat so subpixel antialiasing is preserved */
+.spatial-card > * {
+  transform: translateZ(1px);
+}
+
+/* ---- PART 1b: Recessed chassis (wells for tables & charts) ------------------ */
+.chassis-well {
+  background: rgba(6, 11, 22, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 4px 16px rgba(0, 0, 0, 0.8),
+              inset 0 1px 2px rgba(255, 255, 255, 0.05);
+}
+
+/* ---- PART 2: Tactile buttons (lift on hover, depress on press) -------------- */
+.btn {
+  transition: transform 0.18s cubic-bezier(0.2, 0.9, 0.3, 1),
+              box-shadow 0.18s ease, filter 0.18s ease,
+              background-color 0.18s ease, border-color 0.18s ease,
+              color 0.18s ease, opacity 0.18s ease;
+}
+.btn:hover {
+  transform: translateY(-2px) translateZ(14px);
+  filter: brightness(1.07);
+}
+.btn:active {
+  transform: translateY(2px) translateZ(4px);
+  filter: brightness(0.93);
+  transition-duration: 0.08s;
+}
+.btn:focus-visible {
+  outline: 2px solid rgba(34, 211, 238, 0.6);
+  outline-offset: 2px;
+}
+
+/* ---- PART 3: Sentient Core — orbital rings tilted into Z-space -------------- */
+#sentient-core {
+  perspective: 900px;
+  transform-style: preserve-3d;
+}
+.core-orbital,
+#sentient-core .core-orbital {
+  transform: rotateX(68deg);
+  transform-style: preserve-3d;
+  animation: orbit-3d-spin var(--core-orbit-time, 20s) linear infinite;
+  will-change: transform;
+}
+.core-orbital:nth-child(2),
+#sentient-core .core-orbital:nth-child(2) {
+  animation-duration: 30s;
+  animation-direction: reverse;
+}
+.core-orbital:nth-child(3),
+#sentient-core .core-orbital:nth-child(3) {
+  animation-duration: 40s;
+}
+@keyframes orbit-3d-spin {
+  from { transform: rotateX(68deg) rotateZ(0deg); }
+  to   { transform: rotateX(68deg) rotateZ(360deg); }
+}
+#sentient-core .core-inner-glow {
+  transform: translateZ(8px);
+}
+#sentient-core .core-orb {
+  transform: translateZ(16px);
+}
+#sentient-core .core-filaments,
+#sentient-core .core-particles,
+#sentient-core .core-sensors {
+  transform-style: preserve-3d;
+}
+
+/* ---- Role cards: gentle 3D amphitheater curve (desktop only) --------------- */
+@media (min-width: 768px) {
+  #role-select-view .grid > .sentient-card:nth-child(1) {
+    transform: rotateY(8deg) translateZ(15px);
+  }
+  #role-select-view .grid > .sentient-card:nth-child(2) {
+    transform: rotateY(0deg) translateZ(34px);
+  }
+  #role-select-view .grid > .sentient-card:nth-child(3) {
+    transform: rotateY(-8deg) translateZ(15px);
+  }
+}
+
+/* ---- KPI pedestals: recessed wells with severity under-glow ---------------- */
+#tab-pane-dashboard .sentient-card {
+  background: rgba(9, 14, 26, 0.62);
+  box-shadow:
+    inset 0 4px 16px rgba(0, 0, 0, 0.7),
+    inset 0 1px 2px rgba(255, 255, 255, 0.06),
+    0 14px 30px -14px rgba(0, 0, 0, 0.8);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.5s ease, background-color 0.5s ease;
+}
+#tab-pane-dashboard .sentient-card:hover {
+  transform: translateY(-4px) translateZ(30px);
+  background: rgba(13, 21, 38, 0.72);
+}
+#metric-total { text-shadow: 0 0 18px rgba(6, 182, 212, 0.45); }
+#metric-high { text-shadow: 0 0 18px rgba(244, 63, 94, 0.55); }
+#metric-moderate { text-shadow: 0 0 18px rgba(245, 158, 11, 0.5); }
+#metric-interventions { text-shadow: 0 0 18px rgba(16, 185, 129, 0.5); }
+
+/* ---- Monitor nav + dossier tabs: tactile sidebar slabs ---------------------- */
+.monitor-nav-btn {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.4s ease, background-color 0.4s ease;
+  transform: translateZ(10px);
+}
+.monitor-nav-btn:hover {
+  transform: translateZ(20px) translateX(3px);
+  box-shadow: 0 10px 24px -10px rgba(0, 0, 0, 0.8);
+}
+.dossier-tab {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s ease;
+}
+.dossier-tab:hover,
+.dossier-tab.active {
+  transform: translateZ(12px);
+}
+
+/* ---- Breathing sphere canvas (the signature visual) ------------------------- */
+.breathing-core {
+  perspective: 600px;
+  transform-style: preserve-3d;
+}
+.breathe-sphere {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+.breathing-core > :not(#breathe-sphere) {
+  z-index: 1;
+}
+
+/* ---- Lite Motion & accessibility guards ------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .spatial-card,
+  .spatial-card.lift-3d,
+  .spatial-card.lift-3d:hover,
+  #tab-pane-dashboard [id^="metric-"],
+  #tab-pane-dashboard .sentient-card,
+  .monitor-nav-btn,
+  .dossier-tab,
+  .core-orbital {
+    transform: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+  .spatial-card::after {
+    opacity: 0 !important;
+  }
+  .breathe-sphere {
+    display: none;
+  }
+}
+
+body.lite-motion .spatial-card,
+body.lite-motion .spatial-card.lift-3d:hover,
+body.lite-motion #tab-pane-dashboard [id^="metric-"],
+body.lite-motion #tab-pane-dashboard .sentient-card,
+body.lite-motion .monitor-nav-btn,
+body.lite-motion .dossier-tab {
+  transform: none !important;
+  transition: none !important;
+}
+body.lite-motion .spatial-card {
+  box-shadow: revert;
+}
+body.lite-motion .spatial-card::after {
+  opacity: 0 !important;
+}
+body.lite-motion .core-orbital,
+body.lite-motion .breathing-ring,
+body.lite-motion .atmosphere-volumetric,
+body.lite-motion .core-inner-glow,
+body.lite-motion .core-aura {
+  animation: none !important;
+}
+body.lite-motion .breathe-sphere {
+  display: none;
+}
+body.lite-motion .btn:hover,
+body.lite-motion .btn:active {
+  transform: none;
+  transition: none;
+}
+
+/* ---- Lite Motion toggle active state -------------------------------------- */
+body.lite-motion #lite-motion-toggle {
+  background: rgba(16, 185, 129, 0.18);
+  border-color: rgba(16, 185, 129, 0.5);
+  color: rgb(110, 231, 183);
+}
+body.lite-motion #lite-motion-toggle .text-[10px] {
+  color: rgb(52, 211, 153);
+}

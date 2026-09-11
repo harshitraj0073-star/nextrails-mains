@@ -11732,3 +11732,420 @@ if (document.readyState === 'loading') {
 } else {
   window.AmbientController.init();
 }
+
+// ============================================================================
+// 3D SPATIAL UI ENGINE
+// Pointer-tracked tilt · Breathing sphere · Deep-field particles · Lite Motion
+// ============================================================================
+
+// ---------- Lite Motion toggle ----------
+let _liteMotion = false;
+try { _liteMotion = localStorage.getItem('nexora_lite_motion') === '1'; } catch (_e) {}
+if (_liteMotion) document.body.classList.add('lite-motion');
+
+function toggleLiteMotion() {
+  _liteMotion = !_liteMotion;
+  document.body.classList.toggle('lite-motion', _liteMotion);
+  try { localStorage.setItem('nexora_lite_motion', _liteMotion ? '1' : '0'); } catch (_e) {}
+  // Re-init tilt targets if tilt engine exists
+  if (window.NexSpatial && window.NexSpatial.refreshTilt) window.NexSpatial.refreshTilt();
+}
+window.toggleLiteMotion = toggleLiteMotion;
+
+// ---------- Reduced-motion gate ----------
+const _prefersReduced = window.matchMedia &&
+  window.matchMedia('(prefers-reduced-motion: reduce)');
+function _motionAllowed() {
+  return !_liteMotion && !(_prefersReduced && _prefersReduced.matches);
+}
+
+// ---------- Pointer-tracked tilt engine ----------
+const NexSpatial = {
+  _targets: [],
+  _raf: null,
+  _pointerActive: false,
+  _mouseX: 0,
+  _mouseY: 0,
+
+  refreshTilt() {
+    this._targets = [];
+    document.querySelectorAll('.spatial-card, [data-tilt]').forEach(el => {
+      if (!el.closest('[hidden]') && el.offsetParent !== null) {
+        this._targets.push(el);
+      }
+    });
+  },
+
+  init() {
+    if (!_motionAllowed()) return;
+    this.refreshTilt();
+
+    // Auto-tag known spatial targets
+    document.querySelectorAll(
+      '#role-select-view .sentient-card, #tab-pane-dashboard .sentient-card, ' +
+      '#channel-panel .channel-tile, .monitor-nav-btn, .dossier-tab'
+    ).forEach(el => {
+      el.classList.add('spatial-card');
+    });
+    this.refreshTilt();
+
+    document.addEventListener('pointermove', this._onPointerMove.bind(this), { passive: true });
+    document.addEventListener('pointerleave', this._onPointerLeave.bind(this), { passive: true });
+  },
+
+  _onPointerMove(e) {
+    this._mouseX = e.clientX;
+    this._mouseY = e.clientY;
+    this._pointerActive = true;
+    if (!this._raf) this._raf = requestAnimationFrame(this._tick.bind(this));
+  },
+
+  _onPointerLeave() {
+    this._pointerActive = false;
+    if (!this._raf) this._raf = requestAnimationFrame(this._tick.bind(this));
+  },
+
+  _tick() {
+    this._raf = null;
+    const w = window.innerWidth || 1;
+    const h = window.innerHeight || 1;
+
+    this._targets.forEach(el => {
+      const rect = el.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = this._mouseX - cx;
+      const dy = this._mouseY - cy;
+
+      // Only tilt if pointer is relatively near the card
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const maxDist = Math.max(w, h) * 0.6;
+      if (!this._pointerActive || dist > maxDist) {
+        // Lerp back to neutral via CSS transition
+        el.style.transform = '';
+        el.classList.remove('tilting');
+        return;
+      }
+
+      const rotX = -(dy / h) * 12;
+      const rotY = (dx / w) * 12;
+      const tz = 30;
+      el.classList.add('tilting');
+      el.style.transform =
+        `perspective(800px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateZ(${tz}px)`;
+
+      // Specular glare vars
+      const relX = ((this._mouseX - rect.left) / rect.width) * 100;
+      const relY = ((this._mouseY - rect.top) / rect.height) * 100;
+      el.style.setProperty('--mx', relX + '%');
+      el.style.setProperty('--my', relY + '%');
+      el.classList.add('glare-on');
+    });
+
+    if (this._pointerActive) {
+      this._raf = requestAnimationFrame(this._tick.bind(this));
+    }
+  }
+};
+window.NexSpatial = NexSpatial;
+
+// ---------- Breathing 3D sphere ----------
+let _breatheSphereCanvas = null;
+let _breatheSphereRAF = null;
+let _breatheSphereRunning = false;
+
+function runBreathingSphere() {
+  if (!_motionAllowed()) return;
+  _breatheSphereCanvas = document.getElementById('breathe-sphere');
+  if (!_breatheSphereCanvas) return;
+  _breatheSphereRunning = true;
+
+  const canvas = _breatheSphereCanvas;
+  const dpr = window.devicePixelRatio || 1;
+  const size = 200;
+  canvas.width = size * dpr;
+  canvas.height = size * dpr;
+  canvas.style.width = size + 'px';
+  canvas.style.height = size + 'px';
+
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+  ctx.scale(dpr, dpr);
+
+  const cx = size / 2;
+  const cy = size / 2;
+  let phaseStart = Date.now();
+  // 4-4-4 cycle: Inhale 4s, Hold 4s, Exhale 4s
+  const PHASE_DUR = 4000;
+  const PHASES = [
+    { name: 'Inhale', scaleTarget: 1.0 },
+    { name: 'Hold', scaleTarget: 1.0 },
+    { name: 'Exhale', scaleTarget: 0.55 }
+  ];
+  let currentScale = 0.55;
+
+  function lerp(a, b, t) { return a + (b - a) * Math.min(t, 1); }
+
+  function drawSphere(t) {
+    const elapsed = t - phaseStart;
+    const phaseIdx = Math.floor((elapsed / PHASE_DUR) % 3);
+    const phaseProgress = (elapsed % PHASE_DUR) / PHASE_DUR;
+    const phase = PHASES[phaseIdx];
+
+    // Lerp scale toward target
+    const speed = phase.name === 'Hold' ? 0.04 : 0.08;
+    currentScale = lerp(currentScale, phase.scaleTarget, speed * phaseProgress);
+
+    const baseR = 55;
+    const r = baseR * currentScale;
+
+    ctx.clearRect(0, 0, size, size);
+
+    // Outer glow
+    const glowGrad = ctx.createRadialGradient(cx, cy, r * 0.3, cx, cy, r * 2);
+    glowGrad.addColorStop(0, 'rgba(56, 189, 148, 0.18)');
+    glowGrad.addColorStop(0.5, 'rgba(56, 189, 148, 0.06)');
+    glowGrad.addColorStop(1, 'rgba(56, 189, 148, 0)');
+    ctx.fillStyle = glowGrad;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r * 2, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Core sphere with gradient
+    const coreGrad = ctx.createRadialGradient(cx - r * 0.2, cy - r * 0.2, r * 0.1, cx, cy, r);
+    coreGrad.addColorStop(0, 'rgba(110, 231, 183, 0.7)');
+    coreGrad.addColorStop(0.5, 'rgba(34, 211, 238, 0.5)');
+    coreGrad.addColorStop(1, 'rgba(34, 211, 238, 0.05)');
+    ctx.fillStyle = coreGrad;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Wireframe latitude lines
+    ctx.strokeStyle = 'rgba(167, 243, 208, 0.25)';
+    ctx.lineWidth = 0.5;
+    for (let lat = -60; lat <= 60; lat += 30) {
+      const radLat = (lat * Math.PI) / 180;
+      const yOff = r * Math.sin(radLat);
+      const rr = r * Math.cos(radLat);
+      if (rr < 1) continue;
+      ctx.beginPath();
+      ctx.ellipse(cx, cy + yOff, rr, rr * 0.3, 0, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
+    // Wireframe longitude lines
+    const timeAngle = (elapsed / 1000) * 0.3;
+    for (let lon = 0; lon < 180; lon += 45) {
+      const radLon = ((lon + timeAngle * 30) * Math.PI) / 180;
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, r * Math.abs(Math.cos(radLon)), r, 0, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+  }
+
+  function loop(t) {
+    if (!_breatheSphereRunning || !window.isBreatheActive) {
+      _breatheSphereRunning = false;
+      return;
+    }
+    drawSphere(t);
+    _breatheSphereRAF = requestAnimationFrame(loop);
+  }
+
+  _breatheSphereRAF = requestAnimationFrame(loop);
+}
+window.runBreathingSphere = runBreathingSphere;
+
+function stopBreathingSphere() {
+  _breatheSphereRunning = false;
+  if (_breatheSphereRAF) cancelAnimationFrame(_breatheSphereRAF);
+  _breatheSphereRAF = null;
+  if (_breatheSphereCanvas) {
+    const ctx = _breatheSphereCanvas.getContext('2d');
+    if (ctx) ctx.clearRect(0, 0, _breatheSphereCanvas.width, _breatheSphereCanvas.height);
+  }
+}
+window.stopBreathingSphere = stopBreathingSphere;
+
+// Expose breathing-modal visibility on window — script.js declares
+// `let isBreatheActive` at top level (closure-scoped, NOT on window), so
+// cross-function reads must resolve against the DOM, which is ground truth.
+try {
+  Object.defineProperty(window, 'isBreatheActive', {
+    configurable: true,
+    get: function () {
+      const m = document.getElementById('breathe-modal');
+      return !!(m && !m.classList.contains('hidden'));
+    }
+  });
+} catch (_e) {}
+
+// Hook into existing breathing modal open/close
+(function hookBreathingModal() {
+  const origToggle = window.toggleBreathingModal;
+  if (typeof origToggle !== 'function') return;
+  window.toggleBreathingModal = function () {
+    origToggle.apply(this, arguments);
+    if (window.isBreatheActive) {
+      runBreathingSphere();
+    } else {
+      stopBreathingSphere();
+    }
+  };
+})();
+
+// ---------- Deep-field Z-depth particles engine ----------
+let _deepFieldCanvas = null;
+let _deepFieldCtx = null;
+let _deepFieldParticles = [];
+let _deepFieldRAF = null;
+let _deepFieldRunning = false;
+const DEEP_FIELD_COUNT = 80;
+
+function _initDeepFieldParticles(w, h) {
+  _deepFieldParticles = [];
+  for (let i = 0; i < DEEP_FIELD_COUNT; i++) {
+    _deepFieldParticles.push({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      z: Math.random() * 3 + 0.5, // depth 0.5–3.5
+      speed: Math.random() * 0.3 + 0.1,
+      size: Math.random() * 2 + 0.5,
+      alpha: Math.random() * 0.5 + 0.1
+    });
+  }
+}
+
+function runDeepField() {
+  _deepFieldCanvas = document.getElementById('nexora-ambient-canvas');
+  if (!_deepFieldCanvas) return;
+  _deepFieldCtx = _deepFieldCanvas.getContext('2d');
+  if (!_deepFieldCtx) return;
+  _deepFieldRunning = true;
+
+  const w = _deepFieldCanvas.width = _deepFieldCanvas.offsetWidth * (window.devicePixelRatio || 1);
+  const h = _deepFieldCanvas.height = _deepFieldCanvas.offsetHeight * (window.devicePixelRatio || 1);
+  _deepFieldCtx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+
+  const displayW = _deepFieldCanvas.offsetWidth;
+  const displayH = _deepFieldCanvas.offsetHeight;
+
+  if (!_deepFieldParticles.length) _initDeepFieldParticles(displayW, displayH);
+
+  let mouseX = displayW / 2;
+  let mouseY = displayH / 2;
+  function onMove(e) {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  }
+  document.addEventListener('pointermove', onMove, { passive: true });
+
+  function loop() {
+    if (!_deepFieldRunning) {
+      document.removeEventListener('pointermove', onMove);
+      return;
+    }
+    const ctx = _deepFieldCtx;
+    ctx.clearRect(0, 0, displayW, displayH);
+
+    const normX = mouseX / displayW - 0.5;
+    const normY = mouseY / displayH - 0.5;
+
+    // Particle color follows the active chromatic theme
+    let themeRgb = '148, 243, 210';
+    try {
+      const ac = window.AmbientController;
+      if (ac && ac.getTheme) {
+        const rgb = ac.getTheme().rgb;
+        if (rgb) themeRgb = rgb;
+      }
+    } catch (_e) {}
+
+    _deepFieldParticles.forEach(p => {
+      // Move particles slowly
+      p.y -= p.speed * p.z * 0.3;
+      if (p.y < -5) {
+        p.y = displayH + 5;
+        p.x = Math.random() * displayW;
+      }
+
+      // Mouse parallax: deeper particles shift more
+      const px = p.x + normX * p.z * 25;
+      const py = p.y + normY * p.z * 20;
+
+      // Size scales with depth (closer = bigger)
+      const drawSize = p.size * (1 + (3.5 - p.z) * 0.3);
+      const drawAlpha = p.alpha * (0.3 + p.z * 0.2);
+
+      ctx.beginPath();
+      ctx.arc(px, py, drawSize, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${themeRgb}, ${drawAlpha})`;
+      ctx.fill();
+    });
+
+    _deepFieldRAF = requestAnimationFrame(loop);
+  }
+  _deepFieldRAF = requestAnimationFrame(loop);
+}
+
+function stopDeepField() {
+  _deepFieldRunning = false;
+  if (_deepFieldRAF) cancelAnimationFrame(_deepFieldRAF);
+  _deepFieldRAF = null;
+}
+
+// Monkey-patch AmbientController.switchEngine to handle deep-field
+(function patchAmbientSwitch() {
+  const ac = window.AmbientController;
+  if (!ac || typeof ac.switchEngine !== 'function') return;
+  const origSwitch = ac.switchEngine.bind(ac);
+  ac.switchEngine = function (key) {
+    // Stop the previous deep-field animator whenever switching engines
+    stopDeepField();
+    if (key === 'deep-field') {
+      // Mirror the original switchEngine's bookkeeping so the Deep Field
+      // button gets the active ring and the engine persists across reloads.
+      ac.stopCurrentEngine();
+      ac.activeEngine = 'deep-field';
+      try { localStorage.setItem('nexora_bg_engine', 'deep-field'); } catch (_e) {}
+      document.querySelectorAll('[data-bg-engine]').forEach(btn => {
+        const isMatch = btn.getAttribute('data-bg-engine') === 'deep-field';
+        btn.classList.toggle('ring-2', isMatch);
+        btn.classList.toggle('ring-cyan-400', isMatch);
+        btn.classList.toggle('active', isMatch);
+      });
+      runDeepField();
+    } else {
+      origSwitch(key);
+    }
+  };
+})();
+
+// ---------- Boot init ----------
+(function _initSpatialUI() {
+  function boot() {
+    // Init tilt engine
+    if (window.NexSpatial) window.NexSpatial.init();
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
+})();
+
+// Re-scan tilt targets whenever the view switches — cards inside views that
+// start hidden (role amphitheater, counselor KPI pedestals) aren't trackable
+// until their container becomes visible, and offsetParent stays null otherwise.
+(function patchSwitchViewRescan() {
+  const orig = window.switchView;
+  if (typeof orig !== 'function') return;
+  window.switchView = function (viewName) {
+    const r = orig.apply(this, arguments);
+    if (window.NexSpatial) {
+      requestAnimationFrame(function () { window.NexSpatial.refreshTilt(); });
+    }
+    return r;
+  };
+})();

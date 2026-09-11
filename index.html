@@ -71,6 +71,10 @@
                             <span class="text-sm">🎨</span>
                             <span class="text-xs">Noise Gradient</span>
                         </button>
+                        <button onclick="setAmbientEngine('deep-field')" class="engine-btn" data-bg-engine="deep-field" data-engine="deep-field">
+                            <span class="text-sm">🌌</span>
+                            <span class="text-xs">Deep Field</span>
+                        </button>
                     </div>
                 </div>
 
@@ -116,6 +120,18 @@
                         <button onclick="applyPreset('energy')" data-preset="energy" class="px-3 py-1.5 text-xs rounded-lg bg-slate-800 hover:bg-slate-700 border border-white/10 text-slate-300 transition-all">⚡ Energy</button>
                         <button onclick="applyPreset('night')" data-preset="night" class="px-3 py-1.5 text-xs rounded-lg bg-slate-800 hover:bg-slate-700 border border-white/10 text-slate-300 transition-all">🌙 Night</button>
                     </div>
+                </div>
+
+                <!-- Lite Motion (performance mode) -->
+                <div class="space-y-2">
+                    <label class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Performance</label>
+                    <button onclick="toggleLiteMotion()" id="lite-motion-toggle" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-white/10 text-slate-300 transition-all">
+                        <span class="flex items-center gap-2">
+                            <span class="text-sm">🏃</span>
+                            <span class="text-xs font-medium">Lite Motion</span>
+                        </span>
+                        <span class="text-[10px] text-slate-400">reduce animations on budget devices</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -1612,6 +1628,7 @@
 
             <div class="breathing-chamber py-12">
                 <div class="breathing-core">
+                    <canvas id="breathe-sphere" class="breathe-sphere"></canvas>
                     <div class="breathing-ring"></div>
                     <div class="breathing-ring"></div>
                     <div class="breathing-ring"></div>
